@@ -16,9 +16,10 @@ public abstract class MSSQLDao extends Dao {
 
     protected MSSQLDao() {
         this.setDriver("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        this.setUrl("jdbc:sqlserver://ocrux;databaseName=das");
-        this.setUser("sa");
-        this.setPasswd("pyxis");
+        this.setUrl("jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat");
+        this.setUser("desarrollador");
+        this.setPasswd("intel123!");
+        
     }
 
     @Override
