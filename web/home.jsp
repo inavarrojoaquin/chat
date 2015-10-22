@@ -23,14 +23,9 @@
                         <td colspan="5"><input type="text" name="password" maxlength="100" size="90"/></td>
                     </tr>
                     <tr>
-                        <th class="ar"><fmt:message key="label_type"/></th>
-                        <td colspan="5"><input type="text" name="type" maxlength="100" size="90"/></td>
-                    </tr>
-                    <tr>
                         <th class="ar" colspan="6">
                             <input type="button" value="Nuevo" onclick="jChat.newProfile()"/>
                             <input type="button" value="Profiles" onclick="jChat.getProfileList()"/>
-                            <input type="button" value="Test" onclick="jChat.testRest()"/>
                         </th>
                     </tr>
                 </table>

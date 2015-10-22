@@ -25,10 +25,10 @@
                     </tr>
                     <c:forEach items="${requestScope.form.profileList}" var="profile">
                         <tr>
-                            <td>${profile.getItem('id')}</td>
-                            <td>${profile.getItem('login')}</td>
-                            <td>${profile.getItem('password')}</td>
-                            <td>${profile.getItem('type')}</td>
+                            <td>${profile.id}</td>
+                            <td>${profile.login}</td>
+                            <td>${profile.password}</td>
+                            <td>${profile.type}</td>
                         </tr>
                     </c:forEach>
                 </table>

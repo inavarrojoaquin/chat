@@ -21,13 +21,12 @@ public class MSSQLProfileDao extends MSSQLDao{
 
     @Override
     public void insert(DynaActionForm form) throws Exception {
-        this.setStatement("proc_InsertProfile(?,?,?,?)");
+        this.setStatement("proc_InsertProfile(?,?,?)");
         CallableStatement statement = this.getStatement();
         
         statement.registerOutParameter("id", INTEGER);
         statement.setString("login", String.valueOf(form.getItem("login")));
         statement.setString("password", String.valueOf(form.getItem("password")));
-        statement.setString("type", String.valueOf(form.getItem("type")));
         
         this.executeUpdate();
         form.setItem("id", statement.getInt("id"));
@@ -45,7 +44,21 @@ public class MSSQLProfileDao extends MSSQLDao{
 
     @Override
     public List<DynaActionForm> select(DynaActionForm form) throws Exception {
-        this.setStatement("proc_ProfileList");
+        String selector = (String) form.getItem("selector");
+        
+        if(selector.equals("byId")){
+            this.setStatement("proc_SelectProfileById(?)");
+            this.getStatement().setInt("id", (int) form.getItem("id"));
+        }
+        
+        else if(selector.equals("byLogin")){
+            this.setStatement("proc_SelectProfileByLogin(?)");
+            this.getStatement().setString("login", (String) form.getItem("login"));
+        }
+        
+        else{
+            this.setStatement("proc_SelectProfiles()");
+        }
         return this.execute();
     }
 
