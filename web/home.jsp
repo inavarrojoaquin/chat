@@ -12,25 +12,11 @@
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
-            <form id="newdata" method="post" action="javascript:void(null)">
-                <table border="0">
-                    <tr>                
-                        <th class="ar"><fmt:message key="label_login"/></th>
-                        <td colspan="5"><input type="text" name="login" maxlength="100" size="90"/></td>
-                    </tr>
-                    <tr>
-                        <th class="ar"><fmt:message key="label_password"/></th>
-                        <td colspan="5"><input type="text" name="password" maxlength="100" size="90"/></td>
-                    </tr>
-                    <tr>
-                        <th class="ar" colspan="6">
-                            <input type="button" value="Nuevo" onclick="jChat.newProfile()"/>
-                            <input type="button" value="Profiles" onclick="jChat.getProfileList()"/>
-                        </th>
-                    </tr>
-                </table>
-            </form>
+            <c:if test="${!empty requestScope.form.profile}" >
+                <c:out value="Datos:"></c:out>
+                <c:out value="${requestScope.form.profile.getId()}"></c:out>
+                <c:out value="${requestScope.form.profile.getLogin()}"></c:out>
+            </c:if>
         </fmt:bundle>
-        <div id="response"></div>
     </body>
 </html>

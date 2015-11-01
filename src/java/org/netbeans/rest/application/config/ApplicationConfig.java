@@ -29,7 +29,13 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(ar.edu.ubp.das.rest.ProfilesResource.class);
+        resources.add(ar.edu.ubp.das.rest.InvitationResource.class);
+        resources.add(ar.edu.ubp.das.rest.MessageResource.class);
+        resources.add(ar.edu.ubp.das.rest.ProfileResource.class);
+        resources.add(ar.edu.ubp.das.rest.RoomAccessPolicyResource.class);
+        resources.add(ar.edu.ubp.das.rest.RoomResource.class);
+        resources.add(ar.edu.ubp.das.rest.UserAccessResource.class);
+        resources.add(ar.edu.ubp.das.rest.UserLoginResource.class);
     }
     
 }

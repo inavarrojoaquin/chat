@@ -27,7 +27,7 @@ public class ProfileEntity {
     }
     
     public void fromMap(Map map){
-        this.id = (int) map.get("id");
+        this.id = (Integer) map.get("id");
         this.login = (String) map.get("login");
         this.password = (String) map.get("password");
         this.type = (String) map.get("type");

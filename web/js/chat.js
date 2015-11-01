@@ -4,9 +4,9 @@ var jChat = {
             url: "index.jsp?action=NewProfile",
             type: "post",
             dataType: "html",            
-            data: $.param($("input[type='text']")),
+            data: $.param($("#signup input[type='text']")),
             error: function(hr) {
-                alert(hr);
+                jUtils.showing("error", hr);
             },
             success: function(html) {
                 jUtils.showing("response", html);

@@ -21,7 +21,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.core.Response;
 
 /**
@@ -30,7 +29,7 @@ import javax.ws.rs.core.Response;
  * @author Febo
  */
 @Path("profiles")
-public class ProfilesResource {
+public class ProfileResource {
 
     @Context
     private UriInfo context;
@@ -38,11 +37,11 @@ public class ProfilesResource {
     /**
      * Creates a new instance of ProfilesResource
      */
-    public ProfilesResource() {
+    public ProfileResource() {
     }
 
     /**
-     * PUT method for updating or creating an instance of ProfilesResource
+     * PUT method for updating or creating an instance of ProfileResource
      * @param entity representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
@@ -60,7 +59,7 @@ public class ProfilesResource {
             
             return Response.ok(entity).build();
         } catch (Exception ex) {
-            Logger.getLogger(ProfilesResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.INFO, null, ex);
             return Response.status(Response.Status.CONFLICT).build();
         }
     }
@@ -72,7 +71,7 @@ public class ProfilesResource {
             Dao dao;
             DynaActionForm form;
             List<DynaActionForm> resultSet;
-            List<ProfileEntity> profiles = new LinkedList<>();
+            List<ProfileEntity> entities = new LinkedList<>();
             
             dao = DaoFactory.getDao("Profile");
             form = new DynaActionForm();
@@ -82,11 +81,16 @@ public class ProfilesResource {
             for(DynaActionForm result : resultSet){
                 ProfileEntity entity = new ProfileEntity();
                 entity.fromMap(result.getItems());
-                profiles.add(entity);
+                entities.add(entity);
             }
-            return profiles;
+            
+            if(!entities.isEmpty()){
+                return entities;
+            }else {
+                return null;
+            }
         } catch (Exception ex) {
-            Logger.getLogger(ProfilesResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -97,9 +101,9 @@ public class ProfilesResource {
      */
     
    @GET
-   @Path("/id/{id}")
+   @Path("id/{id}")
    @Produces("application/json")
-   public Response findById(@PathParam("id") int id ){
+   public Response findById(@PathParam("id") Integer id ){
         try {
             Dao dao;
             List<DynaActionForm> resultSet;
@@ -120,7 +124,7 @@ public class ProfilesResource {
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(ProfilesResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Response.Status.PRECONDITION_FAILED).build();
         }
    }
@@ -131,7 +135,7 @@ public class ProfilesResource {
      */
     
    @GET
-   @Path("/login/{login}")
+   @Path("login/{login}")
    @Produces("application/json")
    public Response findByLogin(@PathParam("login") String login ){
         try {
@@ -154,7 +158,7 @@ public class ProfilesResource {
             }
             
         } catch (Exception ex) {
-            Logger.getLogger(ProfilesResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Response.Status.PRECONDITION_FAILED).build();
         }
    }

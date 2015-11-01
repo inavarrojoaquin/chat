@@ -4,8 +4,8 @@ go
 IF OBJECT_ID ('Invitation') IS NOT NULL
 DROP TABLE [dbo].[Invitation]
 GO
-IF OBJECT_ID ('Massage') IS NOT NULL
-DROP TABLE [dbo].[Massage]
+IF OBJECT_ID ('Message') IS NOT NULL
+DROP TABLE [dbo].[Message]
 GO
 IF OBJECT_ID ('User_access') IS NOT NULL
 DROP TABLE [dbo].[User_access]

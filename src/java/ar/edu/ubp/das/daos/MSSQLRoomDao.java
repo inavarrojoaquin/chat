@@ -1,32 +1,40 @@
 package ar.edu.ubp.das.daos;
 
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
+import ar.edu.ubp.das.mvc.daos.DaoFactory;
 import ar.edu.ubp.das.mvc.daos.MSSQLDao;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import static java.sql.Types.INTEGER;
 import java.util.List;
 
-public class MSSQLProfileDao extends MSSQLDao{
+/**
+ *
+ * @author Febo
+ */
+public class MSSQLRoomDao extends MSSQLDao{
 
     @Override
     public DynaActionForm make(ResultSet result) throws Exception {
-        DynaActionForm profile = new DynaActionForm();
-        profile.setItem("id", result.getInt("id"));
-        profile.setItem("login", result.getString("login"));
-        profile.setItem("password", result.getString("password"));
-        profile.setItem("type", result.getString("type"));
-        return profile;
+        DynaActionForm form = new DynaActionForm();
+        
+        form.setItem("id", result.getInt("id"));
+        form.setItem("name", result.getString("name"));
+        form.setItem("type", result.getString("type"));
+        form.setItem("owner", result.getInt("owner"));
+        
+        return form;
     }
 
     @Override
     public void insert(DynaActionForm form) throws Exception {
-        this.setStatement("proc_InsertProfile(?,?,?)");
-        CallableStatement statement = this.getStatement();
+        this.setStatement("proc_InsertRoom(?,?,?,?)");
+        CallableStatement statement = getStatement();
         
         statement.registerOutParameter("id", INTEGER);
-        statement.setString("login", String.valueOf(form.getItem("login")));
-        statement.setString("password", String.valueOf(form.getItem("password")));
+        statement.setString("name", (String) form.getItem("name"));
+        statement.setString("type", (String) form.getItem("type"));
+        statement.setObject("owner", (Integer) form.getItem("owner"));
         
         this.executeUpdate();
         form.setItem("id", statement.getInt("id"));
@@ -47,18 +55,23 @@ public class MSSQLProfileDao extends MSSQLDao{
         String selector = (String) form.getItem("selector");
         
         if(selector.equals("byId")){
-            this.setStatement("proc_SelectProfileById(?)");
+            this.setStatement("proc_SelectRoomById(?)");
             this.getStatement().setInt("id", (Integer) form.getItem("id"));
         }
         
-        else if(selector.equals("byLogin")){
-            this.setStatement("proc_SelectProfileByLogin(?)");
-            this.getStatement().setString("login", (String) form.getItem("login"));
+        else if(selector.equals("byName")){
+            this.setStatement("proc_SelectRoomByName(?)");
+            this.getStatement().setString("name", (String) form.getItem("name"));
+        }
+        else if(selector.equals("byOwner")){
+            this.setStatement("proc_SelectRoomByOwner(?)");
+            this.getStatement().setInt("owner", (Integer) form.getItem("owner"));
         }
         
-        else{
-            this.setStatement("proc_SelectProfiles()");
+        else {
+            this.setStatement("proc_SelectRooms()");
         }
+        
         return this.execute();
     }
 
