@@ -8,14 +8,16 @@
         <script lang="javascript" type="text/javascript" src="./js/jquery.js"></script>
         <script lang="javascript" type="text/javascript" src="./js/utils.js"></script>
         <script lang="javascript" type="text/javascript" src="./js/chat.js"></script>        
-        <title>JSP Page</title>
+        <title>Home-Admin</title>
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
+            <a href="index.jsp?action=LogoutProfile" >Logout</a>
             <c:if test="${!empty requestScope.form.profile}" >
-                <c:out value="Datos:"></c:out>
-                <c:out value="${requestScope.form.profile.getId()}"></c:out>
-                <c:out value="${requestScope.form.profile.getLogin()}"></c:out>
+                <c:set value="${form.profile}" var="profile" ></c:set>
+                <c:out value="Datos-Admin:"></c:out>
+                <c:out value="${profile.getId()}"></c:out>
+                <c:out value="${profile.getLogin()}"></c:out>
             </c:if>
         </fmt:bundle>
     </body>

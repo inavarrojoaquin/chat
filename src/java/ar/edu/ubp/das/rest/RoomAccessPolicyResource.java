@@ -104,11 +104,7 @@ public class RoomAccessPolicyResource {
                 entities.add(e);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -135,11 +131,7 @@ public class RoomAccessPolicyResource {
                 entities.add(e);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;

@@ -29,6 +29,10 @@ BEGIN
 END
 GO
 
+/*Admin user*/
+insert into Profile
+values('admin','admin','admin')
+
 /*
 DECLARE @id_out int;
 EXECUTE proc_InsertProfile @id_out OUTPUT, 'nico', 'nico'
@@ -76,6 +80,37 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SelectParticipantsForRoom ')is not null
+	drop procedure proc_SelectParticipantsForRoom
+go
+
+CREATE PROCEDURE proc_SelectParticipantsForRoom
+ @room int
+AS
+BEGIN
+  
+	select distinct * from Profile p
+	join (select u.profile from User_access u
+		where u.room = @room
+		and datetime_of_access_end is null)t
+	on p.id = t.profile
+END
+GO	
+
+if OBJECT_ID('proc_SelectActivesUsersLogin ')is not null
+	drop procedure proc_SelectActivesUsersLogin
+go
+
+CREATE PROCEDURE proc_SelectActivesUsersLogin
+AS
+BEGIN
+		select distinct p.* FROM Profile p
+		join (SELECT profile FROM User_login
+			where date_time_of_access_end is null)t
+		on p.id = t.profile
+		where p.type = 'USER'
+END
+GO
 
 /****************************************************
 				TABLE User_login
@@ -300,7 +335,7 @@ GO
 
 /*
 declare @id_out int
-exec proc_InsertUserAccess @id_out OUTPUT, 3, 1, '2015-10-26 00:00:00.000', null
+exec proc_InsertUserAccess @id_out OUTPUT, 7, 1, '2015-10-26 00:00:00.000', null
 select @id_out id
 */
 
@@ -348,9 +383,15 @@ CREATE PROCEDURE proc_SelectUserAccessByRoom
  @room int
 AS
 BEGIN
-  
-	select * from User_access
-	where room = @room
+	select u.*
+	from User_access u
+	join (select profile, max(datetime_of_access_start) max_date_time
+		from User_access
+		where room = @room
+		group by profile)t
+	on u.profile = t.profile
+	and u.datetime_of_access_start = t.max_date_time
+	and u.datetime_of_access_end is null
 END
 GO
 
@@ -597,7 +638,7 @@ GO
 
 /*
 declare @id_out int
-exec proc_InsertMessage @id_out OUTPUT, 1, 1, '2015-10-26 00:00:00.000', 'First message', 'pending'
+exec proc_InsertMessage @id_out OUTPUT, 7, 1, '2015-10-26 00:00:00.000', 'Three message', 'accepted'
 select @id_out id
 */
 

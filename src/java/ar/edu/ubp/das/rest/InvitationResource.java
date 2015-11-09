@@ -89,11 +89,7 @@ public class InvitationResource {
                 entities.add(i);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -151,11 +147,7 @@ public class InvitationResource {
                 entities.add(i);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -184,11 +176,7 @@ public class InvitationResource {
                 entities.add(i);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;

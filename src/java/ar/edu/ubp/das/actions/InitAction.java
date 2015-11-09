@@ -17,7 +17,7 @@ public class InitAction extends Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //Código de arranque de la aplicación
-        this.gotoPage("/login.jsp", request, response);
+        this.gotoPage("/template/login.jsp", request, response);
         
     }
     

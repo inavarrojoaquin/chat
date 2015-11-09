@@ -84,11 +84,7 @@ public class ProfileResource {
                 entities.add(entity);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -161,6 +157,62 @@ public class ProfileResource {
             Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(Response.Status.PRECONDITION_FAILED).build();
         }
-   }
+    }
    
+    @GET
+    @Path("room/{room}/actives")
+    @Produces("application/json")
+    public List<ProfileEntity> findActivesByRoom(@PathParam("room") Integer room) {
+        try {
+            Dao dao;
+            DynaActionForm form;
+            List<DynaActionForm> resultSet;
+            List<ProfileEntity> profiles = new LinkedList<>();
+
+            dao = DaoFactory.getDao("Profile");
+            form = new DynaActionForm();
+            form.setItem("selector", "byRoom");
+            form.setItem("room", room);
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet){
+                ProfileEntity profile = new ProfileEntity();
+                profile.fromMap(temp.getItems());
+                profiles.add(profile);
+            }
+            
+            return profiles;
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    @GET
+    @Path("users/actives")
+    @Produces("application/json")
+    public List<ProfileEntity> findActivesUsersLogin() {
+        try {
+            Dao dao;
+            DynaActionForm form;
+            List<DynaActionForm> resultSet;
+            List<ProfileEntity> profiles = new LinkedList<>();
+
+            dao = DaoFactory.getDao("Profile");
+            form = new DynaActionForm();
+            form.setItem("selector", "byUsersActives");
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet){
+                ProfileEntity profile = new ProfileEntity();
+                profile.fromMap(temp.getItems());
+                profiles.add(profile);
+            }
+            
+            return profiles;
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }

@@ -74,11 +74,7 @@ public class RoomResource {
                 entities.add(room);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -107,11 +103,7 @@ public class RoomResource {
                 }
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -165,11 +157,7 @@ public class RoomResource {
                 entities.add(entity);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;

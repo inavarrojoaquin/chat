@@ -39,6 +39,6 @@ public class NewProfileAction extends Action{
             resp = "El usuario ya existe...";
         }
         request.setAttribute("response", resp);
-        this.gotoPage("/login.jsp", request, response);
+        this.gotoPage("/template/login.jsp", request, response);
     }
 }

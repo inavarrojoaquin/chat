@@ -121,19 +121,13 @@ public class UserAccessResource {
             form.setItem("room", room);
             List<DynaActionForm> select = dao.select(form);
             
-            for(DynaActionForm temp : select){
-                if(temp.getItem("datetimeOfAccessEnd") == null){
-                    UserAccessEntity entity = new UserAccessEntity();
-                    entity.fromMap(temp.getItems());
-                    entities.add(entity);
-                }
+            for(DynaActionForm temp : select){         
+                UserAccessEntity entity = new UserAccessEntity();
+                entity.fromMap(temp.getItems());
+                entities.add(entity);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(UserLoginResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -157,11 +151,7 @@ public class UserAccessResource {
                 entities.add(e);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(UserLoginResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;

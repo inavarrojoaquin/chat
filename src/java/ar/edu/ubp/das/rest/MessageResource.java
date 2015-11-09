@@ -95,11 +95,7 @@ public class MessageResource {
                 entities.add(m);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(MessageResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -150,11 +146,7 @@ public class MessageResource {
                 entities.add(m);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(MessageResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -180,11 +172,7 @@ public class MessageResource {
                 entities.add(m);
             }
             
-            if(!entities.isEmpty()){
-                return entities;
-            }else {
-                return null;
-            }
+            return entities;
         } catch (Exception ex) {
             Logger.getLogger(MessageResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
