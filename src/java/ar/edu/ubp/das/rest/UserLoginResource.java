@@ -31,6 +31,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Response;
 
+
 /**
  * REST Web Service
  *
@@ -166,15 +167,16 @@ public class UserLoginResource {
     @GET
     @Path("auth/profile/{email}")
     @Produces("application/json")
-    public Response authProfile(@PathParam("email") String email) throws UnsupportedEncodingException{
+    public Response authProfile(@PathParam("email") String email){
         final String username = "<mail>";
         final String password = "<password>";
-
+        
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         Session session = Session.getInstance(props,
           new javax.mail.Authenticator() {
@@ -186,11 +188,11 @@ public class UserLoginResource {
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("jnfebo@gmail.com"));
+            message.setFrom(new InternetAddress("from-email@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, 
                     InternetAddress.parse(email));
             message.setSubject("Account Validation");
-            message.setText("http://localhost:8080/chat/index.jsp/home?sessionValidation=true");
+            message.setText("http://localhost:8080/chat/index.jsp?action=LoginProfile&userName="+email+"&sessionValidation=true");
 
             Transport.send(message);
            

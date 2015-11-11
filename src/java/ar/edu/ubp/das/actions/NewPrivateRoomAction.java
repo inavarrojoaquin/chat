@@ -76,16 +76,6 @@ public class NewPrivateRoomAction extends Action{
         
         invitationEntity = invitationResponse.readEntity(new GenericType<InvitationEntity>(){});
         
-//        WebTarget profileAuthTarget = client.target("http://localhost:8080/chat/webresources/userslogins/auth/profile/" + inviteEmail);        
-//        Invocation profileAuthInvocation = profileAuthTarget.request().buildGet();
-//        Response profileAuthResponse = profileAuthInvocation.invoke();
-//        
-//        if(profileAuthResponse.getStatusInfo().getReasonPhrase().equals("OK")){
-//            System.out.println("Email enviado...");
-//        }else{
-//            System.out.println("Email NO enviado...");
-//        }
-        
         this.getForm().setItem("roomId", roomEntity.getId());
         this.getForm().setItem("roomName", roomEntity.getName());
         this.getForm().setItem("profileId", profileId);
