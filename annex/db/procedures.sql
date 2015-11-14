@@ -591,8 +591,12 @@ CREATE PROCEDURE proc_SelectInvitationByReceiver
 AS
 BEGIN
   
-	select * from Invitation
+	select i.*, r.name as roomName, p.login as senderName
+	from Invitation i
+	join Room r on r.id = i.room
+	join Profile p on p.id = i.sender
 	where receiver = @receiver
+	
 END
 GO
 

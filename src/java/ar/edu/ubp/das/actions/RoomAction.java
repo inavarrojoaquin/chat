@@ -27,7 +27,6 @@ public class RoomAction extends Action{
         
         String profileId = (String) this.getForm().getItem("profileId");
         String roomId = (String) this.getForm().getItem("roomId");
-        String roomName = (String) this.getForm().getItem("roomName");
         
         UserAccessEntity userAccess = new UserAccessEntity();
         userAccess.setProfile(Integer.parseInt(profileId));
@@ -43,9 +42,15 @@ public class RoomAction extends Action{
             userAccess = res.readEntity(new GenericType<UserAccessEntity>(){});
         }
         
-        this.getForm().setItem("profileId", this.getForm().getItem("profileId"));
-        this.getForm().setItem("roomId", this.getForm().getItem("roomId"));
-        this.getForm().setItem("roomName", this.getForm().getItem("roomName"));
+        WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/" + roomId);        
+        Invocation roomInvocation = roomTarget.request().buildGet();
+        Response roomResponse = roomInvocation.invoke();
+        
+        RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+        
+        this.getForm().setItem("profileId", profileId);
+        this.getForm().setItem("roomId", roomId);
+        this.getForm().setItem("roomName", roomEntity.getName());
         this.getForm().setItem("userAccess", userAccess);
         
         this.gotoPage("/template/user/room.jsp", request, response);        

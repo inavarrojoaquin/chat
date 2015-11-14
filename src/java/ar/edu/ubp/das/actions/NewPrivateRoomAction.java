@@ -68,7 +68,7 @@ public class NewPrivateRoomAction extends Action{
         invitationEntity.setRoom(roomEntity.getId());
         invitationEntity.setSender(Integer.parseInt(profileId));
         invitationEntity.setReceiver(invitedProfile.getId());
-        invitationEntity.setState("pendind");
+        invitationEntity.setState("pending");
         
         WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations");        
         Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.json(invitationEntity));

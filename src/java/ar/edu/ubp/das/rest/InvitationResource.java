@@ -4,6 +4,11 @@ import ar.edu.ubp.das.entities.InvitationEntity;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import ar.edu.ubp.das.mvc.daos.Dao;
 import ar.edu.ubp.das.mvc.daos.DaoFactory;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -157,27 +162,38 @@ public class InvitationResource {
     @GET
     @Path("receiver/{receiver}")
     @Produces("application/json")
-    public List<InvitationEntity> findInvitationByReceiver(@PathParam("receiver") Integer receiver) {
+    public List<DynaActionForm> findInvitationByReceiver(@PathParam("receiver") Integer receiver) {
+        String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
+        String DB_USER = "desarrollador";
+        String DB_PASSWORD = "intel123!";
         try {
-            Dao dao;
-            DynaActionForm form;
-            List<DynaActionForm> resultSet;
-            List<InvitationEntity> entities = new LinkedList<>();
+            List<DynaActionForm> dynaFormList = new LinkedList<>();
             
-            dao = DaoFactory.getDao("Invitation");
-            form = new DynaActionForm();
-            form.setItem("selector", "byReceiver");
-            form.setItem("receiver", receiver);
-            resultSet = dao.select(form);
+            Class.forName( DB_DRIVER ) ;
+            Connection conn = DriverManager.getConnection( DB_CONNECTION, DB_USER, DB_PASSWORD ) ;             
+            CallableStatement cs = conn.prepareCall( "{call proc_SelectInvitationByReceiver(?)}" ) ;        
+            cs.setInt( "receiver", receiver ) ;
             
-            for(DynaActionForm temp : resultSet ){
-                InvitationEntity i = new InvitationEntity();
-                i.fromMap(temp.getItems());
-                entities.add(i);
+            ResultSet rs = cs.executeQuery() ;
+            while( rs.next() ){
+                DynaActionForm f = new DynaActionForm();
+                f.setItem("id", rs.getInt("id"));
+                f.setItem("room", rs.getInt("room"));
+                f.setItem("sender", rs.getInt("sender"));
+                f.setItem("receiver", rs.getInt("receiver"));
+                f.setItem("state", rs.getString("state"));
+                f.setItem("roomName", rs.getString("roomName"));
+                f.setItem("senderName", rs.getString("senderName")); 
+                dynaFormList.add(f);
             }
-            
-            return entities;
-        } catch (Exception ex) {
+
+            rs.close() ;
+            cs.close() ;
+            conn.close() ;
+
+            return dynaFormList;
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }

@@ -35,6 +35,7 @@
                 </form>
             </div>
         </fmt:bundle>
+        <div id="invitations"></div>
         <div id="response"></div>
         <div id="error"></div>
                 
@@ -76,6 +77,49 @@
                     success: function(html) {
                         jUtils.showing("participants", html);
                     }
+                });
+                
+                $.ajax({
+                    url: "index.jsp?action=GetInvitationList",
+                    type: "post",
+                    dataType: "html",            
+                    data:  $.param($("input[type='hidden']")),
+                    error: function(hr) {
+                        jUtils.showing("error", hr);
+                    },
+                    success: function(html) {
+                        jUtils.showing("invitations", html);
+                    }
+                });
+                
+                $("#invitations").on('click','a[data-id]', function(){
+                    var element = $(this);
+                    var parent = $(this).parent();
+                    var room = $(this).data("room");
+                    var profileId = $(this).data("profileid");
+                    var id = $(this).data("id");
+                    var newState = $(this).data("state");
+                    
+                    $.ajax({
+                        url: "index.jsp?action=UpdateStateInvitation",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'id': id, 'newState': newState},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            if(newState == "accepted"){
+                                parent.empty();
+                                parent.siblings("p[data-name='state']").text("State: "+newState);
+                                parent.append("<a href=\"index.jsp?action=Room&profileId="+profileId+"&roomId="+room+" \">Enter</a>");
+                            }else {
+                                element.parents("div#"+id).remove();
+                            }                            
+                        }
+                    });
+                    
+                    return false;
                 });
             });
         </script>
