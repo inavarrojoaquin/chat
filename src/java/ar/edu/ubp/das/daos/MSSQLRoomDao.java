@@ -47,7 +47,11 @@ public class MSSQLRoomDao extends MSSQLDao{
 
     @Override
     public void delete(DynaActionForm form) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.setStatement("proc_DeleteRoom(?)");
+        CallableStatement statement = this.getStatement();
+        statement.setInt("id", (int) form.getItem("id"));
+        
+        this.executeUpdate();
     }
 
     @Override

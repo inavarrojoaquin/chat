@@ -7,6 +7,7 @@
         <p>Public Rooms</p>
         <c:set value="${form.publicRooms}" var="publicRooms" ></c:set>
         <c:set value="${form.profileId}" var="profileId" ></c:set>
+        <c:set value="${form.profileType}" var="profileType" ></c:set>
         
         <c:if test="${publicRooms.size() > 0}">
                 <table border="1">
@@ -19,7 +20,7 @@
                     <c:forEach items="${publicRooms}" var="room" varStatus="loop">
                         <tr>
                             <td>${loop.index + 1}</td>
-                            <td><a href="index.jsp?action=Room&roomId=${room.key.id}&profileId=${profileId}&roomName=${room.key.name} "  id="${room.key.id}" >${room.key.name}</a></td>
+                            <td><a href="index.jsp?action=Room&roomId=${room.key.id}&profileId=${profileId}&roomName=${room.key.name}&profileType=${profileType} "  id="${room.key.id}" >${room.key.name}</a></td>
                             <td>${room.key.type}</td>
                             <td>${room.value}</td>
                         </tr>

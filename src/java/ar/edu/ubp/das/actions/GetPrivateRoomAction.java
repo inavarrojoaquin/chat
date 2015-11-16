@@ -33,7 +33,7 @@ public class GetPrivateRoomAction extends Action{
         if(privateRoomsList != null){
             this.getForm().setItem("privateRooms", privateRoomsList);
             this.getForm().setItem("profileId", owner);
-            this.gotoPage("/template/user/privateRooms.jsp", request, response);
+            this.gotoPage("/template/user/privateRoomList.jsp", request, response);
         }else {
             response.getWriter().println("Empty private rooms");
         }

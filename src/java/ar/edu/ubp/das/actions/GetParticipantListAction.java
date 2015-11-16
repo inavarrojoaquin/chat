@@ -1,8 +1,10 @@
 package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.ProfileEntity;
+import ar.edu.ubp.das.entities.RoomAccessPolicyEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.daos.DaoFactory;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +26,9 @@ public class GetParticipantListAction extends Action{
         System.out.println("GetParticipantsListAction:execute");
         
         String roomId = (String) this.getForm().getItem("roomId");
+        String profileType = (String) this.getForm().getItem("profileType");
+        String userAccessId = (String) this.getForm().getItem("userAccessId");
+        
         List<ProfileEntity> usersActivesList;
         
         if(roomId != null){
@@ -42,6 +47,9 @@ public class GetParticipantListAction extends Action{
         }
         
         this.getForm().setItem("participantsList", usersActivesList);
+        this.getForm().setItem("roomId", roomId);
+        this.getForm().setItem("profileType", profileType);
+        this.getForm().setItem("userAccessId", userAccessId);
         this.gotoPage("/template/user/participantList.jsp", request, response);
         
     }

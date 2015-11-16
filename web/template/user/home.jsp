@@ -17,6 +17,7 @@
                 
             <c:set value="${form.profile}" var="profile" ></c:set>
             <input type="hidden" value="${profile.getId()}" name="profileId" />
+            <input type="hidden" value="${profile.getType()}" name="profileType" />
             
             <div id="publicRooms"></div>
             <div id="privateRooms"></div>
@@ -116,6 +117,26 @@
                             }else {
                                 element.parents("div#"+id).remove();
                             }                            
+                        }
+                    });
+                    
+                    return false;
+                });
+                
+                $("#privateRooms").on('click','a[data-roomid]', function(){
+                    var parent = $(this).parents("tr");
+                    var roomId = $(this).data("roomid");
+                    
+                    $.ajax({
+                        url: "index.jsp?action=DeletePrivateRoom",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'roomId': roomId},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            parent.remove();                            
                         }
                     });
                     

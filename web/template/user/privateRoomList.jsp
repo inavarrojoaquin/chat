@@ -18,8 +18,9 @@
                     <c:forEach items="${privateRooms}" var="room" varStatus="loop">
                         <tr>
                             <td>${loop.index + 1}</td>
-                            <td><a href="index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name}"  id="${room.id}" >${room.name}</a></td>
+                            <td><a href="index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name} "  id="${room.id}" >${room.name}</a></td>
                             <td>${room.type}</td>
+                            <td><a href="#" data-roomid="${room.id}" >Delete</a></td>
                         </tr>
                     </c:forEach>
                 </table>

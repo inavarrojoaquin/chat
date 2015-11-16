@@ -39,10 +39,6 @@ public class LoginProfileAction extends Action{
             String validateFromEmail =request.getParameter("sessionValidation"); //Is not null when arrive from email validator 
             
             String login = this.getForm().getItem("userName") != null ? (String) this.getForm().getItem("userName") : userName;
-
-            System.out.println("nameFromEmail: "+userName);  
-            System.out.println("validate: "+validateFromEmail);  
-            System.out.println("login: "+login);  
             
             Client client = ClientBuilder.newClient();
 
@@ -104,10 +100,10 @@ public class LoginProfileAction extends Action{
                         session.setAttribute("sessionprofile", profile);
                         session.setMaxInactiveInterval(30 * 60);
                         this.getForm().setItem("profile", profile);
+                        this.gotoPage("/template/user/home.jsp", request, response);
+                        
                         if (profile.getType().equals("admin")) {
                             this.gotoPage("/template/admin/home.jsp", request, response);
-                        } else {
-                            this.gotoPage("/template/user/home.jsp", request, response);
                         }
                     }
                 }

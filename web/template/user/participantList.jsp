@@ -6,6 +6,9 @@
     <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
         <p>Participants</p>
         <c:set value="${form.participantsList}" var="participants" ></c:set>
+        <c:set value="${form.profileType}" var="profileType" ></c:set>
+        <c:set value="${form.roomId}" var="roomId" ></c:set> 
+        <c:set value="${form.userAccessId}" var="userAccessId" ></c:set>
         
         <c:if test="${participants.size() > 0}">
                 <table border="1">
@@ -17,6 +20,9 @@
                         <tr>
                             <td>${loop.index + 1}</td>
                             <td>${participant.login}</td>
+                            <c:if test="${profileType.equals('ADMIN')}" >
+                                <td><a href="#" data-delete="" data-profileid="${participant.id}" data-roomid="${roomId}" data-useraccessid="${userAccessId}"  >Eject user</a></td>
+                            </c:if> 
                         </tr>
                     </c:forEach>
                 </table>

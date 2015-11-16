@@ -1,8 +1,16 @@
 package ar.edu.ubp.das.actions;
 
+import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
+import ar.edu.ubp.das.mvc.actions.DynaActionForm;
+import ar.edu.ubp.das.mvc.daos.Dao;
+import ar.edu.ubp.das.mvc.daos.DaoFactory;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -22,10 +30,6 @@ public class NewProfileAction extends Action{
         profile.setLogin((String) this.getForm().getItem("userName"));
         profile.setPassword((String) this.getForm().getItem("password"));
 
-//        JsonObject profile = Json.createObjectBuilder()
-//                .add("login", login)
-//                .add("password", password).build();
-//        
         Client client = ClientBuilder.newClient();
         
         WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles");        

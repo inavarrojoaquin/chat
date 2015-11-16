@@ -163,5 +163,23 @@ public class RoomResource {
             return null;
         }
     }
+    
+    @GET
+    @Path("delete/{id}")
+    @Produces("application/json")
+    public Response deleteRoom(@PathParam("id") Integer id){
+        try {
+            Dao dao = DaoFactory.getDao("Room");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("id", id);
+            dao.delete(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(MessageResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
 
 }

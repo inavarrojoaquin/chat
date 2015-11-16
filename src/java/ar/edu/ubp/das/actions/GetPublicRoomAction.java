@@ -27,6 +27,7 @@ public class GetPublicRoomAction extends Action{
         System.out.println("GetPublicRoomAction:execute");
         
         String profileId = (String) this.getForm().getItem("profileId");
+        String profileType = (String) this.getForm().getItem("profileType");
         
         Client client = ClientBuilder.newClient();
         WebTarget publicRoomsTarget = client.target("http://localhost:8080/chat/webresources/rooms/type/public");        
@@ -48,7 +49,8 @@ public class GetPublicRoomAction extends Action{
             }
             this.getForm().setItem("publicRooms", map);
             this.getForm().setItem("profileId", profileId);
-            this.gotoPage("/template/user/publicRooms.jsp", request, response);
+            this.getForm().setItem("profileType", profileType);
+            this.gotoPage("/template/user/publicRoomList.jsp", request, response);
         }else {
             response.getWriter().println("Empty public rooms");
         }

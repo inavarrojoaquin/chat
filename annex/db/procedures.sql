@@ -306,6 +306,20 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_DeleteRoom ')is not null
+	drop procedure proc_DeleteRoom
+go
+
+CREATE PROCEDURE proc_DeleteRoom
+ @id int
+AS
+BEGIN
+  
+	delete Room
+	where id = @id
+END
+GO
+
 /****************************************************
 				TABLE User_access
 ****************************************************/
@@ -712,6 +726,34 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SelectLastMessagesByRoom ')is not null
+	drop procedure proc_SelectLastMessagesByRoom
+go
+
+CREATE PROCEDURE proc_SelectLastMessagesByRoom
+ @room int,
+ @id int,
+ @profileId int
+AS
+BEGIN
+	if(@id = -1)
+	begin
+		select * 
+		from Message m, (select top 1 u.datetime_of_access_start from User_access u
+						where u.room = @room
+						and u.profile = @profileId
+						order by u.id DESC)t
+		where m.datetime_of_creation >= t.datetime_of_access_start 
+		and m.room = @room
+	end
+	else
+	begin
+		select * from Message
+		where room = @room
+		and id > @id
+	end
+END
+
 if OBJECT_ID('proc_SelectMessages ')is not null
 	drop procedure proc_SelectMessages
 go
@@ -721,5 +763,19 @@ AS
 BEGIN
   
 	select * from Message
+END
+GO
+
+if OBJECT_ID('proc_DeleteMessage ')is not null
+	drop procedure proc_DeleteMessage
+go
+
+CREATE PROCEDURE proc_DeleteMessage
+ @id int
+AS
+BEGIN
+  
+	delete from Message
+	where id = @id
 END
 GO

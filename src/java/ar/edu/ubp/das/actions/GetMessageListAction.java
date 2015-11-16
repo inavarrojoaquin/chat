@@ -29,6 +29,8 @@ public class GetMessageListAction extends Action{
         System.out.println("GetMessageListAction:execute");
         
         String roomId = (String) this.getForm().getItem("roomId");
+        String roomType = (String) this.getForm().getItem("roomType");
+        String profileType = (String) this.getForm().getItem("profileType");
         String userAccessId = (String) this.getForm().getItem("userAccessId");
         
         Client client = ClientBuilder.newClient();
@@ -49,12 +51,19 @@ public class GetMessageListAction extends Action{
         List<MessageEntity> finalMessageList = new LinkedList<>();
         
         if(messageList != null){
-            for(MessageEntity m : messageList){
-                if(m.getDatetimeOfCreation().after(userAcces.getDatetimeOfAccessStart())){
-                    finalMessageList.add(m);
+            if(!profileType.equals("ADMIN")){
+                for(MessageEntity m : messageList){
+                    if(m.getDatetimeOfCreation().after(userAcces.getDatetimeOfAccessStart())){
+                        finalMessageList.add(m);
+                    }
                 }
+                this.getForm().setItem("messageList", finalMessageList);
+            }else{
+                this.getForm().setItem("messageList", messageList);
             }
-            this.getForm().setItem("messageList", finalMessageList);
+            
+            this.getForm().setItem("profileType", profileType);
+            this.getForm().setItem("roomType", roomType);
             this.gotoPage("/template/user/messageList.jsp", request, response);
         }
     }

@@ -66,7 +66,11 @@ public class MSSQLMessageDao extends MSSQLDao{
 
     @Override
     public void delete(DynaActionForm form) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.setStatement("proc_DeleteMessage(?)");
+        CallableStatement statement = this.getStatement();
+        statement.setInt("id", (int) form.getItem("id"));
+        
+        this.executeUpdate();
     }
 
     @Override
@@ -86,6 +90,13 @@ public class MSSQLMessageDao extends MSSQLDao{
         else if(selector.equals("byOwner")){
             this.setStatement("proc_SelectMessageByOwner(?)");
             this.getStatement().setInt("owner", (int) form.getItem("owner"));
+        }
+        
+        else if(selector.equals("byLastMessage")){
+            this.setStatement("proc_SelectLastMessagesByRoom(?,?,?)");
+            this.getStatement().setInt("room", (int) form.getItem("room"));
+            this.getStatement().setInt("id", (int) form.getItem("id"));
+            this.getStatement().setInt("profileId", (int) form.getItem("profileId"));
         }
         
         else {
