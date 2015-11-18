@@ -13,7 +13,7 @@
     <body>
         <c:choose>
             <c:when test="${sessionScope.sessionprofile != null}">
-                <jsp:forward page="index.jsp?action=LoginProfile" >
+                <jsp:forward page="/index.jsp?action=LoginProfile" >
                     <jsp:param value="${sessionScope.sessionprofile}" name="profile"></jsp:param>
                 </jsp:forward>
             </c:when>

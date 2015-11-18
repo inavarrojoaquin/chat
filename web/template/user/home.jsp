@@ -69,18 +69,6 @@
                 });
                 
                 $.ajax({
-                    url: "index.jsp?action=GetParticipantList",
-                    type: "post",
-                    dataType: "html",            
-                    error: function(hr) {
-                        jUtils.showing("error", hr);
-                    },
-                    success: function(html) {
-                        jUtils.showing("participants", html);
-                    }
-                });
-                
-                $.ajax({
                     url: "index.jsp?action=GetInvitationList",
                     type: "post",
                     dataType: "html",            

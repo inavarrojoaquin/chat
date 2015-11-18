@@ -24,9 +24,9 @@ public class LogoutProfileAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("LogoutProfileAction:execute");
         
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession();
         
-        if(session != null){
+        if(session.getAttribute("sessionprofile") != null){
             
             ProfileEntity profile = (ProfileEntity) session.getAttribute("sessionprofile");
 
@@ -46,10 +46,10 @@ public class LogoutProfileAction extends Action{
                 if(userLoginResponse2.getStatusInfo().getReasonPhrase().equals("OK")){
                     System.out.println("FinishSession:OK");
                     session.invalidate();
-                    this.gotoPage("/template/login.jsp", request, response);
                 }
             }
         }
+        this.gotoPage("/template/login.jsp", request, response);
     }
     
 }

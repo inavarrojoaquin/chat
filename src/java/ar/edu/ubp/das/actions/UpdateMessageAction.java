@@ -17,11 +17,11 @@ import javax.ws.rs.core.Response;
  *
  * @author Febo
  */
-public class UpdatePageAction extends Action{
+public class UpdateMessageAction extends Action{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println("UpdatePageAction:execute");
+        System.out.println("UpdateMessageAction:execute");
         
         String roomId = (String) this.getForm().getItem("roomId");
         String messageId = this.getForm().getItem("messageId") == null ? "-1" : (String) this.getForm().getItem("messageId");
@@ -29,8 +29,6 @@ public class UpdatePageAction extends Action{
         String profileType = (String) this.getForm().getItem("profileType");
         String profileId = (String) this.getForm().getItem("profileId");
         
-        System.out.println("mes: " + messageId);
-
         Client client = ClientBuilder.newClient();
         
         WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/room/" + roomId + "/id/" + messageId + "/profileId/" + profileId);

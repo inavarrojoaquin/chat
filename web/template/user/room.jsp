@@ -193,7 +193,7 @@
                     var profileId = $("input[name='profileId']").val();
                     
                     $.ajax({
-                        url: "index.jsp?action=UpdatePage",
+                        url: "index.jsp?action=UpdateMessage",
                         type: "post",
                         dataType: "html",            
                         data:  {'roomId': roomId, 'messageId': messageId, 'roomType': roomType, 'profileType': profileType, 'profileId': profileId},
