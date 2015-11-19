@@ -33,7 +33,7 @@ public class LoginProfileAction extends Action{
         
         if(session.getAttribute("sessionprofile") != null){
             this.getForm().setItem("profile", session.getAttribute("sessionprofile"));
-            this.gotoPage("/template/user/home.jsp", request, response);
+            this.gotoPage("/template/user/home.jsp", request, response);            
         }else{
             String userName = request.getParameter("userName"); //Is not null when arrive from email validator 
             String validateFromEmail =request.getParameter("sessionValidation"); //Is not null when arrive from email validator 
@@ -50,12 +50,16 @@ public class LoginProfileAction extends Action{
             if(profileResponse.getStatusInfo().getReasonPhrase().equals("OK")){
                 ProfileEntity profile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
                 
-                UserLoginEntity userLogin = new UserLoginEntity();
-                userLogin.setProfile(profile.getId());
+                /**Is null when arrive from email validator */
+                String password = this.getForm().getItem("password") != null ? (String) this.getForm().getItem("password") : profile.getPassword();
                 
-                boolean flag = false;
-                
-                //Enable block for implement send email
+                if(password.equals(profile.getPassword())){
+                    UserLoginEntity userLogin = new UserLoginEntity();
+                    userLogin.setProfile(profile.getId());
+
+                    boolean flag = false;
+
+                    //Enable block for implement send email
 //                if(validateFromEmail == null){
 //                    /**Get the last access for profile*/
 //                    WebTarget lastLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/" + profile.getId());
@@ -88,27 +92,33 @@ public class LoginProfileAction extends Action{
 //                        }
 //                    }
 //                }
-                if(!flag){
-                    /**Save new access for profile*/
-                    WebTarget userLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins");
-                    Invocation userLoginInvocation = userLoginTarget.request().buildPost(Entity.json(userLogin));
-                    Response userLoginResponse = userLoginInvocation.invoke();
+                    if (!flag) {
+                        /**
+                         * Save new access for profile
+                         */
+                        WebTarget userLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins");
+                        Invocation userLoginInvocation = userLoginTarget.request().buildPost(Entity.json(userLogin));
+                        Response userLoginResponse = userLoginInvocation.invoke();
 
-                    if (userLoginResponse.getStatusInfo().getReasonPhrase().equals("OK")) {
-                        System.out.println("Create UserLogin");
+                        if (userLoginResponse.getStatusInfo().getReasonPhrase().equals("OK")) {
+                            System.out.println("Create UserLogin");
 
-                        session.setAttribute("sessionprofile", profile);
-                        session.setMaxInactiveInterval(30 * 60);
-                        this.getForm().setItem("profile", profile);
-                        this.gotoPage("/template/user/home.jsp", request, response);
-                        
-                        if (profile.getType().equals("admin")) {
-                            this.gotoPage("/template/admin/home.jsp", request, response);
+                            session.setAttribute("sessionprofile", profile);
+                            session.setMaxInactiveInterval(30 * 60);
+                            this.getForm().setItem("profile", profile);
+                            this.gotoPage("/template/user/home.jsp", request, response);
+
+                            if (profile.getType().equals("admin")) {
+                                this.gotoPage("/template/admin/home.jsp", request, response);
+                            }
                         }
                     }
+                } else {
+                    request.setAttribute("response", "Password incorrect.");
+                    this.gotoPage("/template/login.jsp", request, response);
                 }
-            }else {
-                request.setAttribute("response", "User not found...");
+             }else {
+                request.setAttribute("response", "User not found.");
                 this.gotoPage("/template/login.jsp", request, response);
             }
         }

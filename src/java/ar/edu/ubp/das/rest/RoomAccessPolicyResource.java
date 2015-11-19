@@ -137,4 +137,29 @@ public class RoomAccessPolicyResource {
             return null;
         }
     }
+    
+    @GET
+    @Path("room/{room}/profileId/{id}")
+    @Produces("application/json")
+    public Response findAccessPolicyByRoomAndProfile(@PathParam("room") Integer room, @PathParam("id") Integer id) {
+        try {
+            Dao dao = DaoFactory.getDao("RoomAccessPolicy");
+            DynaActionForm form = new DynaActionForm();
+            List<DynaActionForm> resultSet;
+            
+            form.setItem("selector", "byRoomAndProfile");
+            form.setItem("room", room);
+            form.setItem("profile", id);
+            resultSet = dao.select(form);
+            
+            if(resultSet.size() == 1){
+                return Response.ok().build();
+            } else{
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
 }

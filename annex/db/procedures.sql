@@ -501,6 +501,25 @@ BEGIN
 END
 GO
 
+
+if OBJECT_ID('proc_SelectAccessPolicyByRoomAndProfile ')is not null
+	drop procedure proc_SelectAccessPolicyByRoomAndProfile
+go
+
+CREATE PROCEDURE proc_SelectAccessPolicyByRoomAndProfile
+ @room int,
+ @profile int
+AS
+BEGIN
+  
+	select * from Room_access_policy
+	where room = @room
+	and profile = @profile
+END
+GO
+
+exec proc_SelectAccessPolicyByRoomAndProfile 3,8
+
 if OBJECT_ID('proc_SelectRoomsAccessPolicy ')is not null
 	drop procedure proc_SelectRoomsAccessPolicy
 go
@@ -610,6 +629,26 @@ BEGIN
 	join Room r on r.id = i.room
 	join Profile p on p.id = i.sender
 	where receiver = @receiver
+	
+END
+GO
+
+if OBJECT_ID('proc_SelectLastInvitations ')is not null
+	drop procedure proc_SelectLastInvitations
+go
+
+CREATE PROCEDURE proc_SelectLastInvitations
+ @receiver int,
+ @invitationId int
+AS
+BEGIN
+  
+	select i.*, r.name as roomName, p.login as senderName
+	from Invitation i
+	join Room r on r.id = i.room
+	join Profile p on p.id = i.sender
+	where receiver = @receiver
+	and i.id > @invitationId
 	
 END
 GO

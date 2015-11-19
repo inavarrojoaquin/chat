@@ -31,20 +31,11 @@ public class GetParticipantListAction extends Action{
         
         List<ProfileEntity> usersActivesList;
         
-        if(roomId != null){
-            Client client = ClientBuilder.newClient();
-            WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/profiles/room/" + roomId + "/actives");        
-            Invocation usersActivesInvocation = usersActivesTarget.request().buildGet();
-            Response usersActivesResponse = usersActivesInvocation.invoke();
-            usersActivesList = usersActivesResponse.readEntity(new GenericType<List<ProfileEntity>>(){});       
-            
-        }else {
-            Client client = ClientBuilder.newClient();
-            WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/profiles/users/actives");        
-            Invocation usersActivesInvocation = usersActivesTarget.request().buildGet();
-            Response usersActivesResponse = usersActivesInvocation.invoke();
-            usersActivesList = usersActivesResponse.readEntity(new GenericType<List<ProfileEntity>>(){});       
-        }
+        Client client = ClientBuilder.newClient();
+        WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/profiles/room/" + roomId + "/actives");        
+        Invocation usersActivesInvocation = usersActivesTarget.request().buildGet();
+        Response usersActivesResponse = usersActivesInvocation.invoke();
+        usersActivesList = usersActivesResponse.readEntity(new GenericType<List<ProfileEntity>>(){});       
         
         this.getForm().setItem("participantsList", usersActivesList);
         this.getForm().setItem("roomId", roomId);

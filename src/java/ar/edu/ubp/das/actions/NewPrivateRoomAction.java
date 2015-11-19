@@ -28,7 +28,7 @@ public class NewPrivateRoomAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("NewPrivateRoomAction:execute");
         
-        String profileId = (String) this.getForm().getItem("profile");
+        String profileId = (String) this.getForm().getItem("profileId");
         String title = (String) this.getForm().getItem("title");
         String inviteEmail = (String) this.getForm().getItem("inviteEmail");
         
@@ -76,11 +76,7 @@ public class NewPrivateRoomAction extends Action{
         
         invitationEntity = invitationResponse.readEntity(new GenericType<InvitationEntity>(){});
         
-        this.getForm().setItem("roomId", roomEntity.getId());
-        this.getForm().setItem("roomName", roomEntity.getName());
-        this.getForm().setItem("profileId", profileId);
-        this.getForm().setItem("userAccess", userAccess);
-        this.gotoPage("/template/user/room.jsp", request, response);
+        response.getWriter().println(roomEntity.getId());
     }
     
 }

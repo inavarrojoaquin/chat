@@ -184,7 +184,9 @@
                 });
                 
                 setInterval(reloadMessage, 10000);
+                setInterval(reloadAccessPolicy, 10000);
                 
+                /**Check if have a new messages*/
                 function reloadMessage(){
                     var messageId = $("#messages tr:last input[name='messageId']").val();
                     var roomId = $("input[name='roomId']").val();
@@ -207,6 +209,28 @@
                                     $("#messages tbody tr:last").remove();
                                 }
                                 $("#messages tbody:last").append(html);
+                            }
+                        }
+                    });        
+                }
+                
+                /**Check if the user was rejected*/
+                function reloadAccessPolicy(){
+                    var roomId = $("input[name='roomId']").val();
+                    var profileId = $("input[name='profileId']").val();
+                    
+                    $.ajax({
+                        url: "index.jsp?action=UpdateCheckAccessPolicy",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'roomId': roomId, 'profileId': profileId},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            if($.trim(html) == "ProfileEjected"){
+                                alert("You was ejected to this room");
+                                parent.history.back();
                             }
                         }
                     });        

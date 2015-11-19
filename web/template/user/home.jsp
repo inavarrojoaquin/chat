@@ -24,15 +24,14 @@
             <div id="participants"></div>
             <div>
                 <h4>Start a private chat</h4>
-                <form id="createPrivateRoom" method="post" action="index.jsp?action=NewPrivateRoom">
-                    <input type="hidden" value="${profile.getId()}" name="profile" />
+                <form id="createPrivateRoom">
                     <label for="title">Title/Subject</label>
-                    <input type="text" id="title" name="title" placeholder="I want to talk about..."/>
+                    <input type="text" id="title" name="titleRoom" placeholder="I want to talk about..."/>
                     <br>
                     <label for="inviteEmail">Invite email</label>
-                    <input type="text" id="inviteEmail" name="inviteEmail" placeholder="somebody@somewhere.com"/>
+                    <input type="text" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"/>
                     <br>
-                    <input type="submit" value="Create my chat"/>
+                    <input type="button" id="submit" value="Create my chat"/>
                 </form>
             </div>
         </fmt:bundle>
@@ -81,6 +80,26 @@
                     }
                 });
                 
+                $("#createPrivateRoom #submit").on('click', function(){
+                    var profileId = $("input[name='profileId']").val();
+                    var title = $("input[name='titleRoom']").val();
+                    var inviteEmail = $("input[name='inviteEmailRoom']").val();
+                    
+                    $.ajax({
+                        url: "index.jsp?action=NewPrivateRoom",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'profileId': profileId, 'title': title, 'inviteEmail': inviteEmail},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(roomId) {
+                            //the call response roomId
+                            window.location.href = "http://localhost:8080/chat/index.jsp?action=Room&profileId="+profileId+"&roomId="+roomId;
+                        }
+                    });
+                });
+                    
                 $("#invitations").on('click','a[data-id]', function(){
                     var element = $(this);
                     var parent = $(this).parent();
@@ -130,6 +149,33 @@
                     
                     return false;
                 });
+                
+                setInterval(reloadInvitation, 10000);  
+                
+                /**Check if have a new invitation*/
+                function reloadInvitation(){
+                    var profileId = $("input[name='profileId']").val();
+                    var lastInvitationId = $("#invitations div:last").attr("id");
+
+                    $.ajax({
+                         url: "index.jsp?action=UpdateInvitation",
+                         type: "post",
+                         dataType: "html",            
+                         data:  {'profileId': profileId, 'invitationId': lastInvitationId},
+                         error: function(hr) {
+                             jUtils.showing("error", hr);
+                         },
+                         success: function(html) {
+                             if($.trim(html) != "empty"){
+                                 var invitation_empty = $("#invitations p#invitation_empty").length;
+                                 if(invitation_empty == 1){
+                                    $("#invitations p#invitation_empty").remove();
+                                 }
+                                 $("#invitations").append(html);
+                             }
+                         }
+                     }); 
+                }
             });
         </script>
     </body>

@@ -198,4 +198,45 @@ public class InvitationResource {
             return null;
         }
     }
+    
+    @GET
+    @Path("receiver/{receiver}/invitationId/{invitationId}")
+    @Produces("application/json")
+    public List<DynaActionForm> findLastInvitationsById(@PathParam("receiver") Integer receiver, @PathParam("invitationId") Integer invitationId ) {
+        String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
+        String DB_USER = "desarrollador";
+        String DB_PASSWORD = "intel123!";
+        try {
+            List<DynaActionForm> dynaFormList = new LinkedList<>();
+            
+            Class.forName( DB_DRIVER ) ;
+            Connection conn = DriverManager.getConnection( DB_CONNECTION, DB_USER, DB_PASSWORD ) ;             
+            CallableStatement cs = conn.prepareCall( "{call proc_SelectLastInvitations(?,?)}" ) ;        
+            cs.setInt( "receiver", receiver ) ;
+            cs.setInt( "invitationId", invitationId ) ;
+            
+            ResultSet rs = cs.executeQuery() ;
+            
+            while( rs.next() ){
+                DynaActionForm f = new DynaActionForm();
+                f.setItem("id", rs.getInt("id"));
+                f.setItem("room", rs.getInt("room"));
+                f.setItem("sender", rs.getInt("sender"));
+                f.setItem("receiver", rs.getInt("receiver"));
+                f.setItem("state", rs.getString("state"));
+                f.setItem("roomName", rs.getString("roomName"));
+                f.setItem("senderName", rs.getString("senderName")); 
+                dynaFormList.add(f);
+            }
+            rs.close() ;
+            cs.close() ;
+            conn.close() ;
+
+            return dynaFormList;
+        } catch (Exception ex) {
+            Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }

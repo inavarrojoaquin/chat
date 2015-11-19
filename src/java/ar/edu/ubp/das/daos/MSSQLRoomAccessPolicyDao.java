@@ -71,6 +71,12 @@ public class MSSQLRoomAccessPolicyDao extends MSSQLDao{
             this.getStatement().setInt("room", (int) form.getItem("room"));
         }
         
+        else if(selector.equals("byRoomAndProfile")){
+            this.setStatement("proc_SelectAccessPolicyByRoomAndProfile(?,?)");
+            this.getStatement().setInt("room", (int) form.getItem("room"));
+            this.getStatement().setInt("profile", (int) form.getItem("profile"));
+        }
+        
         else {
             this.setStatement("proc_SelectRoomsAccessPolicy()");
         }
