@@ -3,7 +3,6 @@ package ar.edu.ubp.das.actions;
 import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.entities.UserAccessEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

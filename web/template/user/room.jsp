@@ -58,7 +58,7 @@
                 </c:when>
                 <c:otherwise>
                     <a href="index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" >Leave group</a>
-            
+                                
                     <h2>Room name: -${roomName}-</h2>
 
                     <div id="messages"></div>
@@ -104,21 +104,24 @@
                     },
                     success: function(html) {
                         jUtils.showing("participants", html);
+                        
                     }
                 });
                 
-                 $.ajax({
-                    url: "index.jsp?action=GetPrivateRoom",
-                    type: "post",
-                    dataType: "html",            
-                    data:  $.param($("input[type='hidden']")),
-                    error: function(hr) {
-                        jUtils.showing("error", hr);
-                    },
-                    success: function(html) {
-                        jUtils.showing("privateRooms", html);
-                    }
-                });
+                if($("input[name='roomType']").val() == 'public'){
+                    $.ajax({
+                        url: "index.jsp?action=GetPrivateRoom",
+                        type: "post",
+                        dataType: "html",            
+                        data:  $.param($("input[type='hidden']")),
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            jUtils.showing("privateRooms", html);
+                        }
+                    });
+                }
                 
                 $("#messages").on('click','a[data-delete]', function(){
                     var parent = $(this).parents("tr");
@@ -165,8 +168,7 @@
                 $("#privateRooms").on('click','a[data-roomid]', function(){
                     var parent = $(this).parents("tr");
                     var roomId = $(this).data("roomid");
-                    alert(parent.length);
-                    alert(roomId);
+                    
                     $.ajax({
                         url: "index.jsp?action=DeletePrivateRoom",
                         type: "post",
@@ -185,8 +187,10 @@
                 
                 setInterval(reloadMessage, 10000);
                 setInterval(reloadAccessPolicy, 10000);
+                setInterval(reloadIfExistPrivateRoom, 10000);
+                setInterval(reloadParticipants, 10000);
                 
-                /**Check if have a new messages*/
+                /**Check if the user has a new messages*/
                 function reloadMessage(){
                     var messageId = $("#messages tr:last input[name='messageId']").val();
                     var roomId = $("input[name='roomId']").val();
@@ -214,7 +218,7 @@
                     });        
                 }
                 
-                /**Check if the user was rejected*/
+                /**Check if the user has been ejected*/
                 function reloadAccessPolicy(){
                     var roomId = $("input[name='roomId']").val();
                     var profileId = $("input[name='profileId']").val();
@@ -229,14 +233,49 @@
                         },
                         success: function(html) {
                             if($.trim(html) == "ProfileEjected"){
-                                alert("You was ejected to this room");
+                                alert("You has been ejected to this room");
                                 parent.history.back();
                             }
                         }
                     });        
                 }
                 
+                /**Check if the room has benn removed*/
+                function reloadIfExistPrivateRoom(){
+                    var roomId = $("input[name='roomId']").val();
+                    
+                    $.ajax({
+                        url: "index.jsp?action=UpdateCheckIfExistPrivateRoom",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'roomId': roomId},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            if($.trim(html) == "not_found"){
+                                alert("This room has been removed");
+                                parent.history.back();
+                            }
+                        }
+                    });        
+                }
                 
+                /**Reload participant list*/
+                function reloadParticipants(){
+                    $.ajax({
+                        url: "index.jsp?action=GetParticipantList",
+                        type: "post",
+                        dataType: "html",            
+                        data:  $.param($("input[type='hidden']")),
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            jUtils.showing("participants", html);
+                        }
+                    });
+                }
             });
         </script>
     </body>

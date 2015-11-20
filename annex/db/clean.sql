@@ -1,25 +1,31 @@
 use chat
 go
 
-IF OBJECT_ID ('Invitation') IS NOT NULL
-DROP TABLE [dbo].[Invitation]
+DELETE [dbo].[Invitation]
 GO
-IF OBJECT_ID ('Message') IS NOT NULL
-DROP TABLE [dbo].[Message]
+DBCC CHECKIDENT ('[dbo].[Invitation]', RESEED, 0);
 GO
-IF OBJECT_ID ('User_access') IS NOT NULL
-DROP TABLE [dbo].[User_access]
+DELETE [dbo].[Message]
 GO
-IF OBJECT_ID ('Room_access_policy') IS NOT NULL
-DROP TABLE [dbo].[Room_access_policy]
+DBCC CHECKIDENT ('[dbo].[Message]', RESEED, 0);
 GO
-IF OBJECT_ID ('Room') IS NOT NULL
-DROP TABLE [dbo].[Room]
+DELETE [dbo].[User_access]
 GO
-IF OBJECT_ID ('User_login') IS NOT NULL
-DROP TABLE [dbo].[User_login]
+DBCC CHECKIDENT ('[dbo].[User_access]', RESEED, 0);
 GO
-IF OBJECT_ID ('Profile') IS NOT NULL
-DROP TABLE [dbo].[Profile]
+DELETE [dbo].[Room_access_policy]
 GO
-
+DBCC CHECKIDENT ('[dbo].[Room_access_policy]', RESEED, 0);
+GO
+DELETE [dbo].[Room]
+GO
+DBCC CHECKIDENT ('[dbo].[Room]', RESEED, 0);
+GO
+DELETE [dbo].[User_login]
+GO
+DBCC CHECKIDENT ('[dbo].[User_login]', RESEED, 0);
+GO
+DELETE [dbo].[Profile]
+GO
+DBCC CHECKIDENT ('[dbo].[Profile]', RESEED, 0);
+GO

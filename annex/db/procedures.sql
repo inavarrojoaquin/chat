@@ -31,7 +31,7 @@ GO
 
 /*Admin user*/
 insert into Profile
-values('admin','admin','admin')
+values('admin','admin','ADMIN')
 
 /*
 DECLARE @id_out int;
@@ -89,11 +89,16 @@ CREATE PROCEDURE proc_SelectParticipantsForRoom
 AS
 BEGIN
   
-	select distinct * from Profile p
-	join (select u.profile from User_access u
-		where u.room = @room
-		and datetime_of_access_end is null)t
-	on p.id = t.profile
+	select p.*
+	from Profile p
+	join (select u.*
+		from User_access u, (select u.profile, max(u.datetime_of_access_start) max_date from User_access u
+						where u.room = @room
+						group by u.profile)t
+		where u.datetime_of_access_start = t.max_date
+		and u.datetime_of_access_end is null)t2
+	on p.id = t2.profile
+	
 END
 GO	
 
@@ -250,6 +255,20 @@ GO
 declare @id_out int
 exec proc_InsertRoom @id_out OUTPUT,'ROOM1','TIPO1', null
 select @id_out id
+*/
+/**Insert some rooms
+insert into Room(name, type, owner)
+values ('deporte', 'public', 1)
+insert into Room(name, type, owner)
+values ('vacaciones', 'public', 1)
+insert into Room(name, type, owner)
+values ('ventas', 'public', 1)
+insert into Room(name, type, owner)
+values ('compras', 'public', 1)
+insert into Room(name, type, owner)
+values ('facultad', 'public', 1)
+insert into Room(name, type, owner)
+values ('juegos', 'public', 1)
 */
 
 if OBJECT_ID('proc_SelectRoomById ')is not null

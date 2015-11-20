@@ -26,7 +26,7 @@
                 </table>
             </c:if>
             <c:if test="${privateRooms.size() == 0}">
-                <b><fmt:message key="private_room_empty"/></b>
+                <p id="privateRoom_empty"><fmt:message key="private_room_empty"/></p>
             </c:if>
     </fmt:bundle>
 </div>

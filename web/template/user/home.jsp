@@ -21,7 +21,6 @@
             
             <div id="publicRooms"></div>
             <div id="privateRooms"></div>
-            <div id="participants"></div>
             <div>
                 <h4>Start a private chat</h4>
                 <form id="createPrivateRoom">
@@ -151,6 +150,7 @@
                 });
                 
                 setInterval(reloadInvitation, 10000);  
+                setInterval(reloadPublicRoom, 10000);
                 
                 /**Check if have a new invitation*/
                 function reloadInvitation(){
@@ -176,6 +176,26 @@
                          }
                      }); 
                 }
+                
+                /**Reload public room list*/
+                function reloadPublicRoom(){
+                    var profileId = $("input[name='profileId']").val();
+                    var profileType = $("input[name='profileType']").val();
+                    
+                    $.ajax({
+                        url: "index.jsp?action=GetPublicRoom",
+                        type: "post",
+                        dataType: "html",            
+                        data:  {'profileId': profileId, 'profileType': profileType},
+                        error: function(hr) {
+                            jUtils.showing("error", hr);
+                        },
+                        success: function(html) {
+                            jUtils.showing("publicRooms", html);
+                        }
+                    });
+                }
+                
             });
         </script>
     </body>

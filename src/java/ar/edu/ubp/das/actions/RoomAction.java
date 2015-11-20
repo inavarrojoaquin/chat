@@ -1,6 +1,5 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.RoomAccessPolicyEntity;
 import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.entities.UserAccessEntity;
@@ -32,6 +31,7 @@ public class RoomAction extends Action{
         
         Client client = ClientBuilder.newClient();
         
+        /**Get policy for roomId*/
         WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/" + roomId);        
         Invocation policyInvocation = policyTarget.request().buildGet();
         Response policyResponse = policyInvocation.invoke();
@@ -40,10 +40,10 @@ public class RoomAction extends Action{
         
         boolean flag = false;
         
+        /**Check if the user has been ejected for this room*/
         if(!policyList.isEmpty()){
             for (RoomAccessPolicyEntity policy : policyList) {
                 if(policy.getProfile() == Integer.parseInt(profileId)){
-                    System.out.println("Profile not accepted: " + policy.getProfile());
                     flag = true;
                     break;
                 }
@@ -54,6 +54,7 @@ public class RoomAction extends Action{
             userAccess.setProfile(Integer.parseInt(profileId));
             userAccess.setRoom(Integer.parseInt(roomId));
 
+            /**Create useraccess*/
             WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess");        
             Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.json(userAccess));
             Response res = useraccessInvocation.invoke();
@@ -62,6 +63,7 @@ public class RoomAction extends Action{
                 userAccess = res.readEntity(new GenericType<UserAccessEntity>(){});
             }
 
+            /**Get room*/
             WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/" + roomId);        
             Invocation roomInvocation = roomTarget.request().buildGet();
             Response roomResponse = roomInvocation.invoke();
