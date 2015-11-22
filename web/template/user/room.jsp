@@ -54,6 +54,7 @@
             
             <c:choose>
                 <c:when test="${accessDenied != null}">
+                    <input type="hidden" value="${accessDenied}" name="accessDenied" />            
                     <p>Access denied</p>
                 </c:when>
                 <c:otherwise>
@@ -80,7 +81,8 @@
         
         <script>
             $(document).ready(function(){
-                
+            if($("input[name='accessDenied']").val() == null){
+                    
                 $.ajax({
                     url: "index.jsp?action=GetMessageList",
                     type: "post",
@@ -184,13 +186,15 @@
                     
                     return false;
                 });
-                
+               
                 setInterval(reloadMessage, 10000);
                 setInterval(reloadAccessPolicy, 10000);
                 setInterval(reloadIfExistPrivateRoom, 10000);
                 setInterval(reloadParticipants, 10000);
                 
-                /**Check if the user has a new messages*/
+             }
+             
+             /**Check if the user has a new messages*/
                 function reloadMessage(){
                     var messageId = $("#messages tr:last input[name='messageId']").val();
                     var roomId = $("input[name='roomId']").val();
@@ -276,6 +280,7 @@
                         }
                     });
                 }
+             
             });
         </script>
     </body>

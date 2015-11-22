@@ -153,9 +153,11 @@ public class RoomResource {
             resultSet = dao.select(form);
             
             for(DynaActionForm temp : resultSet){
-                RoomEntity entity = new RoomEntity();
-                entity.fromMap(temp.getItems());
-                entities.add(entity);
+                if(temp.getItem("type").equals("private")){
+                    RoomEntity entity = new RoomEntity();
+                    entity.fromMap(temp.getItems());
+                    entities.add(entity);
+                }
             }
             
             return entities;

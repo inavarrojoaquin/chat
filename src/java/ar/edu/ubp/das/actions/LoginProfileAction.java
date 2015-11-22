@@ -22,8 +22,8 @@ import javax.ws.rs.core.Response;
 public class LoginProfileAction extends Action{
 
     final long MILLSECS_PER_DAY = 24 * 60 * 60 * 1000; //Milliseconds per day
-    //final long MILLSECS_PER_10_DAYS = MILLSECS_PER_DAY * 10; //Milliseconds per 10 days
-    final long MILLSECS_PER_10_DAYS = 60000 * 2; //for test in 1 minute = 60000 milliseconds
+    final long MILLSECS_PER_10_DAYS = MILLSECS_PER_DAY * 10; //Milliseconds per 10 days
+    //final long MILLSECS_PER_10_DAYS = 60000 * 2; //for test in 1 minute = 60000 milliseconds
     
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -60,42 +60,42 @@ public class LoginProfileAction extends Action{
                     boolean flag = false;
 
                     //Enable block for implement send email
-                if(validateFromEmail == null){
-                    /**Get the last access for profile*/
-                    WebTarget lastLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/" + profile.getId());
-                    Invocation lastLoginInvocation = lastLoginTarget.request().buildGet();
-                    Response lastLoginResponse = lastLoginInvocation.invoke();
-                    
-                    System.out.println("Last Login status: "+lastLoginResponse.getStatus());
-                    
-                    if (lastLoginResponse.getStatus() == Response.Status.OK.getStatusCode()) {
-                        userLogin = lastLoginResponse.readEntity(new GenericType<UserLoginEntity>() {});
-
-                        Date date = new Date();
-                        long actualDate = date.getTime(); //actual date in milliseconds
-                        long initDate = userLogin.getDatetimeOfAccessStart().getTime(); //the last login date in milliseconds
-                        long dateDiff = actualDate - initDate; //difference of time in milliseconds
-                        System.out.println("DateDiff: "+dateDiff);  
-                        if (dateDiff > MILLSECS_PER_10_DAYS) {
-                            WebTarget profileAuthTarget = client.target("http://localhost:8080/chat/webresources/userslogins/auth/profile/" + profile.getLogin());
-                            Invocation profileAuthInvocation = profileAuthTarget.request().buildGet();
-                            Response profileAuthResponse = profileAuthInvocation.invoke();
-
-                            if (profileAuthResponse.getStatusInfo().getReasonPhrase().equals("OK")) {
-                                System.out.println("Send email for validate account");
-                                flag = true;
-                                request.setAttribute("response", "Your account has expired. See your email account and try it again...");
-                                this.gotoPage("/template/login.jsp", request, response);
-                            } else {
-                                flag = true;
-                                request.setAttribute("response", "Error in the send email. Try it egain...");
-                                this.gotoPage("/template/login.jsp", request, response);
-                            }
-                        }
-                    }
-                }
+//                    if(validateFromEmail == null){
+//                        /**Get the last access for profile*/
+//                        WebTarget lastLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/" + profile.getId());
+//                        Invocation lastLoginInvocation = lastLoginTarget.request().buildGet();
+//                        Response lastLoginResponse = lastLoginInvocation.invoke();
+//
+//                        System.out.println("Last Login status: "+lastLoginResponse.getStatus());
+//
+//                        if (lastLoginResponse.getStatus() == Response.Status.OK.getStatusCode()) {
+//                            userLogin = lastLoginResponse.readEntity(new GenericType<UserLoginEntity>() {});
+//
+//                            Date date = new Date();
+//                            long actualDate = date.getTime(); //actual date in milliseconds
+//                            long initDate = userLogin.getDatetimeOfAccessStart().getTime(); //the last login date in milliseconds
+//                            long dateDiff = actualDate - initDate; //difference of time in milliseconds
+//                            
+//                            if (dateDiff > MILLSECS_PER_10_DAYS) {
+//                                WebTarget profileAuthTarget = client.target("http://localhost:8080/chat/webresources/userslogins/auth/profile/" + profile.getLogin());
+//                                Invocation profileAuthInvocation = profileAuthTarget.request().buildGet();
+//                                Response profileAuthResponse = profileAuthInvocation.invoke();
+//
+//                                if (profileAuthResponse.getStatusInfo().getReasonPhrase().equals("OK")) {
+//                                    System.out.println("Send email for validate account");
+//                                    flag = true;
+//                                    request.setAttribute("response", "Your account has expired. See your email account and try it again...");
+//                                    this.gotoPage("/template/login.jsp", request, response);
+//                                } else {
+//                                    flag = true;
+//                                    request.setAttribute("response", "Error in the send email. Try it egain...");
+//                                    this.gotoPage("/template/login.jsp", request, response);
+//                                }
+//                            }
+//                        }
+//                    }
                     if (!flag) {
-                        /** Create new access for profile */
+                        /** Create new access for profile*/
                         WebTarget userLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins");
                         Invocation userLoginInvocation = userLoginTarget.request().buildPost(Entity.json(userLogin));
                         Response userLoginResponse = userLoginInvocation.invoke();
