@@ -22,6 +22,7 @@ public class DeletePrivateRoomAction extends Action{
         String roomId = (String) this.getForm().getItem("roomId");
        
         Client client = ClientBuilder.newClient();
+        /**Delete private room id*/
         WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/delete/" + roomId);        
         Invocation roomInvocation = roomTarget.request().buildDelete();
         Response roomResponse = roomInvocation.invoke();

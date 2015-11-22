@@ -14,6 +14,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -111,10 +112,10 @@ public class RoomResource {
         }
     }
     
-    @GET
-    @Path("{id}")
+    @POST
+    @Path("id")
     @Produces("application/json")
-    public Response findById(@PathParam("id") Integer id) {
+    public Response findById(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("Room");
             List<DynaActionForm> resultSet;
@@ -137,10 +138,10 @@ public class RoomResource {
         }
     }
     
-    @GET
-    @Path("owner/{owner}")
+    @POST
+    @Path("owner/id")
     @Produces("application/json")
-    public List<RoomEntity> findByOwner(@PathParam("owner") Integer owner) {
+    public List<RoomEntity> findByOwner(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("Room");
             List<RoomEntity> entities = new LinkedList<>();
@@ -148,7 +149,7 @@ public class RoomResource {
             
             DynaActionForm form = new DynaActionForm();
             form.setItem("selector", "byOwner");
-            form.setItem("owner", owner);
+            form.setItem("owner", id);
             
             resultSet = dao.select(form);
             

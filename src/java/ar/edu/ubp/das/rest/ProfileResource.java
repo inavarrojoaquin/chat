@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -40,11 +41,6 @@ public class ProfileResource {
     public ProfileResource() {
     }
 
-    /**
-     * PUT method for updating or creating an instance of ProfileResource
-     * @param entity representation for the resource
-     * @return an HTTP response with content of the updated or created resource.
-     */
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -91,15 +87,11 @@ public class ProfileResource {
         }
     }
     
-    /**
-     * @param id 
-     * @return an instance that match with @param
-     */
-    
-   @GET
-   @Path("id/{id}")
+   /**no usado*/ 
+   @POST
+   @Path("find/id")
    @Produces("application/json")
-   public Response findById(@PathParam("id") Integer id ){
+   public Response findById(@FormParam("id") Integer id ){
         try {
             Dao dao;
             List<DynaActionForm> resultSet;
@@ -125,15 +117,10 @@ public class ProfileResource {
         }
    }
    
-   /**
-     * @param login 
-     * @return an instance that match with @param
-     */
-    
-   @GET
-   @Path("login/{login}")
+   @POST
+   @Path("find/login")
    @Produces("application/json")
-   public Response findByLogin(@PathParam("login") String login ){
+   public Response findByLogin(@FormParam("login") String login ){
         try {
             Dao dao;
             List<DynaActionForm> resultSet;
@@ -159,10 +146,10 @@ public class ProfileResource {
         }
     }
    
-    @GET
-    @Path("room/{room}/actives")
+    @POST
+    @Path("room/id/actives")
     @Produces("application/json")
-    public List<ProfileEntity> findActivesByRoom(@PathParam("room") Integer room) {
+    public List<ProfileEntity> findActivesByRoom(@FormParam("id") Integer id) {
         try {
             Dao dao;
             DynaActionForm form;
@@ -172,7 +159,7 @@ public class ProfileResource {
             dao = DaoFactory.getDao("Profile");
             form = new DynaActionForm();
             form.setItem("selector", "byRoom");
-            form.setItem("room", room);
+            form.setItem("room", id);
             resultSet = dao.select(form);
             
             for(DynaActionForm temp : resultSet){

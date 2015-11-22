@@ -1,15 +1,12 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -25,8 +22,10 @@ public class DeleteMessageAction extends Action{
         String messageId = (String) this.getForm().getItem("id");
        
         Client client = ClientBuilder.newClient();
+        
+        /**Delete message id*/
         WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/delete/" + messageId);        
-        Invocation messageInvocation = messageTarget.request().buildGet();
+        Invocation messageInvocation = messageTarget.request().buildDelete();
         Response messageResponse = messageInvocation.invoke();
         
         if(messageResponse.getStatusInfo().getReasonPhrase().equals("OK")){

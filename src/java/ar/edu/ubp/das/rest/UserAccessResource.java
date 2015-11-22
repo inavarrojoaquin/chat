@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -62,7 +63,7 @@ public class UserAccessResource {
     }
     
     @PUT
-    @Path("{id}/finish")
+    @Path("id/terminate")
     @Consumes("application/json")
     @Produces("application/json")
     public Response finishSession(UserAccessEntity entity){
@@ -82,10 +83,10 @@ public class UserAccessResource {
         }
     }
     
-    @GET
-    @Path("{id}")
+    @POST
+    @Path("find/id")
     @Produces("application/json")
-    public Response findById(@PathParam("id") Integer id) {
+    public Response findById(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("UserAccess");
             DynaActionForm form = new DynaActionForm();
@@ -108,17 +109,17 @@ public class UserAccessResource {
         }
     }
     
-    @GET
-    @Path("room/{room}/actives")
+    @POST
+    @Path("room/id/actives")
     @Produces("application/json")
-    public List<UserAccessEntity> findActivesByRoom(@PathParam("room") Integer room) {
+    public List<UserAccessEntity> findActivesByRoom(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("UserAccess");
             List<UserAccessEntity> entities = new LinkedList<>();
             DynaActionForm form = new DynaActionForm();
             
             form.setItem("selector", "byRoom");
-            form.setItem("room", room);
+            form.setItem("room", id);
             List<DynaActionForm> select = dao.select(form);
             
             for(DynaActionForm temp : select){         

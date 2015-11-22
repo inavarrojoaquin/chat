@@ -12,6 +12,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -32,8 +33,10 @@ public class RoomAction extends Action{
         Client client = ClientBuilder.newClient();
         
         /**Get policy for roomId*/
-        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/" + roomId);        
-        Invocation policyInvocation = policyTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", roomId);
+        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id");        
+        Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(form));
         Response policyResponse = policyInvocation.invoke();
         
         List<RoomAccessPolicyEntity> policyList = policyResponse.readEntity(new GenericType<List<RoomAccessPolicyEntity>>(){});
@@ -64,8 +67,8 @@ public class RoomAction extends Action{
             }
 
             /**Get room*/
-            WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/" + roomId);        
-            Invocation roomInvocation = roomTarget.request().buildGet();
+            WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/id");        
+            Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
             Response roomResponse = roomInvocation.invoke();
 
             RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});

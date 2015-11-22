@@ -15,9 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -101,10 +101,10 @@ public class InvitationResource {
         }
     }
     
-    @GET
-    @Path("{id}")
+    @POST
+    @Path("find/id")
     @Produces("application/json")
-    public Response findById(@PathParam("id") Integer id) {
+    public Response findById(@FormParam("id") Integer id) {
         try {
             Dao dao;
             DynaActionForm form;
@@ -130,10 +130,11 @@ public class InvitationResource {
         }
     }
     
-    @GET
-    @Path("sender/{sender}")
+    /*No usado*/
+    @POST
+    @Path("sender/id")
     @Produces("application/json")
-    public List<InvitationEntity> findInvitationBySender(@PathParam("sender") Integer sender) {
+    public List<InvitationEntity> findInvitationBySender(@FormParam("id") Integer id) {
         try {
             Dao dao;
             DynaActionForm form;
@@ -143,7 +144,7 @@ public class InvitationResource {
             dao = DaoFactory.getDao("Invitation");
             form = new DynaActionForm();
             form.setItem("selector", "bySender");
-            form.setItem("sender", sender);
+            form.setItem("sender", id);
             resultSet = dao.select(form);
             
             for(DynaActionForm temp : resultSet ){
@@ -159,10 +160,10 @@ public class InvitationResource {
         }
     }
     
-    @GET
-    @Path("receiver/{receiver}")
+    @POST
+    @Path("receiver/id")
     @Produces("application/json")
-    public List<DynaActionForm> findInvitationByReceiver(@PathParam("receiver") Integer receiver) {
+    public List<DynaActionForm> findInvitationByReceiver(@FormParam("id") Integer id) {
         String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
         String DB_USER = "desarrollador";
@@ -173,7 +174,7 @@ public class InvitationResource {
             Class.forName( DB_DRIVER ) ;
             Connection conn = DriverManager.getConnection( DB_CONNECTION, DB_USER, DB_PASSWORD ) ;             
             CallableStatement cs = conn.prepareCall( "{call proc_SelectInvitationByReceiver(?)}" ) ;        
-            cs.setInt( "receiver", receiver ) ;
+            cs.setInt( "receiver", id ) ;
             
             ResultSet rs = cs.executeQuery() ;
             while( rs.next() ){
@@ -199,10 +200,10 @@ public class InvitationResource {
         }
     }
     
-    @GET
-    @Path("receiver/{receiver}/invitationId/{invitationId}")
+    @POST
+    @Path("receiver/id/invitationId/id")
     @Produces("application/json")
-    public List<DynaActionForm> findLastInvitationsById(@PathParam("receiver") Integer receiver, @PathParam("invitationId") Integer invitationId ) {
+    public List<DynaActionForm> findLastInvitationsById(@FormParam("receiver") Integer receiver, @FormParam("invitationId") Integer invitationId ) {
         String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
         String DB_USER = "desarrollador";

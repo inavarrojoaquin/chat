@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -60,10 +61,11 @@ public class RoomAccessPolicyResource {
         }
     }
     
-    @GET
-    @Path("{id}")
+    /**no usado*/
+    @POST
+    @Path("find/id")
     @Produces("application/json")
-    public Response findRoomAccessPolicyById(@PathParam("id") Integer id) {
+    public Response findRoomAccessPolicyById(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("RoomAccessPolicy");
             RoomAccessPolicyEntity entity = new RoomAccessPolicyEntity();
@@ -111,10 +113,10 @@ public class RoomAccessPolicyResource {
         }
     }
     
-    @GET
-    @Path("room/{room}")
+    @POST
+    @Path("room/id")
     @Produces("application/json")
-    public List<RoomAccessPolicyEntity> findRoomAccessPolicyByRoom(@PathParam("room") Integer room) {
+    public List<RoomAccessPolicyEntity> findRoomAccessPolicyByRoom(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("RoomAccessPolicy");
             DynaActionForm form = new DynaActionForm();
@@ -122,7 +124,7 @@ public class RoomAccessPolicyResource {
             List<RoomAccessPolicyEntity> entities = new LinkedList<>();
             
             form.setItem("selector", "byRoom");
-            form.setItem("room", room);
+            form.setItem("room", id);
             resultSet = dao.select(form);
             
             for(DynaActionForm temp : resultSet ){
@@ -138,10 +140,10 @@ public class RoomAccessPolicyResource {
         }
     }
     
-    @GET
-    @Path("room/{room}/profileId/{id}")
+    @POST
+    @Path("room/id/profileId/id")
     @Produces("application/json")
-    public Response findAccessPolicyByRoomAndProfile(@PathParam("room") Integer room, @PathParam("id") Integer id) {
+    public Response findAccessPolicyByRoomAndProfile(@FormParam("room") Integer room, @FormParam("profile") Integer profile) {
         try {
             Dao dao = DaoFactory.getDao("RoomAccessPolicy");
             DynaActionForm form = new DynaActionForm();
@@ -149,7 +151,7 @@ public class RoomAccessPolicyResource {
             
             form.setItem("selector", "byRoomAndProfile");
             form.setItem("room", room);
-            form.setItem("profile", id);
+            form.setItem("profile", profile);
             resultSet = dao.select(form);
             
             if(resultSet.size() == 1){

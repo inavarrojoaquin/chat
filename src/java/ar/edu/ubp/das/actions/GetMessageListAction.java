@@ -1,20 +1,18 @@
 package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.MessageEntity;
-import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.UserAccessEntity;
-import ar.edu.ubp.das.entities.UserLoginEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -35,8 +33,10 @@ public class GetMessageListAction extends Action{
         
         Client client = ClientBuilder.newClient();
         
-        WebTarget userAccesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/" + userAccessId);        
-        Invocation userAccesInvocation = userAccesTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", userAccessId);
+        WebTarget userAccesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/id");        
+        Invocation userAccesInvocation = userAccesTarget.request().buildPost(Entity.form(form));
         Response userAccesResponse = userAccesInvocation.invoke();
         UserAccessEntity userAcces = new UserAccessEntity();
         
@@ -44,9 +44,12 @@ public class GetMessageListAction extends Action{
             userAcces = userAccesResponse.readEntity(new GenericType<UserAccessEntity>(){});
         }
         
-        WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/room/" + roomId);        
-        Invocation messageInvocation = messageTarget.request().buildGet();
+        Form form1 = new Form();
+        form1.param("id", roomId);
+        WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/room/id");        
+        Invocation messageInvocation = messageTarget.request().buildPost(Entity.form(form1));
         Response messageResponse = messageInvocation.invoke();
+        
         List<MessageEntity> messageList = messageResponse.readEntity(new GenericType<List<MessageEntity>>(){});
         List<MessageEntity> finalMessageList = new LinkedList<>();
         

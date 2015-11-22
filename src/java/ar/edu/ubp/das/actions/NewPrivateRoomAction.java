@@ -15,6 +15,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -57,8 +58,10 @@ public class NewPrivateRoomAction extends Action{
         userAccess = res.readEntity(new GenericType<UserAccessEntity>(){});
         
         /**Get invited profile*/
-        WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/login/" + inviteEmail);        
-        Invocation profileInvocation = profileTarget.request().buildGet();
+        Form form = new Form();
+        form.param("login", inviteEmail);
+        WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/login");        
+        Invocation profileInvocation = profileTarget.request().buildPost(Entity.form(form));
         Response profileResponse = profileInvocation.invoke();
         
         ProfileEntity invitedProfile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});

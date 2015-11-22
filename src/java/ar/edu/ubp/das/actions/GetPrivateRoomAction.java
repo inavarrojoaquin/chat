@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -25,8 +27,10 @@ public class GetPrivateRoomAction extends Action{
         String owner = (String) this.getForm().getItem("profileId");
         
         Client client = ClientBuilder.newClient();
-        WebTarget privateRoomsTarget = client.target("http://localhost:8080/chat/webresources/rooms/owner/" + owner);        
-        Invocation privateRoomsInvocation = privateRoomsTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", owner);
+        WebTarget privateRoomsTarget = client.target("http://localhost:8080/chat/webresources/rooms/owner/id");        
+        Invocation privateRoomsInvocation = privateRoomsTarget.request().buildPost(Entity.form(form));
         Response privateRoomsResponse = privateRoomsInvocation.invoke();
         List<RoomEntity> privateRoomsList = privateRoomsResponse.readEntity(new GenericType<List<RoomEntity>>(){});
         

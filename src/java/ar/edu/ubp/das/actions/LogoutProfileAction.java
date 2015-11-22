@@ -11,6 +11,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -27,19 +28,21 @@ public class LogoutProfileAction extends Action{
         HttpSession session = request.getSession();
         
         if(session.getAttribute("sessionprofile") != null){
-            
             ProfileEntity profile = (ProfileEntity) session.getAttribute("sessionprofile");
 
             Client client = ClientBuilder.newClient();
 
-            WebTarget userLoginTarget1 = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/" + profile.getId());        
-            Invocation userLoginInvocation1 = userLoginTarget1.request().buildGet();
+            Form form = new Form();
+            form.param("id", Integer.toString(profile.getId()));
+            /**Get lastlogin profile*/
+            WebTarget userLoginTarget1 = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/id");        
+            Invocation userLoginInvocation1 = userLoginTarget1.request().buildPost(Entity.form(form));
             Response userLoginResponse1 = userLoginInvocation1.invoke();
             
             if(userLoginResponse1.getStatusInfo().getReasonPhrase().equals("OK")){
-                System.out.println("GetLastUserLogin:OK");
                 UserLoginEntity userLogin = userLoginResponse1.readEntity(new GenericType<UserLoginEntity>(){});
-                WebTarget userLoginTarget2 = client.target("http://localhost:8080/chat/webresources/userslogins/" + userLogin.getId() + "/finish");        
+                /**User login terminate session*/
+                WebTarget userLoginTarget2 = client.target("http://localhost:8080/chat/webresources/userslogins/id/terminate");        
                 Invocation userLoginInvocation2 = userLoginTarget2.request().buildPut(Entity.json(userLogin));
                 Response userLoginResponse2 = userLoginInvocation2.invoke();
 

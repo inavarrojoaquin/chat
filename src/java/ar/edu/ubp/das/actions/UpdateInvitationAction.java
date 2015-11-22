@@ -1,6 +1,5 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import java.util.List;
@@ -11,6 +10,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -32,15 +32,19 @@ public class UpdateInvitationAction extends Action{
         Client client = ClientBuilder.newClient();
         /*No invitations in this moment*/
         if(invitationId == null){
-            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/receiver/" + profileId);        
-            Invocation invitationInvocation = invitationTarget.request().buildGet();
+            Form form = new Form();
+            form.param("id", profileId);
+            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/receiver/id");        
+            Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
             Response invitationResponse = invitationInvocation.invoke();
             
             invitationsList = invitationResponse.readEntity(new GenericType<List<DynaActionForm>>(){});
             
         }else{
-            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/receiver/" + profileId + "/invitationId/" + invitationId);        
-            Invocation invitationInvocation = invitationTarget.request().buildGet();
+            Form form1 = new Form();
+            form1.param("receiver", profileId).param("invitationId", invitationId);
+            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/receiver/id/invitationId/id");        
+            Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form1));
             Response invitationResponse = invitationInvocation.invoke();
             
             invitationsList = invitationResponse.readEntity(new GenericType<List<DynaActionForm>>(){});

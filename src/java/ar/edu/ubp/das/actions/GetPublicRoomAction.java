@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -38,8 +40,10 @@ public class GetPublicRoomAction extends Action{
         
         if(publicRoomsList != null){
             for(RoomEntity room : publicRoomsList) {
-                WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess/room/" + room.getId() + "/actives");        
-                Invocation userAccessInvocation = userAccessTarget.request().buildGet();
+                Form form = new Form();
+                form.param("id", room.getId().toString());
+                WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess/room/id/actives");        
+                Invocation userAccessInvocation = userAccessTarget.request().buildPost(Entity.form(form));
                 Response userAccessResponse = userAccessInvocation.invoke();
                 
                 List<UserAccessEntity> userAccessList = userAccessResponse.readEntity(new GenericType<List<UserAccessEntity>>(){});

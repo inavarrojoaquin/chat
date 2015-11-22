@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -27,8 +29,11 @@ public class GetParticipantListAction extends Action{
         String userAccessId = (String) this.getForm().getItem("userAccessId");
         
         Client client = ClientBuilder.newClient();
-        WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/profiles/room/" + roomId + "/actives");        
-        Invocation usersActivesInvocation = usersActivesTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", roomId);
+        /**Get user actives in room*/
+        WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/profiles/room/id/actives");        
+        Invocation usersActivesInvocation = usersActivesTarget.request().buildPost(Entity.form(form));
         Response usersActivesResponse = usersActivesInvocation.invoke();
         
         List<ProfileEntity> usersActivesList = usersActivesResponse.readEntity(new GenericType<List<ProfileEntity>>(){});       

@@ -11,6 +11,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -28,15 +29,18 @@ public class LeaveGroupAction extends Action{
         String userAccessId =  (String) this.getForm().getItem("userAccessId");
         
         Client client = ClientBuilder.newClient();
-        
-        WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/" + userAccessId);        
-        Invocation usersActivesInvocation = usersActivesTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", userAccessId);
+        /**Get user acces*/
+        WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/id");        
+        Invocation usersActivesInvocation = usersActivesTarget.request().buildPost(Entity.form(form));
         Response usersActivesResponse = usersActivesInvocation.invoke();
         
         if(usersActivesResponse.getStatusInfo().getReasonPhrase().equals("OK")){
             UserAccessEntity userAccessEntity = usersActivesResponse.readEntity(new GenericType<UserAccessEntity>(){});
             
-            WebTarget usersActivesTarget1 = client.target("http://localhost:8080/chat/webresources/useraccess/" + userAccessId + "/finish");        
+            /**User acess terminate session*/
+            WebTarget usersActivesTarget1 = client.target("http://localhost:8080/chat/webresources/useraccess/id/terminate");        
             Invocation usersActivesInvocation1 = usersActivesTarget1.request().buildPut(Entity.json(userAccessEntity));
             Response usersActivesResponse1 = usersActivesInvocation1.invoke();
 

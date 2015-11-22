@@ -10,6 +10,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -31,8 +32,11 @@ public class UpdateMessageAction extends Action{
         
         Client client = ClientBuilder.newClient();
         
-        WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/room/" + roomId + "/id/" + messageId + "/profileId/" + profileId);
-        Invocation messageInvocation = messageTarget.request().buildGet();
+        Form form = new Form();
+        form.param("room", roomId).param("message", messageId).param("profileId", profileId);
+        /**Get messages by some parameters*/
+        WebTarget messageTarget = client.target("http://localhost:8080/chat/webresources/messages/room/id/message/id/profileId/id");
+        Invocation messageInvocation = messageTarget.request().buildPost(Entity.form(form));
         Response messageResponse = messageInvocation.invoke();
         
         if(messageResponse.getStatusInfo().getReasonPhrase().equals("OK")){

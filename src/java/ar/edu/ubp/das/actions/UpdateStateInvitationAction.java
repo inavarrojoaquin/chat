@@ -2,8 +2,6 @@ package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.InvitationEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import ar.edu.ubp.das.mvc.actions.DynaActionForm;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -11,6 +9,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
@@ -28,8 +27,11 @@ public class UpdateStateInvitationAction extends Action{
         String newState = (String) this.getForm().getItem("newState");
         
         Client client = ClientBuilder.newClient();
-        WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/" + invitationId);        
-        Invocation invitationInvocation = invitationTarget.request().buildGet();
+        Form form = new Form();
+        form.param("id", invitationId);
+        /**Get invitation id*/
+        WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/find/id");        
+        Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
         Response invitationResponse = invitationInvocation.invoke();
         
         InvitationEntity invitationEntity = invitationResponse.readEntity(new GenericType<InvitationEntity>(){});
