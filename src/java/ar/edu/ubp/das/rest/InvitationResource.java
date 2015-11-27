@@ -17,11 +17,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -161,6 +163,66 @@ public class InvitationResource {
     }
     
     @POST
+    @Path("invite/participant/to/room")
+    @Produces("application/json")
+    public Response inviteParticipantToRoom(@FormParam("room") Integer room, @FormParam("sender") Integer sender, @FormParam("login") String login){
+        try {
+            Dao dao = DaoFactory.getDao("Invitation");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("selector", "inviteParticipant");
+            form.setItem("room", room);
+            form.setItem("sender", sender);
+            form.setItem("login", login);
+            dao.insert(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(UserLoginResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    @DELETE
+    @Path("delete/profile/{id}")
+    @Produces("application/json")
+    public Response deleteInvitation(@PathParam("id") Integer id){
+        try {
+            Dao dao = DaoFactory.getDao("Invitation");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("selector", "byProfile");
+            form.setItem("profile", id);
+            dao.delete(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    @DELETE
+    @Path("delete/profile/{id}/room/{id}")
+    @Produces("application/json")
+    public Response deleteInvitationByProfileAndRoom(@PathParam("profile") Integer profile, @PathParam("room") Integer room){
+        try {
+            Dao dao = DaoFactory.getDao("Invitation");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("selector", "byProfileAndRoom");
+            form.setItem("profile", profile);
+            form.setItem("room", room);
+            dao.delete(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    @POST
     @Path("receiver/id")
     @Produces("application/json")
     public List<DynaActionForm> findInvitationByReceiver(@FormParam("id") Integer id) {
@@ -195,47 +257,6 @@ public class InvitationResource {
 
             return dynaFormList;
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
-    @POST
-    @Path("receiver/id/invitationId/id")
-    @Produces("application/json")
-    public List<DynaActionForm> findLastInvitationsById(@FormParam("receiver") Integer receiver, @FormParam("invitationId") Integer invitationId ) {
-        String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-        String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
-        String DB_USER = "desarrollador";
-        String DB_PASSWORD = "intel123!";
-        try {
-            List<DynaActionForm> dynaFormList = new LinkedList<>();
-            
-            Class.forName( DB_DRIVER ) ;
-            Connection conn = DriverManager.getConnection( DB_CONNECTION, DB_USER, DB_PASSWORD ) ;             
-            CallableStatement cs = conn.prepareCall( "{call proc_SelectLastInvitations(?,?)}" ) ;        
-            cs.setInt( "receiver", receiver ) ;
-            cs.setInt( "invitationId", invitationId ) ;
-            
-            ResultSet rs = cs.executeQuery() ;
-            
-            while( rs.next() ){
-                DynaActionForm f = new DynaActionForm();
-                f.setItem("id", rs.getInt("id"));
-                f.setItem("room", rs.getInt("room"));
-                f.setItem("sender", rs.getInt("sender"));
-                f.setItem("receiver", rs.getInt("receiver"));
-                f.setItem("state", rs.getString("state"));
-                f.setItem("roomName", rs.getString("roomName"));
-                f.setItem("senderName", rs.getString("senderName")); 
-                dynaFormList.add(f);
-            }
-            rs.close() ;
-            cs.close() ;
-            conn.close() ;
-
-            return dynaFormList;
-        } catch (Exception ex) {
             Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }

@@ -4,6 +4,11 @@ import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import ar.edu.ubp.das.mvc.daos.Dao;
 import ar.edu.ubp.das.mvc.daos.DaoFactory;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -83,35 +88,6 @@ public class RoomResource {
         }
     }
     
-    @GET
-    @Path("type/public")
-    @Produces("application/json")
-    public List<RoomEntity> findPublics() {
-        try {
-            Dao dao = DaoFactory.getDao("Room");
-            List<RoomEntity> entities = new LinkedList<>();
-            List<DynaActionForm> resultSet;
-            
-            DynaActionForm form = new DynaActionForm();
-            form.setItem("selector", "findAll");
-            
-            resultSet = dao.select(form);
-            
-            for(DynaActionForm temp : resultSet){
-                if(temp.getItem("type").equals("public")){
-                    RoomEntity room = new RoomEntity();
-                    room.fromMap(temp.getItems());
-                    entities.add(room);
-                }
-            }
-            
-            return entities;
-        } catch (Exception ex) {
-            Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-    }
-    
     @POST
     @Path("id")
     @Produces("application/json")
@@ -138,6 +114,7 @@ public class RoomResource {
         }
     }
     
+    /*not used*/
     @POST
     @Path("owner/id")
     @Produces("application/json")
@@ -166,6 +143,74 @@ public class RoomResource {
             Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+    
+    @POST
+    @Path("public/participant/profile")
+    @Produces("application/json")
+    public List<RoomEntity> findByProfileInPublic(@FormParam("id") Integer id) {
+        try {
+            Dao dao = DaoFactory.getDao("Room");
+            List<RoomEntity> entities = new LinkedList<>();
+            List<DynaActionForm> resultSet;
+            
+            DynaActionForm form = new DynaActionForm();
+            form.setItem("selector", "byProfile");
+            form.setItem("profile", id);
+            
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet){
+                RoomEntity entity = new RoomEntity();
+                entity.fromMap(temp.getItems());
+                entities.add(entity);
+            }
+            
+            return entities;
+        } catch (Exception ex) {
+            Logger.getLogger(RoomResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    @GET
+    @Path("type/public")
+    @Produces("application/json")
+    public List<DynaActionForm> findPublicsWithUserCant() {
+        
+        String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+        String DB_CONNECTION = "jdbc:sqlserver://FEBO-PC\\MSSQLSERVER2012;databaseName=chat";
+        String DB_USER = "desarrollador";
+        String DB_PASSWORD = "intel123!";
+        try {
+            List<DynaActionForm> dynaFormList = new LinkedList<>();
+            
+            Class.forName( DB_DRIVER ) ;
+            Connection conn = DriverManager.getConnection( DB_CONNECTION, DB_USER, DB_PASSWORD ) ;             
+            CallableStatement cs = conn.prepareCall( "{call proc_SelectRooms()}" ) ;        
+            
+            ResultSet rs = cs.executeQuery() ;
+            while( rs.next() ){
+                DynaActionForm f = new DynaActionForm();
+                f.setItem("id", rs.getInt("id"));
+                f.setItem("name", rs.getString("name"));
+                f.setItem("type", rs.getString("type"));
+                f.setItem("owner", rs.getInt("owner"));
+                f.setItem("cant_user", rs.getInt("cant_user"));
+                
+                dynaFormList.add(f);
+            }
+
+            rs.close() ;
+            cs.close() ;
+            conn.close() ;
+
+            return dynaFormList;
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(InvitationResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
     }
     
     @DELETE

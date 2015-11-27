@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -56,7 +57,7 @@ public class RoomAccessPolicyResource {
             
             return Response.ok(entity).build();
         } catch (Exception ex) {
-            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.serverError().build();
         }
     }
@@ -83,7 +84,7 @@ public class RoomAccessPolicyResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
         } catch (Exception ex) {
-            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.serverError().build();
         }
     }
@@ -108,7 +109,7 @@ public class RoomAccessPolicyResource {
             
             return entities;
         } catch (Exception ex) {
-            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
@@ -135,13 +136,13 @@ public class RoomAccessPolicyResource {
             
             return entities;
         } catch (Exception ex) {
-            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
     }
     
     @POST
-    @Path("room/id/profileId/id")
+    @Path("room/id/profile/id")
     @Produces("application/json")
     public Response findAccessPolicyByRoomAndProfile(@FormParam("room") Integer room, @FormParam("profile") Integer profile) {
         try {
@@ -160,8 +161,27 @@ public class RoomAccessPolicyResource {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
         } catch (Exception ex) {
-            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.serverError().build();
         }
     }
+    
+    @DELETE
+    @Path("delete/{id}")
+    @Produces("application/json")
+    public Response deleteRoomAccessPolicy(@PathParam("id") Integer id){
+        try {
+            Dao dao = DaoFactory.getDao("RoomAccessPolicy");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("profile", id);
+            dao.delete(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+
 }

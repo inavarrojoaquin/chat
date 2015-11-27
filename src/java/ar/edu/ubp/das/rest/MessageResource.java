@@ -149,16 +149,17 @@ public class MessageResource {
     }
     
     @POST
-    @Path("room/id")
+    @Path("room/id/profile/id")
     @Produces("application/json")
-    public List<MessageEntity> findMessageByRoom(@FormParam("id") Integer id) {
+    public List<MessageEntity> findMessageByRoomAndProfile(@FormParam("room") Integer room, @FormParam("profile") Integer profile) {
         try {
             Dao dao = DaoFactory.getDao("Message");
             DynaActionForm form = new DynaActionForm();
             List<MessageEntity> entities = new LinkedList<>();
             
-            form.setItem("selector", "byRoom");
-            form.setItem("room",id);
+            form.setItem("selector", "byRoomAndProfile");
+            form.setItem("room", room);
+            form.setItem("profile", profile);
             List<DynaActionForm> select = dao.select(form);
             
             for(DynaActionForm temp : select){
@@ -174,19 +175,18 @@ public class MessageResource {
         }
     }
     
+    /*no usado*/
     @POST
-    @Path("room/id/message/id/profileId/id")
+    @Path("room/id")
     @Produces("application/json")
-    public List<MessageEntity> findLastMessagesByRoom(@FormParam("room") Integer room, @FormParam("message") Integer message, @FormParam("profileId") Integer profileId) {
+    public List<MessageEntity> findMessageByRoom(@FormParam("id") Integer id) {
         try {
             Dao dao = DaoFactory.getDao("Message");
             DynaActionForm form = new DynaActionForm();
             List<MessageEntity> entities = new LinkedList<>();
             
-            form.setItem("selector", "byLastMessage");
-            form.setItem("room",room);
-            form.setItem("id",message);
-            form.setItem("profileId", profileId);
+            form.setItem("selector", "byRoom");
+            form.setItem("room",id);
             List<DynaActionForm> select = dao.select(form);
             
             for(DynaActionForm temp : select){

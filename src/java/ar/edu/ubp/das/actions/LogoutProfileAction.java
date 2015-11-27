@@ -30,11 +30,22 @@ public class LogoutProfileAction extends Action{
         if(session.getAttribute("sessionprofile") != null){
             ProfileEntity profile = (ProfileEntity) session.getAttribute("sessionprofile");
 
+            String profileId = Integer.toString(profile.getId());
             Client client = ClientBuilder.newClient();
-
+            
+            /**Delete all policys for profileId*/
+            WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/delete/" + profileId);        
+            Invocation policyInvocation = policyTarget.request().buildDelete();
+            Response policyResponse = policyInvocation.invoke();
+            
+            /**Delete all invitations for profileId*/
+            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/delete/profile/" + profileId);        
+            Invocation invitationInvocation = invitationTarget.request().buildDelete();
+            Response invitationResponse = invitationInvocation.invoke();
+            
+            /**Get lastlogin profile*/
             Form form = new Form();
             form.param("id", Integer.toString(profile.getId()));
-            /**Get lastlogin profile*/
             WebTarget userLoginTarget1 = client.target("http://localhost:8080/chat/webresources/userslogins/lastlogin/profile/id");        
             Invocation userLoginInvocation1 = userLoginTarget1.request().buildPost(Entity.form(form));
             Response userLoginResponse1 = userLoginInvocation1.invoke();

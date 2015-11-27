@@ -1,10 +1,11 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.RoomAccessPolicyEntity;
+import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.entities.UserAccessEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -27,58 +28,81 @@ public class RoomAction extends Action{
         System.out.println("RoomAction:execute");
         
         String profileId = (String) this.getForm().getItem("profileId");
-        String profileType = (String) this.getForm().getItem("profileType");
         String roomId = (String) this.getForm().getItem("roomId");
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-Param: {0}", profileId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-Param: {0}", roomId);
         
         Client client = ClientBuilder.newClient();
         
-        /**Get policy for roomId*/
-        Form form = new Form();
-        form.param("id", roomId);
-        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id");        
-        Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(form));
+        /*Get profile by id*/
+        Form profileForm = new Form();
+        profileForm.param("id", profileId);
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a Profile");
+        
+        WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/id");        
+        Invocation profileInvocation = profileTarget.request().buildPost(Entity.form(profileForm));
+        Response profileResponse = profileInvocation.invoke();
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a Profile: {0}", profileResponse.getStatus());
+        
+        ProfileEntity profile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
+        
+        /**Get policy for roomId and profileId*/
+        Form policyForm = new Form();
+        policyForm.param("room", roomId);
+        policyForm.param("profile", profileId);
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a ROOMACCESSPOLICY");
+        
+        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id/profile/id");        
+        Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(policyForm));
         Response policyResponse = policyInvocation.invoke();
         
-        List<RoomAccessPolicyEntity> policyList = policyResponse.readEntity(new GenericType<List<RoomAccessPolicyEntity>>(){});
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a ROOMACCESSPOLICY: " + policyResponse.getStatus());
         
         boolean flag = false;
         
         /**Check if the user has been ejected for this room*/
-        if(!policyList.isEmpty()){
-            for (RoomAccessPolicyEntity policy : policyList) {
-                if(policy.getProfile() == Integer.parseInt(profileId)){
-                    flag = true;
-                    break;
-                }
-            }
+        if(policyResponse.getStatus() == 200){
+            flag = true;
         }
         if(!flag){
             UserAccessEntity userAccess = new UserAccessEntity();
             userAccess.setProfile(Integer.parseInt(profileId));
             userAccess.setRoom(Integer.parseInt(roomId));
 
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a USERACCESS");
             /**Create useraccess*/
             WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess");        
             Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.json(userAccess));
-            Response res = useraccessInvocation.invoke();
+            Response userAccessResponse = useraccessInvocation.invoke();
 
-            if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
-                userAccess = res.readEntity(new GenericType<UserAccessEntity>(){});
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a USERACCESS: " + userAccessResponse.getStatus());
+            
+            if(userAccessResponse.getStatus() == 200){
+                userAccess = userAccessResponse.readEntity(new GenericType<UserAccessEntity>(){});
+            
+                Form form = new Form();
+                form.param("id", roomId);
+
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a ROOM");
+                /**Get room*/
+                WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/id");        
+                Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
+                Response roomResponse = roomInvocation.invoke();
+
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a ROOM: " + roomResponse.getStatus());
+                
+                if(roomResponse.getStatus() == 200){
+                    RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+                
+                    this.getForm().setItem("profile", profile);
+                    this.getForm().setItem("room", roomEntity);
+                    this.getForm().setItem("userAccess", userAccess);
+                }
             }
-
-            /**Get room*/
-            WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/id");        
-            Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
-            Response roomResponse = roomInvocation.invoke();
-
-            RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
-
-            this.getForm().setItem("profileId", profileId);
-            this.getForm().setItem("profileType", profileType);
-            this.getForm().setItem("roomId", roomId);
-            this.getForm().setItem("roomName", roomEntity.getName());
-            this.getForm().setItem("roomType", roomEntity.getType());
-            this.getForm().setItem("userAccess", userAccess);
         }else{
             this.getForm().setItem("accessDenied", "true");
         }

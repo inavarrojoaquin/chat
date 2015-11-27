@@ -1,6 +1,8 @@
 package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.mvc.actions.Action;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -24,13 +26,21 @@ public class UpdateCheckAccessPolicyAction extends Action{
         String roomId = (String) this.getForm().getItem("roomId");
         String profileId = (String) this.getForm().getItem("profileId");
         
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateCheckAccessPolicyAction-Param: {0}", roomId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateCheckAccessPolicyAction-Param: {0}", profileId);
+        
         Client client = ClientBuilder.newClient();
         
         Form form = new Form();
         form.param("room", roomId).param("profile", profileId);
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "PRE llamado a POLICY");
+        
         WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id/profileId/id");
         Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(form));
         Response policyResponse = policyInvocation.invoke();
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "POS llamado a POLICY: " + policyResponse.getStatus());
         
         if(policyResponse.getStatusInfo().getReasonPhrase().equals("OK")){
             response.getWriter().println("ProfileEjected");

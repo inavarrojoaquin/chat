@@ -90,6 +90,11 @@ public class MSSQLUserAccessDao extends MSSQLDao{
             this.getStatement().setInt("room", (int) form.getItem("room"));
         }
         
+        else if(selector.equals("lastByProfile")){
+            this.setStatement("proc_SelectLastUserAccessByProfile(?)");
+            this.getStatement().setInt("profile", (int) form.getItem("profile"));
+        }
+        
         else {
             this.setStatement("proc_SelectUsersAccess()");
         }

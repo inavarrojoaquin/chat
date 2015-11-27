@@ -17,9 +17,9 @@
                     <th>Name</th>
                 </tr>
                 <c:forEach items="${participants}" var="participant" varStatus="loop">
-                    <tr>
+                    <tr data-name='participant'>
                         <td>${loop.index + 1}</td>
-                        <td>${participant.login}</td>
+                        <td><a href="#" data-login="${participant.login}" >${participant.login}</a></td>
                         <c:if test="${profileType.equals('ADMIN')}" >
                             <td><a href="#" data-delete="" data-profileid="${participant.id}" data-roomid="${roomId}" data-useraccessid="${userAccessId}"  >Eject user</a></td>
                         </c:if> 

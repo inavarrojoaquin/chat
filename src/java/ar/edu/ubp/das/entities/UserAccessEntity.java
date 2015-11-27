@@ -14,7 +14,7 @@ public class UserAccessEntity {
     private Integer id;
     private Integer room;
     private Integer profile;
-    private Date datetimeOfAccessStart;
+    private Date datetimeOfAccessStart;    
     private Date datetimeOfAccessEnd;
 
     public UserAccessEntity() {

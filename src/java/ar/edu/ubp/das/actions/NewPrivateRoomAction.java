@@ -1,13 +1,11 @@
 package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.InvitationEntity;
-import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.RoomEntity;
-import ar.edu.ubp.das.entities.UserAccessEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -33,10 +31,16 @@ public class NewPrivateRoomAction extends Action{
         String title = (String) this.getForm().getItem("title");
         String inviteEmail = (String) this.getForm().getItem("inviteEmail");
         
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-Param: {0}", profileId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-Param: {0}", title);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-Param: {0}", inviteEmail);
+        
         RoomEntity roomEntity = new RoomEntity();
         roomEntity.setOwner(Integer.parseInt(profileId));
         roomEntity.setName(title);
         roomEntity.setType("private");
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-PRE llamado a ROOM");
         
         /**Create private room*/
         Client client = ClientBuilder.newClient();
@@ -44,42 +48,44 @@ public class NewPrivateRoomAction extends Action{
         Invocation roomInvocation = roomTarget.request().buildPost(Entity.json(roomEntity));
         Response roomResponse = roomInvocation.invoke();
         
-        roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-POS llamado a ROOM: " + roomResponse.getStatus());
         
-        UserAccessEntity userAccess = new UserAccessEntity();
-        userAccess.setProfile(Integer.parseInt(profileId));
-        userAccess.setRoom(roomEntity.getId());
+        if(roomResponse.getStatus() == 200){
+            roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-PRE llamado a PROFILE");
+            
+            /**Get invited profile*/
+            Form form = new Form();
+            form.param("login", inviteEmail);
+            WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/login");        
+            Invocation profileInvocation = profileTarget.request().buildPost(Entity.form(form));
+            Response profileResponse = profileInvocation.invoke();
 
-        /**Create user access for private room*/
-        WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess");        
-        Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.json(userAccess));
-        Response res = useraccessInvocation.invoke();
-        
-        userAccess = res.readEntity(new GenericType<UserAccessEntity>(){});
-        
-        /**Get invited profile*/
-        Form form = new Form();
-        form.param("login", inviteEmail);
-        WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/login");        
-        Invocation profileInvocation = profileTarget.request().buildPost(Entity.form(form));
-        Response profileResponse = profileInvocation.invoke();
-        
-        ProfileEntity invitedProfile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
-        
-        /**Create invitation*/
-        InvitationEntity invitationEntity = new InvitationEntity();
-        invitationEntity.setRoom(roomEntity.getId());
-        invitationEntity.setSender(Integer.parseInt(profileId));
-        invitationEntity.setReceiver(invitedProfile.getId());
-        invitationEntity.setState("pending");
-        
-        WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations");        
-        Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.json(invitationEntity));
-        Response invitationResponse = invitationInvocation.invoke();
-        
-        invitationEntity = invitationResponse.readEntity(new GenericType<InvitationEntity>(){});
-        
-        response.getWriter().println(roomEntity.getId());
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-POS llamado a INVITED PROFILE: " + profileResponse.getStatus());
+            if(profileResponse.getStatus() == 200){
+                ProfileEntity invitedProfile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
+            
+                /**Create invitation*/
+                InvitationEntity invitationEntity = new InvitationEntity();
+                invitationEntity.setRoom(roomEntity.getId());
+                invitationEntity.setSender(Integer.parseInt(profileId));
+                invitationEntity.setReceiver(invitedProfile.getId());
+                invitationEntity.setState("pending");
+                
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-PRE llamado a INVITATION");
+
+                WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations");        
+                Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.json(invitationEntity));
+                Response invitationResponse = invitationInvocation.invoke();
+                
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-POS llamado a INVITATION: " + invitationResponse.getStatus());
+                if(invitationResponse.getStatus() == 200){
+                    System.out.println("Create private room and send invitation...");
+                    response.getWriter().println(roomEntity.getId());
+                }
+            }
+        }
     }
     
 }

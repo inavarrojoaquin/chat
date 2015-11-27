@@ -4,6 +4,8 @@ import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.UserLoginEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,42 +48,37 @@ public class LoginProfileAction extends Action{
             String login = (String) this.getForm().getItem("userName");
             String password = (String) this.getForm().getItem("password");
             
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Param: {0}", login);
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Param: {0}", password);
+            
             Client client = ClientBuilder.newClient();
-
-            /**Get profile*/
+            
+            /**If exist user insert user_login register in the database*/
             Form form = new Form();
             form.param("login", login);
-            WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/login");
+            form.param("password", password);
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-PRE llamado a PROFILE");
+            
+            WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles/find/login/password");
             Invocation profileInvocation = profileTarget.request().buildPost(Entity.form(form));
             Response profileResponse = profileInvocation.invoke();
-           
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-POS llamado a PROFILE: " + profileResponse.getStatus());
+            
             if(profileResponse.getStatusInfo().getReasonPhrase().equals("OK")){
                 ProfileEntity profile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
                 
-                if(password.equals(profile.getPassword())){
-                    UserLoginEntity userLogin = new UserLoginEntity();
-                    userLogin.setProfile(profile.getId());
+                System.out.println("UserLogin created.");
 
-                    /** Create new access for profile*/
-                    WebTarget userLoginTarget = client.target("http://localhost:8080/chat/webresources/userslogins");
-                    Invocation userLoginInvocation = userLoginTarget.request().buildPost(Entity.json(userLogin));
-                    Response userLoginResponse = userLoginInvocation.invoke();
+                session.setAttribute("sessionprofile", profile);
+                session.setMaxInactiveInterval(30 * 60);
 
-                    if (userLoginResponse.getStatusInfo().getReasonPhrase().equals("OK")) {
-                        System.out.println("UserLogin created.");
-
-                        session.setAttribute("sessionprofile", profile);
-                        session.setMaxInactiveInterval(30 * 60);
-                        
-                        this.getForm().setItem("profile", profile);
-                        this.gotoPage("/template/user/home.jsp", request, response);
-                    }
-                } else {
-                    request.setAttribute("response", "Password incorrect.");
-                    this.gotoPage("/template/login.jsp", request, response);
-                }
-             }else {
-                request.setAttribute("response", "User not found.");
+                this.getForm().setItem("profile", profile);
+                this.gotoPage("/template/user/home.jsp", request, response);
+            }
+            else {
+                request.setAttribute("response", "User not found or password incorrect...");
                 this.gotoPage("/template/login.jsp", request, response);
             }
         }

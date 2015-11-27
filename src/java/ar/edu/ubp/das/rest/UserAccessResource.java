@@ -110,6 +110,33 @@ public class UserAccessResource {
     }
     
     @POST
+    @Path("find/last/profile")
+    @Produces("application/json")
+    public Response findLastByProfile(@FormParam("id") Integer id) {
+        try {
+            Dao dao = DaoFactory.getDao("UserAccess");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("selector", "lastByProfile");
+            form.setItem("profile", id);
+            List<DynaActionForm> select = dao.select(form);
+            
+            if(select.size() == 1){
+                UserAccessEntity entity = new UserAccessEntity();
+                entity.fromMap(select.get(0).getItems());
+                return Response.ok(entity).build();
+            }
+            else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UserLoginResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    /*Not used*/
+    @POST
     @Path("room/id/actives")
     @Produces("application/json")
     public List<UserAccessEntity> findActivesByRoom(@FormParam("id") Integer id) {

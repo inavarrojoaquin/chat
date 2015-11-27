@@ -71,7 +71,10 @@ public class MSSQLRoomDao extends MSSQLDao{
             this.setStatement("proc_SelectRoomByOwner(?)");
             this.getStatement().setInt("owner", (Integer) form.getItem("owner"));
         }
-        
+        else if(selector.equals("byProfile")){
+            this.setStatement("proc_SelectParticipantRoomsByProfile(?)");
+            this.getStatement().setInt("profile", (Integer) form.getItem("profile"));
+        }
         else {
             this.setStatement("proc_SelectRooms()");
         }

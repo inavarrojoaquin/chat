@@ -87,16 +87,15 @@ public class MSSQLMessageDao extends MSSQLDao{
             this.getStatement().setInt("room", (int) form.getItem("room"));
         }
         
+        else if(selector.equals("byRoomAndProfile")){
+            this.setStatement("proc_SelectMessageByRoomAndProfile(?, ?)");
+            this.getStatement().setInt("room", (int) form.getItem("room"));
+            this.getStatement().setInt("profile", (int) form.getItem("profile"));
+        }
+                        
         else if(selector.equals("byOwner")){
             this.setStatement("proc_SelectMessageByOwner(?)");
             this.getStatement().setInt("owner", (int) form.getItem("owner"));
-        }
-        
-        else if(selector.equals("byLastMessage")){
-            this.setStatement("proc_SelectLastMessagesByRoom(?,?,?)");
-            this.getStatement().setInt("room", (int) form.getItem("room"));
-            this.getStatement().setInt("id", (int) form.getItem("id"));
-            this.getStatement().setInt("profileId", (int) form.getItem("profileId"));
         }
         
         else {

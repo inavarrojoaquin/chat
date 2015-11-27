@@ -29,3 +29,23 @@ DELETE [dbo].[Profile]
 GO
 DBCC CHECKIDENT ('[dbo].[Profile]', RESEED, 0);
 GO
+
+/**Add admin profile
+insert into Profile
+values('admin','admin','ADMIN')
+*/
+
+/**Insert some rooms
+insert into Room(name, type, owner)
+values ('deporte', 'public', 1)
+insert into Room(name, type, owner)
+values ('vacaciones', 'public', 1)
+insert into Room(name, type, owner)
+values ('ventas', 'public', 1)
+insert into Room(name, type, owner)
+values ('compras', 'public', 1)
+insert into Room(name, type, owner)
+values ('facultad', 'public', 1)
+insert into Room(name, type, owner)
+values ('juegos', 'public', 1)
+*/

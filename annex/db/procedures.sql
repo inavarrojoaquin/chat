@@ -80,6 +80,35 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SelectProfileByLoginAndPassword ')is not null
+	drop procedure proc_SelectProfileByLoginAndPassword
+go
+
+CREATE PROCEDURE proc_SelectProfileByLoginAndPassword
+ @login varchar(100),
+ @password varchar(100)
+AS
+BEGIN
+	select * from Profile p
+			where p.login = @login
+			and p.password = @password
+	 
+	declare @cant int = (select count(p.id) from Profile p
+						where p.login = @login
+						and p.password = @password)
+
+	if(@cant > 0)
+	begin
+		--si existe el usuario, inserto un access_login
+		declare @date datetime = getDate()
+		insert into User_login(profile, date_time_of_access_start, date_time_of_access_end)
+		select p.id, @date, null from Profile p
+		where p.login = @login
+		and p.password = @password
+	end	
+END
+GO
+
 if OBJECT_ID('proc_SelectParticipantsForRoom ')is not null
 	drop procedure proc_SelectParticipantsForRoom
 go
@@ -88,17 +117,17 @@ CREATE PROCEDURE proc_SelectParticipantsForRoom
  @room int
 AS
 BEGIN
-  
-	select p.*
-	from Profile p
-	join (select u.*
-		from User_access u, (select u.profile, max(u.datetime_of_access_start) max_date from User_access u
-						where u.room = @room
-						group by u.profile)t
-		where u.datetime_of_access_start = t.max_date
-		and u.datetime_of_access_end is null)t2
+    /*Selecciona los usuarios que accedieron a salas con end_date null*/
+	select p.* from Profile p
+	join (select u1.* from User_access u1
+		join (select u.profile, max(u.datetime_of_access_start) max_start from User_access u
+			where u.room = @room
+			group by u.profile)t
+		on u1.profile = t.profile
+		and u1.datetime_of_access_start = t.max_start
+		and u1.datetime_of_access_end is null)t2
 	on p.id = t2.profile
-	
+	and p.type = 'USER'
 END
 GO	
 
@@ -109,11 +138,47 @@ go
 CREATE PROCEDURE proc_SelectActivesUsersLogin
 AS
 BEGIN
-		select distinct p.* FROM Profile p
-		join (SELECT profile FROM User_login
-			where date_time_of_access_end is null)t
-		on p.id = t.profile
+		/*selecciona los usuarios logueados con date_end null*/
+		select p.* from Profile p 
+		join (select u.* from User_login u
+				join (select l.profile, max(l.date_time_of_access_start) max_start
+					from User_login	l
+					group by l.profile)t
+				on u.profile = t.profile
+				and u.date_time_of_access_start = t.max_start)t2
+		on p.id = t2.profile
 		where p.type = 'USER'
+		and t2.date_time_of_access_end is null
+END
+GO
+
+if OBJECT_ID('proc_SelectRejectedInvitationsByRoom ')is not null
+	drop procedure proc_SelectRejectedInvitationsByRoom
+go
+
+CREATE PROCEDURE proc_SelectRejectedInvitationsByRoom
+ @room int 
+AS
+BEGIN
+	/*Selecciona los usuarios que rechazaron la invitacion a un determinado chat privado y ademas borra las invitaciones*/
+	select p.* from Profile p
+		join (select * from Invitation i
+			where i.room = @room
+			and i.state = 'rejected')t
+		on p.id = t.receiver
+
+	declare @cant int = (select count(i.id) from Invitation i
+						where i.room = @room
+						and i.state = 'rejected')
+
+	if(@cant > 0)
+	begin
+		--delete invitations
+		delete from Invitation
+		where id in (select i.id from Invitation i
+					where i.room = @room
+					and i.state = 'rejected')
+	end
 END
 GO
 
@@ -186,8 +251,7 @@ CREATE PROCEDURE proc_SelectLastUserLogin
 AS
 BEGIN
 	select * from User_login
-	where profile = @profile
-	and date_time_of_access_start = (select max(date_time_of_access_start) 
+	where date_time_of_access_start = (select max(date_time_of_access_start) 
 									from User_login 
 									where profile = @profile)
 
@@ -313,6 +377,10 @@ BEGIN
 END
 GO
 
+
+/*
+Select all rooms with user_cant column
+**/
 if OBJECT_ID('proc_SelectRooms ')is not null
 	drop procedure proc_SelectRooms
 go
@@ -320,8 +388,42 @@ go
 CREATE PROCEDURE proc_SelectRooms
 AS
 BEGIN
-  
-	select * from Room
+	select *, (select count(u.id) cant_user
+			from User_access u
+			join (select profile, max(datetime_of_access_start) max_date_time
+				from User_access
+				where room = r.id
+				group by profile)t
+			on u.profile = t.profile
+			and u.datetime_of_access_start = t.max_date_time
+			and u.datetime_of_access_end is null
+			join Profile p
+			on p.id = u.profile
+			and p.type = 'USER') cant_user
+	from Room r
+	where r.type = 'public'
+END
+GO
+
+if OBJECT_ID('proc_SelectParticipantRoomsByProfile ')is not null
+	drop procedure proc_SelectParticipantRoomsByProfile
+go
+
+CREATE PROCEDURE proc_SelectParticipantRoomsByProfile
+ @profile int
+AS
+BEGIN
+    /*selecciona las salas en las que participa un usuario*/
+	select r.* from Room r
+	join (select ul.* from User_access ul
+		join (select u.room, max(u.datetime_of_access_start) max_start from User_access u
+			where u.profile = @profile
+			group by u.room)t
+		on ul.room = t.room
+		and ul.datetime_of_access_start = t.max_start)t2
+	on r.id = t2.room
+	and t2.datetime_of_access_end is null
+	and r.type = 'public'
 END
 GO
 
@@ -425,8 +527,28 @@ BEGIN
 	on u.profile = t.profile
 	and u.datetime_of_access_start = t.max_date_time
 	and u.datetime_of_access_end is null
+	join Profile p
+	on p.id = u.profile
+	and p.type = 'USER'
+
 END
 GO
+
+if OBJECT_ID('proc_SelectLastUserAccessByProfile ')is not null
+	drop procedure proc_SelectLastUserAccessByProfile
+go
+
+CREATE PROCEDURE proc_SelectLastUserAccessByProfile
+ @profile int
+AS
+BEGIN
+	select * from User_access u
+	where u.datetime_of_access_start = (select max(datetime_of_access_start) 
+									from User_access
+									where profile = @profile)
+END
+GO
+
 
 if OBJECT_ID('proc_SelectUsersAccess ')is not null
 	drop procedure proc_SelectUsersAccess
@@ -537,8 +659,6 @@ BEGIN
 END
 GO
 
-exec proc_SelectAccessPolicyByRoomAndProfile 3,8
-
 if OBJECT_ID('proc_SelectRoomsAccessPolicy ')is not null
 	drop procedure proc_SelectRoomsAccessPolicy
 go
@@ -550,6 +670,21 @@ BEGIN
 	select * from Room_access_policy
 END
 GO
+
+if OBJECT_ID('proc_DeleteRoomsAccessPolicyByProfile ')is not null
+	drop procedure proc_DeleteRoomsAccessPolicyByProfile
+go
+
+CREATE PROCEDURE proc_DeleteRoomsAccessPolicyByProfile
+ @profile int
+AS
+BEGIN
+  
+	delete Room_access_policy 
+	where profile = @profile
+END
+GO
+
 
 /****************************************************
 				TABLE Invitation
@@ -652,26 +787,6 @@ BEGIN
 END
 GO
 
-if OBJECT_ID('proc_SelectLastInvitations ')is not null
-	drop procedure proc_SelectLastInvitations
-go
-
-CREATE PROCEDURE proc_SelectLastInvitations
- @receiver int,
- @invitationId int
-AS
-BEGIN
-  
-	select i.*, r.name as roomName, p.login as senderName
-	from Invitation i
-	join Room r on r.id = i.room
-	join Profile p on p.id = i.sender
-	where receiver = @receiver
-	and i.id > @invitationId
-	
-END
-GO
-
 if OBJECT_ID('proc_SelectInvitations ')is not null
 	drop procedure proc_SelectInvitations
 go
@@ -683,6 +798,62 @@ BEGIN
 	select * from Invitation
 END
 GO
+
+if OBJECT_ID('proc_DeleteInvitationsByProfile ')is not null
+	drop procedure proc_DeleteInvitationsByProfile
+go
+
+CREATE PROCEDURE proc_DeleteInvitationsByProfile
+ @profile int
+AS
+BEGIN
+  
+	delete Invitation
+	where receiver = @profile
+END
+GO
+
+if OBJECT_ID('proc_DeleteRejectedInvitationsByProfileAndRoom ')is not null
+	drop procedure proc_DeleteRejectedInvitationsByProfileAndRoom
+go
+
+CREATE PROCEDURE proc_DeleteRejectedInvitationsByProfileAndRoom
+ @profile int,
+ @room int
+AS
+BEGIN
+  
+	delete Invitation
+	where receiver = @profile
+		and room = @room
+		and state = 'rejected'
+END
+GO
+
+if OBJECT_ID('proc_InviteParticipantToRoom ')is not null
+	drop procedure proc_InviteParticipantToRoom
+go
+
+CREATE PROCEDURE proc_InviteParticipantToRoom
+ @room int,
+ @sender int,
+ @login varchar(100)
+AS
+BEGIN
+  
+	if exists(select * from Profile p where p.login = @login)
+	 begin
+		insert into Invitation(room, sender, receiver, state)
+		select @room, @sender, p.id, 'pending'
+		from Profile p
+		where p.login = @login
+	 end
+END
+GO
+
+exec proc_InviteParticipantToRoom 1,3,'nico'
+
+
 
 /****************************************************
 				TABLE Message
@@ -770,6 +941,40 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SelectMessageByRoomAndProfile ')is not null
+	drop procedure proc_SelectMessageByRoomAndProfile
+go
+
+CREATE PROCEDURE proc_SelectMessageByRoomAndProfile
+ @room int,
+ @profile int
+AS
+BEGIN
+  
+	declare @type varchar(10) = (select p.type from Profile p where id = @profile)
+
+	if (@type = 'ADMIN')
+		begin
+			select * from Message m
+			where m.room = @room
+			and m.datetime_of_creation >= (select date_time_of_access_start from User_login --Last user login
+											where date_time_of_access_start = (select max(date_time_of_access_start) 
+																			from User_login 
+																			where profile = @profile))
+		end
+	else
+		begin
+			select * from Message m
+			where m.room = @room
+			and m.datetime_of_creation >= (select u.datetime_of_access_start from User_access u --Last user access
+										where u.datetime_of_access_start = (select max(datetime_of_access_start) 
+										from User_access
+										where profile = @profile))
+		
+		end
+END
+GO
+
 if OBJECT_ID('proc_SelectMessageByOwner ')is not null
 	drop procedure proc_SelectMessageByOwner
 go
@@ -783,34 +988,6 @@ BEGIN
 	where owner = @owner
 END
 GO
-
-if OBJECT_ID('proc_SelectLastMessagesByRoom ')is not null
-	drop procedure proc_SelectLastMessagesByRoom
-go
-
-CREATE PROCEDURE proc_SelectLastMessagesByRoom
- @room int,
- @id int,
- @profileId int
-AS
-BEGIN
-	if(@id = -1)
-	begin
-		select * 
-		from Message m, (select top 1 u.datetime_of_access_start from User_access u
-						where u.room = @room
-						and u.profile = @profileId
-						order by u.id DESC)t
-		where m.datetime_of_creation >= t.datetime_of_access_start 
-		and m.room = @room
-	end
-	else
-	begin
-		select * from Message
-		where room = @room
-		and id > @id
-	end
-END
 
 if OBJECT_ID('proc_SelectMessages ')is not null
 	drop procedure proc_SelectMessages

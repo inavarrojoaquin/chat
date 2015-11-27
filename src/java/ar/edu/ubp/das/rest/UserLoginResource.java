@@ -78,7 +78,7 @@ public class UserLoginResource {
         }        
     }
     
-    /*no usado*/
+    /*not used*/
     @POST
     @Path("find/id")
     @Produces("application/json")
@@ -127,6 +127,7 @@ public class UserLoginResource {
         }
     }
     
+    /*not used*/
     @GET
     @Produces("application/json")
     public List<UserLoginEntity> findAll(){

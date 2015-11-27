@@ -28,17 +28,28 @@ public class MSSQLInvitationDao extends MSSQLDao{
 
     @Override
     public void insert(DynaActionForm form) throws Exception {
-        this.setStatement("proc_InsertInvitation(?,?,?,?,?)");
-        CallableStatement statement = this.getStatement();
-
-        statement.registerOutParameter("id",INTEGER);
-        statement.setInt("room", (int) form.getItem("room"));
-        statement.setInt("sender", (int) form.getItem("sender"));
-        statement.setInt("receiver", (int) form.getItem("receiver"));
-        statement.setString("state", (String) form.getItem("state"));
+        String selector = (String) form.getItem("selector");
         
-        this.executeUpdate();
-        form.setItem("id", statement.getInt("id"));
+        if(selector.equals("inviteParticipant")){
+            this.setStatement("proc_InviteParticipantToRoom(?,?,?)");
+            CallableStatement statement = this.getStatement();
+
+            statement.setInt("room", (int) form.getItem("room"));
+            statement.setInt("sender", (int) form.getItem("sender"));
+            statement.setInt("login", (int) form.getItem("login"));
+            this.executeUpdate();
+        }else{
+            this.setStatement("proc_InsertInvitation(?,?,?,?,?)");
+            CallableStatement statement = this.getStatement();
+
+            statement.registerOutParameter("id",INTEGER);
+            statement.setInt("room", (int) form.getItem("room"));
+            statement.setInt("sender", (int) form.getItem("sender"));
+            statement.setInt("receiver", (int) form.getItem("receiver"));
+            statement.setString("state", (String) form.getItem("state"));
+            this.executeUpdate();
+            form.setItem("id", statement.getInt("id"));
+        }
     }
 
     @Override
@@ -57,7 +68,20 @@ public class MSSQLInvitationDao extends MSSQLDao{
 
     @Override
     public void delete(DynaActionForm form) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String selector = (String) form.getItem("selector");
+        
+        if(selector.equals("byProfile")){
+            this.setStatement("proc_DeleteInvitationsByProfile(?)");
+            this.getStatement().setInt("profile", (int) form.getItem("profile"));
+        }
+        
+        else{
+            this.setStatement("proc_DeleteRejectedInvitationsByProfileAndRoom(?, ?)");
+            this.getStatement().setInt("profile", (int) form.getItem("profile"));
+            this.getStatement().setInt("room", (int) form.getItem("room"));
+        }
+        
+        this.executeUpdate();
     }
 
     @Override

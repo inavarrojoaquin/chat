@@ -146,6 +146,36 @@ public class ProfileResource {
         }
     }
    
+   @POST
+   @Path("find/login/password")
+   @Produces("application/json")
+   public Response findByLoginAndPassword(@FormParam("login") String login, @FormParam("password") String password ){
+        try {
+            Dao dao;
+            List<DynaActionForm> resultSet;
+            DynaActionForm form;
+            
+            dao = DaoFactory.getDao("Profile");
+            form = new DynaActionForm();
+            form.setItem("selector", "byLoginAndPassword");
+            form.setItem("login", login);
+            form.setItem("password", password);
+            resultSet = dao.select(form);
+            
+            if(resultSet.isEmpty()){
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }else {
+                ProfileEntity profile = new ProfileEntity();
+                profile.fromMap(resultSet.get(0).getItems());
+                return Response.ok(profile).build();
+            }
+            
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(Response.Status.PRECONDITION_FAILED).build();
+        }
+    }
+   
     @POST
     @Path("room/id/actives")
     @Produces("application/json")
@@ -175,8 +205,37 @@ public class ProfileResource {
         }
     }
     
+    @POST
+    @Path("rejected/invitation/by/room")
+    @Produces("application/json")
+    public List<ProfileEntity> findRejectedInvitationsByRoom(@FormParam("id") Integer id) {
+        try {
+            Dao dao;
+            DynaActionForm form;
+            List<DynaActionForm> resultSet;
+            List<ProfileEntity> profiles = new LinkedList<>();
+
+            dao = DaoFactory.getDao("Profile");
+            form = new DynaActionForm();
+            form.setItem("selector", "rejectedInvitationsByRoom");
+            form.setItem("room", id);
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet){
+                ProfileEntity profile = new ProfileEntity();
+                profile.fromMap(temp.getItems());
+                profiles.add(profile);
+            }
+            
+            return profiles;
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
     @GET
-    @Path("users/actives")
+    @Path("usersLogin/actives")
     @Produces("application/json")
     public List<ProfileEntity> findActivesUsersLogin() {
         try {

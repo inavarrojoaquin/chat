@@ -54,7 +54,11 @@ public class MSSQLRoomAccessPolicyDao extends MSSQLDao{
 
     @Override
     public void delete(DynaActionForm form) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.setStatement("proc_DeleteRoomsAccessPolicyByProfile(?)");
+        CallableStatement statement = this.getStatement();
+        statement.setInt("profile", (int) form.getItem("profile"));
+        
+        this.executeUpdate();
     }
 
     @Override

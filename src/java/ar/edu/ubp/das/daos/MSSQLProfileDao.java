@@ -55,6 +55,11 @@ public class MSSQLProfileDao extends MSSQLDao{
             this.setStatement("proc_SelectProfileByLogin(?)");
             this.getStatement().setString("login", (String) form.getItem("login"));
         }
+        else if(selector.equals("byLoginAndPassword")){
+            this.setStatement("proc_SelectProfileByLoginAndPassword(?, ?)");
+            this.getStatement().setString("login", (String) form.getItem("login"));
+            this.getStatement().setString("password", (String) form.getItem("password"));
+        }
         
         else if(selector.equals("byRoom")){
             this.setStatement("proc_SelectParticipantsForRoom(?)");
@@ -63,6 +68,11 @@ public class MSSQLProfileDao extends MSSQLDao{
         
         else if(selector.equals("byUsersActives")){
             this.setStatement("proc_SelectActivesUsersLogin()");
+        }
+        
+        else if(selector.equals("rejectedInvitationsByRoom")){
+            this.setStatement("proc_SelectRejectedInvitationsByRoom(?)");
+            this.getStatement().setInt("room", (Integer) form.getItem("room"));
         }
         
         else{
