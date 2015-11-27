@@ -135,7 +135,7 @@ var jsRoom = {
                     parent.history.back();
                 }
             }
-        }).success(jsRoom.reloadIfExistPrivateRoom);                
+        }).success(jsRoom.refreshIfExistPrivateRoom);                
     },
     
     reloadRejectedInvitations: function(){
@@ -152,7 +152,7 @@ var jsRoom = {
                     alert("El usuario: " + element.login + " rechazo la invitacion al chat");
                 });
             }
-        }).success(jsRoom.reloadRejectedInvitations);  
+        }).success(jsRoom.refreshRejectedInvitations);  
     },
     
     refreshMessage: function(){
@@ -193,7 +193,7 @@ var jsRoom = {
             },
             success: function(roomId) {
                 //the call ajax response roomId
-                window.open("http://localhost:8080/chat/index.jsp?action=Room&profileId="+roomVar.profileId+"&roomId="+roomVar.roomId , 'PrivateChat, _blank');
+                window.open("http://localhost:8080/chat/index.jsp?action=Room&profileId="+roomVar.profileId+"&roomId="+roomId , 'PrivateChat, _blank');
             }
         });
     },
