@@ -3,6 +3,8 @@ package ar.edu.ubp.das.actions;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -26,14 +28,20 @@ public class GetInvitationListAction extends Action{
         
         String profileId = (String) this.getForm().getItem("profileId");
         
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-Param: {0}", profileId);
+        
         Client client = ClientBuilder.newClient();
  
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-PRE llamado a INVITATIONS");
+        
         /**Get invitations*/
         Form form = new Form();
         form.param("id", profileId);
         WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/receiver/id");        
         Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
         Response invitationResponse = invitationInvocation.invoke();
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-POS llamado a INVITATIONS: " + invitationResponse.getStatus());
         
         List<DynaActionForm> invitationsList = invitationResponse.readEntity(new GenericType<List<DynaActionForm>>(){});
         

@@ -34,33 +34,33 @@
             <c:choose>
                 <c:when test="${accessDenied != null}">
                     <input type="hidden" value="${accessDenied}" name="accessDenied" />            
-                    <a href="index.jsp?action=LoginProfile" >Close</a>                   
+                    <a href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>                   
                 </c:when>
                 <c:otherwise>
                     <c:choose>
                         <c:when test="${roomType.equals('private')}" >
                             <c:choose>
                                 <c:when test="${roomOwner == profileId}" >
-                                    <a id="deletePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" >Close chat</a>
+                                    <a id="deletePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" ><fmt:message key="label_close" /></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a id="leavePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" >Leave chat</a>
+                                    <a id="leavePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" ><fmt:message key="label_leave" /></a>
                                 </c:otherwise>
                             </c:choose>
                         </c:when>
                         <c:otherwise>
-                            <a href="index.jsp?action=LoginProfile" >Close</a>
-                            <a href="index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" >Leave group</a>
+                            <a href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
+                            <a href="index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" ><fmt:message key="label_leave" /></a>
                         </c:otherwise>
                     </c:choose>
                     
-                    <h2>Room name: -${roomName}-</h2>
+                    <h2><fmt:message key="label_room_name" /> -${roomName}-</h2>
 
                     <div id="messages"></div>
 
                     <form id="sendMessage" >
-                        <input type="text" name="message" placeholder="Enter message" />
-                        <input type="button" name="send" onclick="jsRoom.sendMessage();" value="Send" />
+                        <input type="text" name="message" placeholder="<fmt:message key='label_enter_message' />" />
+                        <input type="button" name="send" onclick="jsRoom.sendMessage();" value="<fmt:message key='label_send' />" />
                     </form>
 
                     <div id="participants"></div>   <%-- Participants in this room --%>
@@ -70,26 +70,26 @@
                     <c:choose>
                         <c:when test="${roomType.equals('public')}">
                             <div>
-                                <h4>Start a private chat</h4>
+                                <h4><fmt:message key="title_start_private_room" /></h4>
                                 <form id="createPrivateRoom">
-                                    <label for="title">Title/Subject</label>
+                                    <label for="title"><fmt:message key="label_title_subject" /></label>
                                     <input type="text" id="title" name="titleRoom" placeholder="I want to talk about..."/>
                                     <br>
-                                    <label for="inviteEmail">Invite email</label>
+                                    <label for="inviteEmail"><fmt:message key="label_invite_email" /></label>
                                     <input type="text" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"/>
                                     <br>
-                                    <input type="button" id="submit" onclick="jsRoom.newPrivateRoom();" value='Create my chat' />
+                                    <input type="button" id="submit" onclick="jsRoom.newPrivateRoom();" value="<fmt:message key="label_create_chat" />" />
                                 </form>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <div>
-                                <h4>Invite participants</h4>
+                                <h4><fmt:message key="label_invite_participant" /></h4>
                                 <form id="inviteParticipant">
-                                    <label for="inviteEmail">Invite email</label>
+                                    <label for="inviteEmail"><fmt:message key="label_invite_email" /></label>
                                     <input type="text" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"/>
                                     <br>
-                                    <input type="button" id="submit" onclick="jsRoom.inviteParticipant();" value='Invite' />
+                                    <input type="button" id="submit" onclick="jsRoom.inviteParticipant();" value="<fmt:message key='label_send' />" />
                                 </form>
                             </div>
                         </c:otherwise>

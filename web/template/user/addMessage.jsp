@@ -13,10 +13,10 @@
         <tr>
             <input type="hidden" value="${message.id}" name="messageId"/>
             <td>${message.owner}</td>
-            <td>${message.datetimeOfCreation}</td>
+            <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></td>
             <td>${message.body}</td>
             <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
-                <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}') return false;" >Delete</a></td>
+                <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}') return false;" ><fmt:message key="label_delete"/></a></td>
             </c:if>
         </tr>
     </c:if>        

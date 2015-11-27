@@ -4,6 +4,8 @@ import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.entities.UserAccessEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -28,7 +30,12 @@ public class LeaveGroupAction extends Action{
         
         String userAccessId =  (String) this.getForm().getItem("userAccessId");
         
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-Param: {0}", userAccessId);
+        
         Client client = ClientBuilder.newClient();
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-PRE llamado a USERACCESS");
+        
         Form form = new Form();
         form.param("id", userAccessId);
         /**Get user acces*/
@@ -36,13 +43,19 @@ public class LeaveGroupAction extends Action{
         Invocation usersActivesInvocation = usersActivesTarget.request().buildPost(Entity.form(form));
         Response usersActivesResponse = usersActivesInvocation.invoke();
         
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-POS llamado a USERACCESS: " + usersActivesResponse.getStatus());
+        
         if(usersActivesResponse.getStatusInfo().getReasonPhrase().equals("OK")){
             UserAccessEntity userAccessEntity = usersActivesResponse.readEntity(new GenericType<UserAccessEntity>(){});
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-PRE llamado a USERACCESSTERMINATE");
             
             /**User acess terminate session*/
             WebTarget usersActivesTarget1 = client.target("http://localhost:8080/chat/webresources/useraccess/id/terminate");        
             Invocation usersActivesInvocation1 = usersActivesTarget1.request().buildPut(Entity.json(userAccessEntity));
             Response usersActivesResponse1 = usersActivesInvocation1.invoke();
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-POS llamado a USERACCESSTERMINATE: " + usersActivesResponse1.getStatus());
 
             if(usersActivesResponse1.getStatusInfo().getReasonPhrase().equals("OK")){
                 this.gotoPage("/index.jsp?action=LoginProfile", request, response);
