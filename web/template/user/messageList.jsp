@@ -11,7 +11,6 @@
         <table border="1">
             <tbody>
                 <tr>
-                    <th>#</th>
                     <th>Owner</th>
                     <th>Created</th>
                     <th>Body</th>
@@ -19,14 +18,12 @@
         <c:choose>
             <c:when test="${messages != null && messages.size() > 0}">
                 <c:forEach items="${messages}" var="message" varStatus="loop">
-                    <tr>
-                        <input type="hidden" value="${message.id}" name="messageId"/>
-                        <td>${loop.index}</td>
+                    <tr id="${message.id}">
                         <td>${message.owner}</td>
                         <td>${message.datetimeOfCreation}</td>
                         <td>${message.body}</td>
                         <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
-                            <td><a href="#" data-delete="" data-id="${message.id}" >Delete</a></td>
+                            <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}'); return false;" >Delete</a></td>
                         </c:if> 
                     </tr>
                 </c:forEach>

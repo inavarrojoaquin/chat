@@ -34,13 +34,13 @@ public class UpdateCheckAccessPolicyAction extends Action{
         Form form = new Form();
         form.param("room", roomId).param("profile", profileId);
         
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "PRE llamado a POLICY");
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateCheckAccessPolicyAction-PRE llamado a POLICY");
         
-        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id/profileId/id");
+        WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/room/id/profile/id");
         Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(form));
         Response policyResponse = policyInvocation.invoke();
         
-        Logger.getLogger(getClass().getName()).log(Level.INFO, "POS llamado a POLICY: " + policyResponse.getStatus());
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateCheckAccessPolicyAction-POS llamado a POLICY: " + policyResponse.getStatus());
         
         if(policyResponse.getStatusInfo().getReasonPhrase().equals("OK")){
             response.getWriter().println("ProfileEjected");

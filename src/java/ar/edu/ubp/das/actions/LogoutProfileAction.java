@@ -27,20 +27,24 @@ public class LogoutProfileAction extends Action{
         
         HttpSession session = request.getSession();
         
-        if(session.getAttribute("sessionprofile") != null){
-            ProfileEntity profile = (ProfileEntity) session.getAttribute("sessionprofile");
+        if(session.getAttribute("profile") != null){
+            ProfileEntity profile = (ProfileEntity) session.getAttribute("profile");
 
             String profileId = Integer.toString(profile.getId());
             Client client = ClientBuilder.newClient();
             
             /**Delete all policys for profileId*/
-            WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/delete/" + profileId);        
-            Invocation policyInvocation = policyTarget.request().buildDelete();
+            Form policyForm = new Form();
+            policyForm.param("id", profileId);
+            WebTarget policyTarget = client.target("http://localhost:8080/chat/webresources/roomaccesspolicy/delete/profile/id");        
+            Invocation policyInvocation = policyTarget.request().buildPost(Entity.form(policyForm));
             Response policyResponse = policyInvocation.invoke();
             
             /**Delete all invitations for profileId*/
-            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/delete/profile/" + profileId);        
-            Invocation invitationInvocation = invitationTarget.request().buildDelete();
+            Form invitationForm = new Form();
+            invitationForm.param("id", profileId);
+            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/delete/profile/id");        
+            Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(invitationForm));
             Response invitationResponse = invitationInvocation.invoke();
             
             /**Get lastlogin profile*/

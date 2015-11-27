@@ -80,10 +80,10 @@ public class MessageResource {
         }
     }
     
-    @DELETE
-    @Path("delete/{id}")
+    @POST
+    @Path("delete/message")
     @Produces("application/json")    
-    public Response deleteMessage(@PathParam("id") Integer id){
+    public Response deleteMessage(@FormParam("id") Integer id){
         try {
             Dao dao = DaoFactory.getDao("Message");
             DynaActionForm form = new DynaActionForm();

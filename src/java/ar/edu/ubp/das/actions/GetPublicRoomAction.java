@@ -1,22 +1,16 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.RoomEntity;
-import ar.edu.ubp.das.entities.UserAccessEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 

@@ -642,7 +642,6 @@ BEGIN
 END
 GO
 
-
 if OBJECT_ID('proc_SelectAccessPolicyByRoomAndProfile ')is not null
 	drop procedure proc_SelectAccessPolicyByRoomAndProfile
 go
@@ -654,8 +653,9 @@ AS
 BEGIN
   
 	select * from Room_access_policy
-	where room = @room
-	and profile = @profile
+	where id = (select max(id) from Room_access_policy
+			where room = @room
+			and profile = @profile)
 END
 GO
 

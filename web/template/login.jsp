@@ -5,16 +5,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script lang="javascript" type="text/javascript" src="./js/jquery.js"></script>
-        <script lang="javascript" type="text/javascript" src="./js/utils.js"></script>
-        <script lang="javascript" type="text/javascript" src="./js/chat.js"></script>        
+        <script lang="javascript" type="text/javascript" src="./js/jquery.js"></script>       
         <title>Login</title>
     </head>
     <body>
         <c:choose>
-            <c:when test="${sessionScope.sessionprofile != null}">
+            <c:when test="${sessionScope.profile != null}">
                 <jsp:forward page="/index.jsp?action=LoginProfile" >
-                    <jsp:param value="${sessionScope.sessionprofile}" name="profile"></jsp:param>
+                    <jsp:param value="${sessionScope.profile}" name="profile"></jsp:param>
                 </jsp:forward>
             </c:when>
             <c:otherwise>
@@ -24,15 +22,15 @@
                         <form id="signup" method="post" action="index.jsp?action=NewProfile">
                             <table>
                                 <tr>                
-                                    <th class="ar"><fmt:message key="label_userName"/></th>
+                                    <th ><fmt:message key="label_email"/></th>
                                     <td colspan="5"><input type="text" name="userName" maxlength="100" size="90"/></td>
                                 </tr>
                                 <tr>
-                                    <th class="ar"><fmt:message key="label_password"/></th>
+                                    <th ><fmt:message key="label_password"/></th>
                                     <td colspan="5"><input type="text" name="password" maxlength="100" size="90"/></td>
                                 </tr>
                                 <tr>
-                                    <th class="ar" colspan="6">
+                                    <th colspan="6">
                                         <input type="submit" value="Sing up"/>
                                     </th>
                                 </tr>
@@ -44,15 +42,15 @@
                         <form id="login" method="post" action="index.jsp?action=LoginProfile">
                             <table>
                                 <tr>                
-                                    <th class="ar"><fmt:message key="label_userName"/></th>
+                                    <th ><fmt:message key="label_email"/></th>
                                     <td colspan="5"><input type="text" name="userName" maxlength="100" size="90"/></td>
                                 </tr>
                                 <tr>
-                                    <th class="ar"><fmt:message key="label_password"/></th>
+                                    <th ><fmt:message key="label_password"/></th>
                                     <td colspan="5"><input type="text" name="password" maxlength="100" size="90"/></td>
                                 </tr>
                                 <tr>
-                                    <th class="ar" colspan="6">
+                                    <th colspan="6">
                                         <input type="submit" value="Log in" />
                                     </th>
                                 </tr>

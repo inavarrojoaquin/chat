@@ -25,7 +25,6 @@ public class GetInvitationListAction extends Action{
         System.out.println("GetInvitationListAction:execute");
         
         String profileId = (String) this.getForm().getItem("profileId");
-        String userLoginStart = (String) this.getForm().getItem("userLoginStart");
         
         Client client = ClientBuilder.newClient();
  
@@ -41,7 +40,6 @@ public class GetInvitationListAction extends Action{
         if(invitationsList != null){
             this.getForm().setItem("invitations", invitationsList);
             this.getForm().setItem("profileId", profileId);
-            this.getForm().setItem("userLoginStart", userLoginStart);
             this.gotoPage("/template/user/invitationList.jsp", request, response);
         }
     }

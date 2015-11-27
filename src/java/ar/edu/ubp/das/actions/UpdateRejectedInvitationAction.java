@@ -68,8 +68,11 @@ public class UpdateRejectedInvitationAction extends Action{
 //                    Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateRejectedInvitationAction-PRE llamado a INVITATION");
 //                    System.out.println("Json1-PROFILEID: " + object.get("id"));    
 //
-//                    WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/delete/profile/" + Integer.toString(object.getInt("id")) + "/room/" + roomId);
-//                    Invocation invitationInvocation = invitationTarget.request().buildDelete();
+//                       Form form = new Form();
+//                       form.param("profile", Integer.toString(object.getInt("id")));
+//                       form.param("room", roomId);
+//                    WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/delete/profile/id/room/id");
+//                    Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
 //                    Response invitationResponse = invitationInvocation.invoke();
 //
 //                    Logger.getLogger(getClass().getName()).log(Level.INFO, "UpdateRejectedInvitationAction-POS llamado a INVITATION: " + invitationResponse.getStatus());

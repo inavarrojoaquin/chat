@@ -213,10 +213,10 @@ public class RoomResource {
         
     }
     
-    @DELETE
-    @Path("delete/{id}")
+    @POST
+    @Path("delete/room")
     @Produces("application/json")
-    public Response deleteRoom(@PathParam("id") Integer id){
+    public Response deleteRoom(@FormParam("id") Integer id){
         try {
             Dao dao = DaoFactory.getDao("Room");
             DynaActionForm form = new DynaActionForm();

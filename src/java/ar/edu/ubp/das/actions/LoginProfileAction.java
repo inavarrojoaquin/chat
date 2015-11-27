@@ -39,10 +39,13 @@ public class LoginProfileAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("LoginProfileAction:execute");  
         
-        HttpSession session = request.getSession(); 
+        HttpSession session = request.getSession(false); 
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 1: " + session);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 2: " + session.getAttribute("profile"));
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session ID: " + session.getId());
         
-        if(session.getAttribute("sessionprofile") != null){
-            this.getForm().setItem("profile", session.getAttribute("sessionprofile"));
+        if(session.getAttribute("profile") != null){            
+            this.getForm().setItem("profile", session.getAttribute("profile"));
             this.gotoPage("/template/user/home.jsp", request, response);            
         }else{
             String login = (String) this.getForm().getItem("userName");
@@ -71,8 +74,9 @@ public class LoginProfileAction extends Action{
                 
                 System.out.println("UserLogin created.");
 
-                session.setAttribute("sessionprofile", profile);
-                session.setMaxInactiveInterval(30 * 60);
+                session.setAttribute("profile", profile);
+                
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Param: {0}", session.getAttribute("profile"));
 
                 this.getForm().setItem("profile", profile);
                 this.gotoPage("/template/user/home.jsp", request, response);

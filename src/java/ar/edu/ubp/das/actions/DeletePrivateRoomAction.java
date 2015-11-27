@@ -5,8 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.Response;
 
 /**
@@ -23,8 +25,10 @@ public class DeletePrivateRoomAction extends Action{
        
         Client client = ClientBuilder.newClient();
         /**Delete private room id*/
-        WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/delete/" + roomId);        
-        Invocation roomInvocation = roomTarget.request().buildDelete();
+        Form form = new Form();
+        form.param("id", roomId);
+        WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/delete/room");        
+        Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
         Response roomResponse = roomInvocation.invoke();
         
         if(roomResponse.getStatusInfo().getReasonPhrase().equals("OK")){

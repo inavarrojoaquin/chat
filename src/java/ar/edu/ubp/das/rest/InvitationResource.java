@@ -52,6 +52,7 @@ public class InvitationResource {
             DynaActionForm form = new DynaActionForm();
             
             form.setItems(entity.toMap());
+            form.setItem("selector", "newInvitation");
             dao.insert(form);
             entity.setId((Integer) form.getItem("id"));
             
@@ -183,10 +184,10 @@ public class InvitationResource {
         }
     }
     
-    @DELETE
-    @Path("delete/profile/{id}")
+    @POST
+    @Path("delete/profile/id")
     @Produces("application/json")
-    public Response deleteInvitation(@PathParam("id") Integer id){
+    public Response deleteInvitation(@FormParam("id") Integer id){
         try {
             Dao dao = DaoFactory.getDao("Invitation");
             DynaActionForm form = new DynaActionForm();
@@ -202,10 +203,10 @@ public class InvitationResource {
         }
     }
     
-    @DELETE
-    @Path("delete/profile/{id}/room/{id}")
+    @POST
+    @Path("delete/profile/id/room/id")
     @Produces("application/json")
-    public Response deleteInvitationByProfileAndRoom(@PathParam("profile") Integer profile, @PathParam("room") Integer room){
+    public Response deleteInvitationByProfileAndRoom(@FormParam("profile") Integer profile, @FormParam("room") Integer room){
         try {
             Dao dao = DaoFactory.getDao("Invitation");
             DynaActionForm form = new DynaActionForm();

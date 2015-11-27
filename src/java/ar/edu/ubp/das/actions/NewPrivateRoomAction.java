@@ -65,7 +65,7 @@ public class NewPrivateRoomAction extends Action{
             Logger.getLogger(getClass().getName()).log(Level.INFO, "NewPrivateRoomAction-POS llamado a INVITED PROFILE: " + profileResponse.getStatus());
             if(profileResponse.getStatus() == 200){
                 ProfileEntity invitedProfile = profileResponse.readEntity(new GenericType<ProfileEntity>(){});
-            
+                
                 /**Create invitation*/
                 InvitationEntity invitationEntity = new InvitationEntity();
                 invitationEntity.setRoom(roomEntity.getId());

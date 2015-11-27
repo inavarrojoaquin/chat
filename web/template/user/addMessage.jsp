@@ -12,12 +12,11 @@
         <%-- Send message action --%>
         <tr>
             <input type="hidden" value="${message.id}" name="messageId"/>
-            <td>--</td>
             <td>${message.owner}</td>
             <td>${message.datetimeOfCreation}</td>
             <td>${message.body}</td>
             <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
-                <td><a href="#" data-delete="" data-id="${message.id}" >Delete</a></td>
+                <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}') return false;" >Delete</a></td>
             </c:if>
         </tr>
     </c:if>        

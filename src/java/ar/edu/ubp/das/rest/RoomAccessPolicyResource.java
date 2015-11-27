@@ -166,10 +166,10 @@ public class RoomAccessPolicyResource {
         }
     }
     
-    @DELETE
-    @Path("delete/{id}")
+    @POST
+    @Path("delete/profile/id")
     @Produces("application/json")
-    public Response deleteRoomAccessPolicy(@PathParam("id") Integer id){
+    public Response deleteRoomAccessPolicy(@FormParam("id") Integer id){
         try {
             Dao dao = DaoFactory.getDao("RoomAccessPolicy");
             DynaActionForm form = new DynaActionForm();
