@@ -5,9 +5,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script lang="javascript" type="text/javascript" src="./js/jquery.js"></script>
-        <script lang="javascript" type="text/javascript" src="./js/utils.js"></script>
-        <script lang="javascript" type="text/javascript" src="./js/jsRoom.js"></script>        
+        <script lang="javascript" type="text/javascript" src="./js-chat/jquery.js"></script>
+        <script lang="javascript" type="text/javascript" src="./js-chat/utils.js"></script>
+        <script lang="javascript" type="text/javascript" src="./js-chat/jsRoom.js"></script>        
         <title>Room</title>
     </head>
     <body>
