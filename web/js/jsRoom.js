@@ -4,6 +4,7 @@ $(document).ready(function(){
     roomVar.RELOAD_TIME = 15000;
     roomVar.roomId = $("input[name='roomId']").val();
     roomVar.roomType = $("input[name='roomType']").val();
+    roomVar.roomOwner = $("input[name='roomOwner']").val();
     roomVar.privateRoom = roomVar.roomType == "private" ? true : false;
     roomVar.profileType = $("input[name='profileType']").val();
     roomVar.profileId = $("input[name='profileId']").val();
@@ -13,17 +14,16 @@ $(document).ready(function(){
     // !! transforma en boolean
     if ( (!! $("input[name='accessDenied']").val()) == false ){
         jsRoom.getMessageList();
-        jsRoom.getParticipantList();
-        jsRoom.getPublicRoomByProfile();
-        jsRoom.reloadAccessPolicy();
-
     }
     
     if(roomVar.privateRoom){
         jsRoom.getAllLoguedParticipantList();
-        jsRoom.reloadIfExistPrivateRoom();
-        jsRoom.reloadRejectedInvitations();
+        
+        if(roomVar.roomOwner == roomVar.profileId){
+            jsRoom.reloadRejectedInvitations();
+        }
     }
+    
 });
 
 var jsRoom = {
@@ -40,24 +40,8 @@ var jsRoom = {
             success: function(html) {
                 jUtils.showing("messages", html);
             }
-        }).success(jsRoom.refreshMessage);
-
+        }).success(jsRoom.getParticipantList);
     }, 
-    
-    getPublicRoomByProfile: function(){
-        $.ajax({
-            url: "index.jsp?action=GetPublicRoomByProfile",
-            type: "post",
-            dataType: "html",            
-            data:  {'profileId':roomVar.profileId},
-            error: function(hr) {
-                jUtils.showing("error", hr);
-            },
-            success: function(html) {
-                jUtils.showing("participateRoom", html);
-            }
-        });
-    },
     
     getParticipantList: function(){
         $.ajax({
@@ -82,22 +66,22 @@ var jsRoom = {
                     }
                 }
             }
-        }).success(jsRoom.refreshParticipants);
+        }).success(jsRoom.getPublicRoomByProfile);
     },
     
-    getAllLoguedParticipantList: function(){
+    getPublicRoomByProfile: function(){
         $.ajax({
-            url: "index.jsp?action=GetAllLoguedParticipantList",
+            url: "index.jsp?action=GetPublicRoomByProfile",
             type: "post",
             dataType: "html",            
-            data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId},
+            data:  {'profileId':roomVar.profileId},
             error: function(hr) {
                 jUtils.showing("error", hr);
             },
             success: function(html) {
-                jUtils.showing("allLoguedParticipants", html);
+                jUtils.showing("participateRoom", html);
             }
-        }).success(jsRoom.refreshAllLoguedParticipants);
+        }).success(jsRoom.reloadAccessPolicy);
     },
     
     /**Check if the user has been ejected*/
@@ -116,7 +100,22 @@ var jsRoom = {
                     parent.history.back();
                 }
             }
-        }).success(jsRoom.refreshAccessPolicy);                
+        }).success(jsRoom.refreshMessage);                
+    },
+    
+    getAllLoguedParticipantList: function(){
+        $.ajax({
+            url: "index.jsp?action=GetAllLoguedParticipantList",
+            type: "post",
+            dataType: "html",            
+            data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                jUtils.showing("allLoguedParticipants", html);
+            }
+        }).success(jsRoom.reloadIfExistPrivateRoom);
     },
     
     /**Check if the room has benn removed*/
@@ -132,10 +131,10 @@ var jsRoom = {
             success: function(html) {
                 if($.trim(html) == "not_found"){
                     alert("This room has been removed");
-                    parent.history.back();
+                    roomVar.privateRoom ? window.close() : parent.history.back();
                 }
             }
-        }).success(jsRoom.refreshIfExistPrivateRoom);                
+        }).success(jsRoom.refreshAllLoguedParticipants);                
     },
     
     reloadRejectedInvitations: function(){
@@ -148,9 +147,11 @@ var jsRoom = {
                 jUtils.showing("error", hr);
             },
             success: function(data) {
-                $.each(data, function(index, element) {
-                    alert("El usuario: " + element.login + " rechazo la invitacion al chat");
-                });
+                if(data != "[]"){
+                    $.each(data, function(index, element) {
+                        alert("El usuario: " + element.login + " rechazo la invitacion al chat");
+                    });
+                }
             }
         }).success(jsRoom.refreshRejectedInvitations);  
     },
@@ -159,20 +160,8 @@ var jsRoom = {
         setTimeout(jsRoom.getMessageList, roomVar.RELOAD_TIME);
     },
     
-    refreshParticipants: function(){
-        setTimeout(jsRoom.getParticipantList, roomVar.RELOAD_TIME);
-    },
-    
     refreshAllLoguedParticipants: function(){
         setTimeout(jsRoom.getAllLoguedParticipantList, roomVar.RELOAD_TIME);
-    },
-    
-    refreshAccessPolicy: function(){
-        setTimeout(jsRoom.reloadAccessPolicy, roomVar.RELOAD_TIME);
-    },
-    
-    refreshIfExistPrivateRoom: function(){
-        setTimeout(jsRoom.reloadIfExistPrivateRoom, roomVar.RELOAD_TIME);
     },
     
     refreshRejectedInvitations: function(){
@@ -318,11 +307,3 @@ var jsRoom = {
     }
     
 };
-
-/*Estos metodos se ejecutan recursivamente. 
-* Los ajax devuelven promesas (return $.ajax() el ajax retorna una promesa), y si el ajax terminó (promise.done()) 
-* recien se ejeccuta el setTimeOut llamando recursivamente a la misma funcion.
-* Necesariamente para cada refresh tengo que hacer un metodo aparte
-* Ademas estos metodos tiene dependencia, necesitan q los primeros ajax se terminen para recien ejecutarse
-* pj: $.ajax().success(refreshMessage)
-* */

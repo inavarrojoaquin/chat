@@ -38,7 +38,7 @@
                 </table>
             </c:when>
             <c:otherwise>
-                <b><fmt:message key="public_room_empty"/></b>
+                <p><fmt:message key="public_room_empty"/></p>
             </c:otherwise>
         </c:choose>
         

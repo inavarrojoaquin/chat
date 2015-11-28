@@ -104,6 +104,7 @@ public class RoomAction extends Action{
                 }
             }
         }else{
+            this.getForm().setItem("profile", profile);
             this.getForm().setItem("accessDenied", "true");
         }
         this.gotoPage("/template/user/room.jsp", request, response);        

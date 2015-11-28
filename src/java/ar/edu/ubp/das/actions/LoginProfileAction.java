@@ -40,6 +40,7 @@ public class LoginProfileAction extends Action{
         System.out.println("LoginProfileAction:execute");  
         
         HttpSession session = request.getSession(false); 
+        
         Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 1: " + session);
         Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 2: " + session.getAttribute("profile"));
         Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session ID: " + session.getId());
@@ -76,9 +77,10 @@ public class LoginProfileAction extends Action{
 
                 session.setAttribute("profile", profile);
                 
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Param: {0}", session.getAttribute("profile"));
-
                 this.getForm().setItem("profile", profile);
+                
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-SessionAttribute: {0}", session.getAttribute("profile"));
+                
                 this.gotoPage("/template/user/home.jsp", request, response);
             }
             else {

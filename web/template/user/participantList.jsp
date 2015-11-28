@@ -11,7 +11,10 @@
         <c:set value="${form.flag}" var="inviteMore" ></c:set>
         
         <c:if test="${participants.size() > 0}"> 
-            <p><fmt:message key="title_participant"/></p>
+            <c:choose>
+                <c:when test="${inviteMore == null}" ><p><fmt:message key="title_participant"/></p></c:when>
+                <c:otherwise><p><fmt:message key="title_participant_list"/></p></c:otherwise>
+            </c:choose> 
             <table border="1">
                 <tr>
                     <th><fmt:message key="label_name"/></th>

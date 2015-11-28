@@ -27,6 +27,7 @@
             <input type="hidden" value="${roomId}" name="roomId" />
             <input type="hidden" value="${roomName}" name="roomName" />
             <input type="hidden" value="${roomType}" name="roomType" />
+            <input type="hidden" value="${roomOwner}" name="roomOwner" />
             <input type="hidden" value="${profileId}" name="profileId" />
             <input type="hidden" value="${profileType}" name="profileType" />
             <input type="hidden" value="${userAccessId}" name="userAccessId" />   
@@ -34,7 +35,8 @@
             <c:choose>
                 <c:when test="${accessDenied != null}">
                     <input type="hidden" value="${accessDenied}" name="accessDenied" />            
-                    <a href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>                   
+                    <a href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
+                    <p>Access Denied</p>
                 </c:when>
                 <c:otherwise>
                     <c:choose>
@@ -83,15 +85,17 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div>
-                                <h4><fmt:message key="label_invite_participant" /></h4>
-                                <form id="inviteParticipant">
-                                    <label for="inviteEmail"><fmt:message key="label_invite_email" /></label>
-                                    <input type="text" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"/>
-                                    <br>
-                                    <input type="button" id="submit" onclick="jsRoom.inviteParticipant();" value="<fmt:message key='label_send' />" />
-                                </form>
-                            </div>
+                            <c:if test="${roomOwner == profileId}" >
+                                <div>
+                                    <h4><fmt:message key="label_invite_participant" /></h4>
+                                    <form id="inviteParticipant">
+                                        <label for="inviteEmail"><fmt:message key="label_invite_email" /></label>
+                                        <input type="text" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"/>
+                                        <br>
+                                        <input type="button" id="submit" onclick="jsRoom.inviteParticipant();" value="<fmt:message key='label_send' />" />
+                                    </form>
+                                </div>
+                            </c:if>
                         </c:otherwise>
                     </c:choose>
                     

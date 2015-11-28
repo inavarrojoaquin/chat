@@ -1,6 +1,8 @@
 package ar.edu.ubp.das.actions;
 
+import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -22,6 +25,8 @@ public class UpdateRejectedInvitationAction extends Action{
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("UpdateRejectedInvitationAction:execute");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         
         String roomId = (String) this.getForm().getItem("roomId");
         
@@ -43,12 +48,11 @@ public class UpdateRejectedInvitationAction extends Action{
         
         if(profileResponse.getStatus() == 200){
             String json = profileResponse.readEntity(String.class);
-        
+            
             System.out.println("Invitation JSON: " + json);
-
-            if(!json.equals("[]")){ 
-                response.getWriter().write(json);
-            }
+        
+            response.getWriter().write(json);
+            
         }
     }
 }

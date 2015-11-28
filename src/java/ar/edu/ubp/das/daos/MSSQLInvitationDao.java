@@ -36,7 +36,7 @@ public class MSSQLInvitationDao extends MSSQLDao{
 
             statement.setInt("room", (int) form.getItem("room"));
             statement.setInt("sender", (int) form.getItem("sender"));
-            statement.setInt("login", (int) form.getItem("login"));
+            statement.setString("login", (String) form.getItem("login"));
             this.executeUpdate();
         }else{
             this.setStatement("proc_InsertInvitation(?,?,?,?,?)");
