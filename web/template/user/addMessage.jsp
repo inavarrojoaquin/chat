@@ -10,15 +10,22 @@
    
     <c:if test="${message != null}">
         <%-- Send message action --%>
-        <tr>
-            <input type="hidden" value="${message.id}" name="messageId"/>
-            <td>${message.owner}</td>
-            <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></td>
-            <td>${message.body}</td>
-            <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
-                <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}') return false;" ><fmt:message key="label_delete"/></a></td>
-            </c:if>
-        </tr>
+        <li class="media" id="${message.id}">
+            <div class="media-body">
+                <div class="media">
+                    <a class="pull-left" href="#"><img class="media-object img-circle" src="img/user.png" /></a>
+                    <div class="media-body">
+                        <p>${message.body}</p>
+                        <small class="text-muted">${message.owner} | <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></small>
+                        <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
+                            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                <a href="#" role="button" class="pull-right" onclick="jsRoom.deleteMessage('${message.id}'); return false;" ><fmt:message key="label_delete" /></a>
+                            </div>
+                        </c:if> 
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </li>
     </c:if>        
-
 </fmt:bundle>

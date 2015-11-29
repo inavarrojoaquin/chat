@@ -25,7 +25,7 @@
                           <div class="col-md-6 col-md-offset-3">
                               <form class="form-signin" id="login" method="post" action="index.jsp?action=LoginProfile">
                                   <h3 class="form-signin-heading"><fmt:message key="title_login"/></h3>
-                                  <input type="email" class="form-control" name="userName" placeholder="Email address" required="" autofocus="">
+                                  <input type="text" class="form-control" name="userName" placeholder="Email address" required="" autofocus="">
                                   <input type="password" class="form-control" name="password" placeholder="Password" required="">
                                   <input class="form-control btn btn-primary btn-block" type="submit" value="Sign in" />
                               </form>

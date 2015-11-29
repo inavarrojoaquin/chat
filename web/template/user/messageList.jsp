@@ -4,37 +4,60 @@
     
 <div>
     <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
-        <p><fmt:message key="title_messages" /></p>
         <c:set value="${form.roomType}" var="roomType" ></c:set>
         <c:set value="${form.profileType}" var="profileType" ></c:set>
         <c:set value="${form.messageList}" var="messages" ></c:set>        
-        <table border="1">
-            <tbody>
-                <tr>
-                    <th><fmt:message key="label_owner"/></th>
-                    <th><fmt:message key="label_created_date"/></th>
-                    <th><fmt:message key="label_body"/></th>
-                </tr>
-        <c:choose>
-            <c:when test="${messages != null && messages.size() > 0}">
-                <c:forEach items="${messages}" var="message" varStatus="loop">
-                    <tr id="${message.id}">
-                        <td>${message.owner}</td>
-                        <td><fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></td>
-                        <td>${message.body}</td>
-                        <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
-                            <td><a href="#" onclick="jsRoom.deleteMessage('${message.id}'); return false;" ><fmt:message key="label_delete" /></a></td>
-                        </c:if> 
-                    </tr>
-                </c:forEach>
-            </c:when>
-            <c:otherwise>
-                <tr id="message_empty">
-                    <td colspan="4"><b><fmt:message key="message_empty"/></td>
-                </tr>
-            </c:otherwise>
-        </c:choose>
-            </tbody>
-        </table>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <fmt:message key="title_messages" />
+            </div>
+            <div class="panel-body modal-body">
+                <ul class="media-list">
+                    <c:choose>
+                        <c:when test="${messages != null && messages.size() > 0}">
+                            <c:forEach items="${messages}" var="message" varStatus="loop">
+                                <li class="media" id="${message.id}">
+                                    <div class="media-body">
+                                        <div class="media">
+                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="img/user.png" /></a>
+                                            <div class="media-body">
+                                                <p>${message.body}</p>
+                                                <small class="text-muted">${message.owner} | <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></small>
+                                                <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
+                                                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                                        <a href="#" role="button" class="pull-right" onclick="jsRoom.deleteMessage('${message.id}'); return false;" ><fmt:message key="label_delete" /></a>
+                                                    </div>
+                                                </c:if> 
+                                                <hr />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="media">
+                                <div class="media-body">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <p><fmt:message key="message_empty"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group" id="sendMessage">
+                    <input type="text" class="form-control" name="message" placeholder="Enter message" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" name="send" type="button" onclick="jsRoom.sendMessage();" ><fmt:message key='label_send' /></button>
+                    </span>
+                </div>
+            </div>
+        </div>
     </fmt:bundle>
 </div>
