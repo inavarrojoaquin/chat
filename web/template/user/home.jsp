@@ -13,6 +13,11 @@
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
+            <c:set value="${form.profile}" var="profile" ></c:set>
+            <c:set value="${profile.getLogin()}" var="profileLogin" ></c:set>
+            
+            <input type="hidden" value="${profile.getId()}" name="profileId" />
+            
             <%-- NavBar --%>
             <nav class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
@@ -22,6 +27,7 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
+                            <p class="navbar-text">${profileLogin}</p>
                             <li class=""><a href="index.jsp?action=LogoutProfile"><fmt:message key="label_logout"/></a></li>  
                         </ul>
                     </div><!-- /.navbar-collapse -->
@@ -30,12 +36,12 @@
             
             <div class="container">
                 <div class="row">
-                    <c:set value="${form.profile}" var="profile" ></c:set>
-                    <input type="hidden" value="${profile.getId()}" name="profileId" />
 
+                    <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
+                    <div class="col-md-4 col-md-offset-4"><span class="label label-warning" id="error"></span></div>
+                    
                     <div class="col-md-6" id="publicRooms"></div>
                     <div class="col-md-6" id="invitations"></div>
-                    <span class="label label-info" id="response"></span>
                 </div>
             </div>
         </fmt:bundle>

@@ -54,7 +54,7 @@ var jsRoom = {
             },
             success: function(html) {
                 jUtils.showing("participants", html);
-                var cant = $("#participants tr[id]").length;
+                var cant = $("#participants li[id]").length;
 
                 if(roomVar.privateRoom){
                     if(cant > 1){
@@ -182,6 +182,8 @@ var jsRoom = {
             },
             success: function(roomId) {
                 //the call ajax response roomId
+                $("input[name='titleRoom']").val("");
+                $("input[name='inviteEmailRoom']").val("");
                 window.open("http://localhost:8080/chat/index.jsp?action=Room&profileId="+roomVar.profileId+"&roomId="+roomId , 'PrivateChat, _blank');
             }
         });
@@ -199,7 +201,8 @@ var jsRoom = {
                 jUtils.showing("error", hr);
             },
             success: function(html) {
-                console.log("Send invitations success.");
+                $("input[name='inviteEmailRoom']").val("");
+                alert("Send invitations success.");
             }
         });
     },
@@ -217,18 +220,19 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html)){
-                    var message_empty = $("#messages tbody #message_empty").length;
+                    var message_empty = $("#messages #message_empty").length;
                     if(message_empty == 1){
-                        $("#messages tbody tr:last").remove();
+                        $("#messages ul li:last").remove();
                     }
-                    $("#messages tbody:last").append(html);
+                    $("#messages ul:last").append(html);
                 }
+                $("#sendMessage input[name='message']").val("");
             }
         });
     },
  
     deleteMessage: function(messageId){
-        var parent = $("#messages tr#"+messageId);
+        var parent = $("#messages li#"+messageId);
         var id = messageId;
 
         $.ajax({
@@ -290,7 +294,7 @@ var jsRoom = {
     }, 
     
     ejectUser: function(roomId, profileId){
-        var parent = $("#participants tr#"+profileId);
+        var parent = $("#participants li#"+profileId);
         
         $.ajax({
             url: "index.jsp?action=EjectUser",

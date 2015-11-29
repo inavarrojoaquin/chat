@@ -18,6 +18,7 @@
             <c:set value="${room.getType()}" var="roomType" ></c:set>
             <c:set value="${room.getOwner()}" var="roomOwner" ></c:set>
             <c:set value="${form.profile}" var="profile" ></c:set>           
+            <c:set value="${profile.getLogin()}" var="profileLogin" ></c:set>
             <c:set value="${profile.getId()}" var="profileId" ></c:set>        
             <c:set value="${profile.getType()}" var="profileType" ></c:set>        
             <c:set value="${form.userAccess}" var="userAccess" ></c:set>
@@ -34,10 +35,16 @@
             
             <c:choose>
                 <c:when test="${accessDenied != null}">
-                    <div class="btn-group btn-group-justified" role="group" aria-label="">
-                        <input type="hidden" value="${accessDenied}" name="accessDenied" />            
-                        <a role="button" href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
-                        <h3><fmt:message key="label_access_denied" /></h3>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="btn-group btn-group-justified" role="group" aria-label="">
+                                    <input type="hidden" value="${accessDenied}" name="accessDenied" />            
+                                    <a role="button" href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
+                                    <h3><span class="label label-danger"><fmt:message key="label_access_denied" /></span></h3>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -63,6 +70,9 @@
                                     </c:otherwise>
                                 </c:choose>
                                 </ul>
+                                <ul class="nav navbar-nav navbar-right">
+                                    <p class="navbar-text">${profileLogin}</p>
+                                </ul>
                             </div><!-- /.navbar-collapse -->
                         </div><!-- /.container-fluid -->
                     </nav> <%-- /.NavBar --%>
@@ -70,11 +80,22 @@
                     <div class="container">
                         <div class="row">
                             
-                            <h3><fmt:message key="label_room_name" /> ${roomName} </h3>
+                            <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
+                            <div class="col-md-4 col-md-offset-4"><span class="label label-warning" id="error"></span></div>
                             
-                            <span class="label label-info" id="response"></span>
+                            <div class="col-md-12"><h3><span class="label label-primary"><fmt:message key="label_room_name" /> ${roomName}</span></h3></div>
                             
-                            <div class="col-md-8" id="messages"></div> <%-- Left panel / Messages --%>
+                            <div class="col-md-8"> <%-- Left panel--%>
+                                <div id="messages"></div> <%-- Messages --%>
+                                <div class="panel-footer"> <%-- Enter message --%>
+                                    <div class="input-group" id="sendMessage">
+                                        <input type="text" class="form-control" name="message" placeholder="Enter message" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info" name="send" type="button" onclick="jsRoom.sendMessage();" ><fmt:message key='label_send' /></button>
+                                        </span>
+                                    </div>
+                                </div> <%-- /.Enter message --%>
+                            </div> <%-- /.Left panel--%>
 
                             <div class="col-md-4"> <%-- Right panel --%>
                                 <div class="row">

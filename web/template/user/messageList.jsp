@@ -37,7 +37,7 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <li class="media">
+                            <li class="media" id="message_empty" >
                                 <div class="media-body">
                                     <div class="media">
                                         <div class="media-body">
@@ -49,14 +49,6 @@
                         </c:otherwise>
                     </c:choose>
                 </ul>
-            </div>
-            <div class="panel-footer">
-                <div class="input-group" id="sendMessage">
-                    <input type="text" class="form-control" name="message" placeholder="Enter message" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info" name="send" type="button" onclick="jsRoom.sendMessage();" ><fmt:message key='label_send' /></button>
-                    </span>
-                </div>
             </div>
         </div>
     </fmt:bundle>
