@@ -17,16 +17,16 @@
                     <c:choose>
                         <c:when test="${messages != null && messages.size() > 0}">
                             <c:forEach items="${messages}" var="message" varStatus="loop">
-                                <li class="media" id="${message.id}">
+                                <li class="media" id="${message.getItem('id')}">
                                     <div class="media-body">
                                         <div class="media">
                                             <a class="pull-left" href="#"><img class="media-object img-circle" src="img/user.png" /></a>
                                             <div class="media-body">
-                                                <p>${message.body}</p>
-                                                <small class="text-muted">${message.owner} | <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></small>
+                                                <p>${message.getItem('body')}</p>
+                                                <small class="text-muted">${message.getItem('ownerName')} | <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.getItem('datetimeOfCreation')}" /></small>
                                                 <c:if test="${roomType.equals('public') && profileType.equals('ADMIN')}" >
                                                     <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                                                        <a href="#" role="button" class="pull-right" onclick="jsRoom.deleteMessage('${message.id}'); return false;" ><fmt:message key="label_delete" /></a>
+                                                        <a href="#" role="button" class="pull-right" onclick="jsRoom.deleteMessage('${message.getItem('id')}'); return false;" ><fmt:message key="label_delete" /></a>
                                                     </div>
                                                 </c:if> 
                                                 <hr />

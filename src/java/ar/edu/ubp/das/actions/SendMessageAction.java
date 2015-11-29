@@ -29,6 +29,7 @@ public class SendMessageAction extends Action{
         String message = (String) this.getForm().getItem("message");
         String roomType = (String) this.getForm().getItem("roomType");
         String profileType = (String) this.getForm().getItem("profileType");
+        String profileLogin = (String) this.getForm().getItem("profileLogin");
         
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setRoom(Integer.parseInt(roomId));
@@ -47,6 +48,7 @@ public class SendMessageAction extends Action{
             this.getForm().setItem("message", messageEntity);
             this.getForm().setItem("roomType", roomType);
             this.getForm().setItem("profileType", profileType);
+            this.getForm().setItem("profileLogin", profileLogin);
             this.gotoPage("/template/user/addMessage.jsp", request, response);
         }
     }

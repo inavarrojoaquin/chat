@@ -8,6 +8,7 @@ $(document).ready(function(){
     roomVar.privateRoom = roomVar.roomType == "private" ? true : false;
     roomVar.profileType = $("input[name='profileType']").val();
     roomVar.profileId = $("input[name='profileId']").val();
+    roomVar.profileLogin = $("input[name='profileLogin']").val();
     roomVar.userAccessId = $("input[name='userAccessId']").val();
     
     // null y undefined evaluan en falso en js
@@ -214,7 +215,7 @@ var jsRoom = {
             url: "index.jsp?action=SendMessage",
             type: "post",
             dataType: "html",            
-            data: {"roomId":roomVar.roomId, "profileId":roomVar.profileId, "roomType":roomVar.roomType, "profileType":roomVar.profileType, "message": message},
+            data: {"roomId":roomVar.roomId, "profileId":roomVar.profileId, "profileLogin":roomVar.profileLogin ,"roomType":roomVar.roomType, "profileType":roomVar.profileType, "message": message},
             error: function(hr) {
                 jUtils.showing("error", hr);
             },

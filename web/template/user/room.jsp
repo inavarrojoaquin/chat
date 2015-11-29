@@ -30,6 +30,7 @@
             <input type="hidden" value="${roomType}" name="roomType" />
             <input type="hidden" value="${roomOwner}" name="roomOwner" />
             <input type="hidden" value="${profileId}" name="profileId" />
+            <input type="hidden" value="${profileLogin}" name="profileLogin" />
             <input type="hidden" value="${profileType}" name="profileType" />
             <input type="hidden" value="${userAccessId}" name="userAccessId" />   
             
