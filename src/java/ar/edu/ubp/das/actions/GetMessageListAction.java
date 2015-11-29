@@ -44,7 +44,7 @@ public class GetMessageListAction extends Action{
         
         Client client = ClientBuilder.newClient();
                 
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-Session-profileList: {0}", session.getAttribute("profileList"));
         
@@ -62,7 +62,7 @@ public class GetMessageListAction extends Action{
             if(profileResponse.getStatus() == 200){
                 profileList = profileResponse.readEntity(new GenericType<List<ProfileEntity>>(){});
                 session.setAttribute("profileList", profileList);
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-Session-profileList: {0}", session.getAttribute("profileList"));
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-Session-profileList: {0}", session.getAttribute("profileList").hashCode());
             }
         }
         
@@ -82,19 +82,22 @@ public class GetMessageListAction extends Action{
             List<MessageEntity> messageList = messageResponse.readEntity(new GenericType<List<MessageEntity>>(){});
             List<DynaActionForm> finalMessageList = new LinkedList<>();
             
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-MENSAJES-LIST {0}", messageList.size());
+            
             if(!messageList.isEmpty()){
-                for (ProfileEntity profile : profileList) {
-                    for (MessageEntity message : messageList) {
+                for (MessageEntity message : messageList) {
+                    for (ProfileEntity profile : profileList) {
                         if(message.getOwner() == profile.getId()){
                             DynaActionForm m = new DynaActionForm();
                             m.setItems(message.toMap());
                             m.setItem("ownerName", profile.getLogin());
                             finalMessageList.add(m);
-                            break;
                         }
                     }
                 }
             }
+            
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-FINAL-MENSAJES-LIST {0}", finalMessageList.size());
             
             this.getForm().setItem("messageList", finalMessageList);
             this.getForm().setItem("profileType", profileType);

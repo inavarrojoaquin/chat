@@ -61,7 +61,7 @@
                                                 <li><a id="deletePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" ><fmt:message key="label_close" /></a></li>
                                             </c:when>
                                             <c:otherwise>
-                                                <li><a id="leavePrivateRoom" href="#" onclick="jsRoom.deletePrivateRoom(); return false;" ><fmt:message key="label_leave" /></a></li>
+                                                <li><a id="leavePrivateRoom" href="#" onclick="jsRoom.leavePrivateRoom(); return false;" ><fmt:message key="label_leave" /></a></li>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:when>
@@ -82,7 +82,6 @@
                         <div class="row">
                             
                             <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
-                            <div class="col-md-4 col-md-offset-4"><span class="label label-warning" id="error"></span></div>
                             
                             <div class="col-md-12"><h3><span class="label label-primary"><fmt:message key="label_room_name" /> ${roomName}</span></h3></div>
                             

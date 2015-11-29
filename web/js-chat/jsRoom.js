@@ -40,6 +40,12 @@ var jsRoom = {
             },
             success: function(html) {
                 jUtils.showing("messages", html);
+                var container = $('#messages div.modal-body'),
+                    scrollTo = $('#messages li:last');
+
+                container.scrollTop(
+                    scrollTo.offset().top - container.offset().top + container.scrollTop()
+                );
             }
         }).success(jsRoom.getParticipantList);
     }, 

@@ -38,7 +38,6 @@
                 <div class="row">
 
                     <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
-                    <div class="col-md-4 col-md-offset-4"><span class="label label-warning" id="error"></span></div>
                     
                     <div class="col-md-6" id="publicRooms"></div>
                     <div class="col-md-6" id="invitations"></div>
