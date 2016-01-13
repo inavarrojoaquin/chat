@@ -960,7 +960,7 @@ BEGIN
 			and m.datetime_of_creation >= (select date_time_of_access_start from User_login --Last user login
 											where date_time_of_access_start = (select max(date_time_of_access_start) 
 																			from User_login 
-																			where profile = @profile))
+																			where profile = @profile))			
 		end
 	else
 		begin

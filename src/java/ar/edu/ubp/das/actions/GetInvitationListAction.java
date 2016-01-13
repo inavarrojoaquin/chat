@@ -1,5 +1,6 @@
 package ar.edu.ubp.das.actions;
 
+import ar.edu.ubp.das.entities.InvitationComplexEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import java.util.List;
@@ -42,8 +43,8 @@ public class GetInvitationListAction extends Action{
         Response invitationResponse = invitationInvocation.invoke();
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-POS llamado a INVITATIONS: " + invitationResponse.getStatus());
-        
-        List<DynaActionForm> invitationsList = invitationResponse.readEntity(new GenericType<List<DynaActionForm>>(){});
+       
+        List<InvitationComplexEntity> invitationsList = invitationResponse.readEntity(new GenericType<List<InvitationComplexEntity>>(){});
         
         if(invitationsList != null){
             this.getForm().setItem("invitations", invitationsList);

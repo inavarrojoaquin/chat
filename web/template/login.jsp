@@ -60,7 +60,7 @@
                                               <input class="form-control" placeholder="Password" name="password" type="password" value="" required="">
                                           </div>
                                           <div class="form-group">
-                                              <input class="form-control btn btn-primary btn-block" type="submit" value="Sing up"/>
+                                              <input class="form-control btn btn-primary btn-block" type="submit" value="Sign up"/>
                                           </div>
                                       </fieldset>
                                   </form>

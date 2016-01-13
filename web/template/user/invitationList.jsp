@@ -5,8 +5,7 @@
     <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
         <c:set value="${form.invitations}" var="invitations" ></c:set>      
         <c:set value="${form.profileId}" var="profileId" ></c:set>   
-        <c:set value="${form.userLoginStart}" var="userLoginStart" ></c:set>   
-
+        
         <%-- Invitations --%>
         <c:choose>
             <c:when test="${!empty invitations}">
@@ -18,24 +17,24 @@
                         <ul class="media-list">
                             <c:forEach items="${invitations}" var="invitation" >
                                 <c:choose >
-                                    <c:when test="${invitation.getItem('state').equals('pending')}" >
-                                        <div id="${invitation.getItem("id")}">
+                                    <c:when test="${invitation.state == 'pending'}" >
+                                        <div id="${invitation.id}">
                                             <li class="media">
                                                 <div class="media-body">
                                                     <div class="media">
                                                         <a class="pull-left" href="#"><img class="media-object img-circle" src="img/invitation.png" /></a>
 
                                                         <div class="media-body">
-                                                            <p>Invitation from ${invitation.getItem("senderName")} to room ${invitation.getItem("roomName")}</p>
-                                                            <small class="text-muted"><p data-name="state"><fmt:message key="label_state"/> ${invitation.getItem("state")}</p></small>
+                                                            <p>Invitation from ${invitation.senderName} to room ${invitation.roomName}</p>
+                                                            <small class="text-muted"><p data-name="state"><fmt:message key="label_state"/> ${invitation.state}</p></small>
 
                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                 <a href="#" role="button" class="btn btn-default" 
-                                                                   onclick="jsHome.updateStateInvitation(${invitation.getItem('room')}, '${profileId}', ${invitation.getItem('id')}, 'accepted'); return false;" >
+                                                                   onclick="jsHome.updateStateInvitation(${invitation.room}, '${profileId}', ${invitation.id}, 'accepted'); return false;" >
                                                                     <fmt:message key="lebel_accept"/>
                                                                 </a>
                                                                 <a href="#" role="button" class="btn btn-default" 
-                                                                   onclick="jsHome.updateStateInvitation(${invitation.getItem('room')}, '${profileId}', ${invitation.getItem('id')}, 'rejected'); return false;" >
+                                                                   onclick="jsHome.updateStateInvitation(${invitation.room}, '${profileId}', ${invitation.id}, 'rejected'); return false;" >
                                                                     <fmt:message key="label_reject"/>
                                                                 </a>
                                                             </div>

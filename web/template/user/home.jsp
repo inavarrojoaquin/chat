@@ -35,6 +35,16 @@
             </nav> <%-- /.NavBar --%>
             
             <div class="container">
+                
+                <div class="tab-content">
+                    <div class="tab-pane" id="home">
+                      1
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                      2
+                    </div>
+                </div>
+                
                 <div class="row">
 
                     <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
