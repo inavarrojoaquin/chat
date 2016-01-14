@@ -39,6 +39,13 @@
                             </div>
                       </c:if>
                       <%-- /get response  --%>
+                      <%-- get response  --%>
+                      <c:if test="${error != null}" >
+                            <div class="col-md-6 col-md-offset-3">
+                                <div class="alert alert-danger" role="alert"><c:out value="${error}" ></c:out></div>
+                            </div>
+                      </c:if>
+                      <%-- /get response  --%>
                       <%-- sign up  --%>
                       <div class="row" style="padding: 70px;">
                           <div class="col-md-6 col-md-offset-3">
@@ -58,6 +65,12 @@
                                                   <i class="glyphicon glyphicon-lock"></i>
                                               </span>
                                               <input class="form-control" placeholder="Password" name="password" type="password" value="" required="">
+                                          </div>
+                                          <div class="form-group input-group">
+                                              <span class="input-group-addon">
+                                                  <i class="glyphicon glyphicon-lock"></i>
+                                              </span>
+                                              <input class="form-control" placeholder="Confirm password" name="confirmPassword" type="password" value="" required="">
                                           </div>
                                           <div class="form-group">
                                               <input class="form-control btn btn-primary btn-block" type="submit" value="Sign up"/>

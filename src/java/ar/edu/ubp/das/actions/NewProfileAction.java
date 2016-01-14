@@ -22,34 +22,36 @@ public class NewProfileAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {        
         System.out.println("NewProfileAction:execute");
        
-        ProfileEntity profile = new ProfileEntity();
-        profile.setLogin((String) this.getForm().getItem("userName"));
-        profile.setPassword((String) this.getForm().getItem("password"));
+        if(this.getForm().getItem("password").equals(this.getForm().getItem("confirmPassword"))){
+            ProfileEntity profile = new ProfileEntity();
+            profile.setLogin((String) this.getForm().getItem("userName"));
+            profile.setPassword((String) this.getForm().getItem("password"));
 
-        Client client = ClientBuilder.newClient();
-        
-        WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles");        
-        Invocation profilesInvocation = profileTarget.request().buildPost(Entity.json(profile));
-        Response res = profilesInvocation.invoke();
-        
-        String resp;
-        if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
-            HttpSession session = request.getSession(false);
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-profileList: {0}", session.getAttribute("profileList"));
+            Client client = ClientBuilder.newClient();
+
+            WebTarget profileTarget = client.target("http://localhost:8080/chat/webresources/profiles");        
+            Invocation profilesInvocation = profileTarget.request().buildPost(Entity.json(profile));
+            Response res = profilesInvocation.invoke();
             
-            if(session.getAttribute("profileList") != null){
-                profile = res.readEntity(new GenericType<ProfileEntity>(){});
-                List<ProfileEntity> profileList = (List<ProfileEntity>) session.getAttribute("profileList");
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-PRE-profileList: {0}", profileList.size());
-                profileList.add(profile);
-                session.setAttribute("profileList", profileList);
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-POS-profileList: {0}", profileList.size());
+            if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
+                HttpSession session = request.getSession(false);
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-profileList: {0}", session.getAttribute("profileList"));
+
+                if(session.getAttribute("profileList") != null){
+                    profile = res.readEntity(new GenericType<ProfileEntity>(){});
+                    List<ProfileEntity> profileList = (List<ProfileEntity>) session.getAttribute("profileList");
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-PRE-profileList: {0}", profileList.size());
+                    profileList.add(profile);
+                    session.setAttribute("profileList", profileList);
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-POS-profileList: {0}", profileList.size());
+                }
+                request.setAttribute("response", "Registro exitoso, realice el login");
+            }else {
+                request.setAttribute("error", "Error: El usuario ya existe...");
             }
-            resp = "Registro exitoso, realice el login";
-        }else {
-            resp = "El usuario ya existe...";
+        }else{
+            request.setAttribute("error", "Error: Las contraseñas ingresadas son diferentes. Vuelva a intentar el registro");
         }
-        request.setAttribute("response", resp);
         this.gotoPage("/template/login.jsp", request, response);
     }
 }
