@@ -88,15 +88,21 @@
                             <div class="col-md-8"> <%-- Left panel--%>
                                 <div id="messages"></div> <%-- Messages --%>
                                 <div class="panel-footer"> <%-- Enter message --%>
-                                    <div class="input-group" id="sendMessage">
-                                        <input type="text" class="form-control" name="message" placeholder="Enter message" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-info" name="send" type="button" onclick="jsRoom.sendMessage();" ><fmt:message key='label_send' /></button>
-                                        </span>
-                                    </div>
+                                    <form id="sendMessage"> <%-- send message  --%>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <input type="text" class="form-control" name="message" placeholder="Enter message" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input class="form-control btn btn-info" type="submit" value="Send" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form> <%-- /send message  --%>
                                 </div> <%-- /.Enter message --%>
                             </div> <%-- /.Left panel--%>
-
+                            
                             <div class="col-md-4"> <%-- Right panel --%>
                                 <div class="row">
                                     
@@ -111,11 +117,13 @@
                                                     <div class="panel-heading">
                                                         <fmt:message key="title_start_private_room" />                                                       
                                                     </div>
-                                                    <div class="input-group" id="createPrivateRoom">
-                                                        <input type="text" class="form-control" id="title" name="titleRoom" placeholder="I want to talk about..." required="" autofocus="">
-                                                        <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
-                                                        <input id="submit" class="form-control btn btn-primary btn-block" type="button" onclick="jsRoom.newPrivateRoom();" value="Send" />
-                                                    </div>
+                                                    <form id="createPrivateRoom">
+                                                        <div class="input-group" >
+                                                            <input type="text" class="form-control" id="title" name="titleRoom" placeholder="I want to talk about..." autofocus="" required="">
+                                                            <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
+                                                            <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" />
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div> <%-- /.New private chat --%>
                                         </c:when>
@@ -126,10 +134,12 @@
                                                         <div class="panel-heading">
                                                             <fmt:message key="label_invite_participant" />
                                                         </div>
-                                                        <div class="" id="inviteParticipant">
-                                                            <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
-                                                            <input id="submit" class="form-control btn btn-primary btn-block" type="button" onclick="jsRoom.inviteParticipant();" value="Send" />
-                                                        </div>
+                                                        <form id="inviteParticipant">
+                                                            <div>
+                                                                <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
+                                                                <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" />
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div> <%-- /.Invite participant --%>
                                             </c:if>

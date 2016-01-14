@@ -25,6 +25,24 @@ $(document).ready(function(){
         }
     }
     
+    //Detect enter-button when the user want send message
+    $("#sendMessage").submit(function(event){
+       event.preventDefault();
+       jsRoom.sendMessage();
+    });
+    
+    //Detect enter-button when the user want invite user to new private room
+    $("#createPrivateRoom").submit(function(event){
+       event.preventDefault();
+       jsRoom.newPrivateRoom();
+    });
+    
+    //Detect enter-button when the user want invite more users to private room
+    $("#inviteParticipant").submit(function(event){
+       event.preventDefault();
+       jsRoom.inviteParticipant();
+    });
+    
 });
 
 var jsRoom = {
