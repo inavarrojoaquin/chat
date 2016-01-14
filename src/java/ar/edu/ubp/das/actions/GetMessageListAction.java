@@ -1,5 +1,6 @@
 package ar.edu.ubp.das.actions;
 
+import ar.edu.ubp.das.entities.MessageComplexEntity;
 import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
@@ -80,7 +81,7 @@ public class GetMessageListAction extends Action{
 
         if(messageResponse.getStatus() == 200 && profileList != null){
             List<MessageEntity> messageList = messageResponse.readEntity(new GenericType<List<MessageEntity>>(){});
-            List<DynaActionForm> finalMessageList = new LinkedList<>();
+            List<MessageComplexEntity> finalMessageList = new LinkedList<>();
             
             Logger.getLogger(getClass().getName()).log(Level.INFO, "GetMessageListAction-MENSAJES-LIST {0}", messageList.size());
             
@@ -88,9 +89,9 @@ public class GetMessageListAction extends Action{
                 for (MessageEntity message : messageList) {
                     for (ProfileEntity profile : profileList) {
                         if(message.getOwner() == profile.getId()){
-                            DynaActionForm m = new DynaActionForm();
-                            m.setItems(message.toMap());
-                            m.setItem("ownerName", profile.getLogin());
+                            MessageComplexEntity m = new MessageComplexEntity();
+                            m.fromMap(message.toMap());
+                            m.setOwnerName(profile.getLogin());
                             finalMessageList.add(m);
                         }
                     }

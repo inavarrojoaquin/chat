@@ -22,8 +22,8 @@
                                         <div class="media">
                                             <a class="pull-left" href="#"><img class="media-object img-circle" src="img/room.png" /></a>
                                             <div class="media-body">
-                                                <a href="index.jsp?action=Room&roomId=${room.getItem("id")}&profileId=${profileId}&roomName=${room.getItem("name")}" >${room.getItem("name")}</a>
-                                                <small class="text-muted"><p><fmt:message key="label_user_cant"/> ${room.getItem("cant_user")}</p></small>
+                                                <a href="index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name}" >${room.name}</a>
+                                                <small class="text-muted"><p><fmt:message key="label_user_cant"/> ${room.cant_user}</p></small>
                                                 <hr />
                                             </div>
                                         </div>

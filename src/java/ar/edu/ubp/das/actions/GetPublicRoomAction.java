@@ -1,5 +1,6 @@
 package ar.edu.ubp.das.actions;
 
+import ar.edu.ubp.das.entities.RoomComplexEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import java.util.List;
@@ -38,10 +39,9 @@ public class GetPublicRoomAction extends Action{
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetPublicRoomAction-POS llamado a PUBLICROOM: " + publicRoomsResponse.getStatus());
         
-        List<DynaActionForm> publicRoomsList = publicRoomsResponse.readEntity(new GenericType<List<DynaActionForm>>(){});
+        List<RoomComplexEntity> publicRoomsList = publicRoomsResponse.readEntity(new GenericType<List<RoomComplexEntity>>(){});
         
         if(publicRoomsList != null){
-            
             this.getForm().setItem("publicRooms", publicRoomsList);
             this.getForm().setItem("profileId", profileId);
             this.gotoPage("/template/user/publicRoomList.jsp", request, response);

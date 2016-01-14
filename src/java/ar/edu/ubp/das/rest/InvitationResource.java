@@ -5,11 +5,6 @@ import ar.edu.ubp.das.entities.InvitationEntity;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import ar.edu.ubp.das.mvc.daos.Dao;
 import ar.edu.ubp.das.mvc.daos.DaoFactory;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,13 +13,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 /**
