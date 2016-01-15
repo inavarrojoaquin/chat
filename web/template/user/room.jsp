@@ -101,6 +101,8 @@
                                         </div>
                                     </form> <%-- /send message  --%>
                                 </div> <%-- /.Enter message --%>
+                                
+                                <div id="invitations" style="margin-top: 10px"></div> <%-- Invitations --%>
                             </div> <%-- /.Left panel--%>
                             
                             <div class="col-md-4"> <%-- Right panel --%>

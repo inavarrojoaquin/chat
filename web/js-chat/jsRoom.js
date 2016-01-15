@@ -23,6 +23,8 @@ $(document).ready(function(){
         if(roomVar.roomOwner == roomVar.profileId){
             jsRoom.reloadRejectedInvitations();
         }
+    }else{
+        jsRoom.getInvitationList();
     }
     
     //Detect enter-button when the user want send message
@@ -73,7 +75,7 @@ var jsRoom = {
             url: "index.jsp?action=GetParticipantList",
             type: "post",
             dataType: "html",            
-            data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId},
+            data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId, "profileId": roomVar.profileId},
             error: function(hr) {
                 jUtils.showing("error", hr);
             },
@@ -181,6 +183,21 @@ var jsRoom = {
         }).success(jsRoom.refreshRejectedInvitations);  
     },
     
+    getInvitationList: function(){
+        $.ajax({
+            url: "index.jsp?action=GetInvitationList",
+            type: "post",
+            dataType: "html",            
+            data:  {'profileId':roomVar.profileId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                jUtils.showing("invitations", html);
+            }
+        }).success(jsRoom.refreshInvitationList);
+    },
+    
     refreshMessage: function(){
         setTimeout(jsRoom.getMessageList, roomVar.RELOAD_TIME);
     },
@@ -191,6 +208,10 @@ var jsRoom = {
     
     refreshRejectedInvitations: function(){
         setTimeout(jsRoom.reloadRejectedInvitations, roomVar.RELOAD_TIME);
+    },
+    
+    refreshInvitationList: function(){
+        setTimeout(jsRoom.getInvitationList, roomVar.RELOAD_TIME);
     },
     
     newPrivateRoom: function(){

@@ -29,6 +29,7 @@ public class GetParticipantListAction extends Action{
         String roomId = (String) this.getForm().getItem("roomId");
         String profileType = (String) this.getForm().getItem("profileType");
         String userAccessId = (String) this.getForm().getItem("userAccessId");
+        String profileId = (String) this.getForm().getItem("profileId");
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetParticipantsListAction-Param: {0}", roomId);
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetParticipantsListAction-Param: {0}", profileType);
@@ -55,6 +56,7 @@ public class GetParticipantListAction extends Action{
             this.getForm().setItem("roomId", roomId);
             this.getForm().setItem("profileType", profileType);
             this.getForm().setItem("userAccessId", userAccessId);
+            this.getForm().setItem("profileId", profileId);
             this.gotoPage("/template/user/participantList.jsp", request, response);
         }
     }

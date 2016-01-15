@@ -8,6 +8,7 @@
         <c:set value="${form.profileType}" var="profileType" ></c:set>
         <c:set value="${form.roomId}" var="roomId" ></c:set> 
         <c:set value="${form.userAccessId}" var="userAccessId" ></c:set>
+        <c:set value="${form.profileId}" var="profileId" ></c:set>
         <c:set value="${form.flag}" var="inviteMore" ></c:set>
         
         <c:if test="${participants.size() > 0}"> 
@@ -27,28 +28,30 @@
             <div class="panel-body">
                 <ul class="media-list">
                 <c:forEach items="${participants}" var="participant" >
-                    <li class="media" id="${participant.id}">
-                        <div class="media-body">
-                            <div class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle" style="max-height:40px;" src="img/user.png" />
-                                </a>
-                                <div class="media-body" >
-                                    <c:choose>
-                                        <c:when test="${inviteMore == null}" >
-                                            <a href="#" onclick="jsRoom.addToInvite('${participant.login}'); return false;" >${participant.login}</a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a href="#" onclick="jsRoom.addToInviteList('${participant.login}'); return false;" >${participant.login}</a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <c:if test="${profileType.equals('ADMIN')}" >
-                                        <a href="#" onclick="jsRoom.ejectUser('${roomId}', '${participant.id}'); return false;" ><fmt:message key="label_eject_user"/></a>
-                                    </c:if> 
+                    <c:if test="${participant.id != profileId}" >
+                        <li class="media" id="${participant.id}">
+                            <div class="media-body">
+                                <div class="media">
+                                    <a class="pull-left" href="#">
+                                        <img class="media-object img-circle" style="max-height:40px;" src="img/user.png" />
+                                    </a>
+                                    <div class="media-body" >
+                                        <c:choose>
+                                            <c:when test="${inviteMore == null}" >
+                                                <a href="#" onclick="jsRoom.addToInvite('${participant.login}'); return false;" >${participant.login}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="#" onclick="jsRoom.addToInviteList('${participant.login}'); return false;" >${participant.login}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <c:if test="${profileType.equals('ADMIN')}" >
+                                            <a href="#" onclick="jsRoom.ejectUser('${roomId}', '${participant.id}'); return false;" ><fmt:message key="label_eject_user"/></a>
+                                        </c:if> 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    </c:if>
                 </c:forEach>
                 </ul>
             </div>
