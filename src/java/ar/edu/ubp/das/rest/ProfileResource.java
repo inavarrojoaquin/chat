@@ -261,4 +261,34 @@ public class ProfileResource {
             return null;
         }
     }
+    
+    /*Not used*/
+    @POST
+    @Path("usersLogin/actives/search")
+    @Produces("application/json")
+    public List<ProfileEntity> searchActivesUsersLogin(@FormParam("string_search") String string_search) {
+        try {
+            Dao dao;
+            DynaActionForm form;
+            List<DynaActionForm> resultSet;
+            List<ProfileEntity> profiles = new LinkedList<>();
+
+            dao = DaoFactory.getDao("Profile");
+            form = new DynaActionForm();
+            form.setItem("selector", "bySearchUsersActives");
+            form.setItem("string_search", string_search);
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet){
+                ProfileEntity profile = new ProfileEntity();
+                profile.fromMap(temp.getItems());
+                profiles.add(profile);
+            }
+            
+            return profiles;
+        } catch (Exception ex) {
+            Logger.getLogger(ProfileResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 }

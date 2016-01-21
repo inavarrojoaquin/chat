@@ -152,6 +152,35 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SearchUsersLogin ')is not null
+	drop procedure proc_SearchUsersLogin
+go
+
+CREATE PROCEDURE proc_SearchUsersLogin
+(
+ @string_search	varchar(255) = null
+)
+as
+begin
+
+  set @string_search = '%' + isnull(ltrim(rtrim(@string_search)), '') + '%' 
+
+  /*busca los usuarios logueados con date_end null y coincidan con la palabra de busqueda*/
+	select p.* from Profile p 
+	join (select u.* from User_login u
+			join (select l.profile, max(l.date_time_of_access_start) max_start
+				from User_login	l
+				group by l.profile)t
+			on u.profile = t.profile
+			and u.date_time_of_access_start = t.max_start)t2
+	on p.id = t2.profile
+	where p.type = 'USER'
+	and t2.date_time_of_access_end is null
+	and p.login like @string_search
+
+END
+GO
+
 if OBJECT_ID('proc_SelectRejectedInvitationsByRoom ')is not null
 	drop procedure proc_SelectRejectedInvitationsByRoom
 go
@@ -841,19 +870,20 @@ CREATE PROCEDURE proc_InviteParticipantToRoom
 AS
 BEGIN
   
-	if exists(select * from Profile p where p.login = @login)
-	 begin
-		insert into Invitation(room, sender, receiver, state)
-		select @room, @sender, p.id, 'pending'
-		from Profile p
-		where p.login = @login
-	 end
+	 if exists(select * from Profile p where p.login = @login)
+		 begin
+			insert into Invitation(room, sender, receiver, state)
+			select @room, @sender, p.id, 'pending'
+			from Profile p
+			where p.login = @login
+		 end
+	 else 
+		 begin
+			RAISERROR('Error, user not found', 16, 1)
+			ROLLBACK
+		 end
 END
 GO
-
-exec proc_InviteParticipantToRoom 1,3,'nico'
-
-
 
 /****************************************************
 				TABLE Message

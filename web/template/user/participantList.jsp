@@ -9,22 +9,13 @@
         <c:set value="${form.roomId}" var="roomId" ></c:set> 
         <c:set value="${form.userAccessId}" var="userAccessId" ></c:set>
         <c:set value="${form.profileId}" var="profileId" ></c:set>
-        <c:set value="${form.flag}" var="inviteMore" ></c:set>
         
         <c:if test="${participants.size() > 0}"> 
             <div class="panel panel-primary">
-            <c:choose>
-                <c:when test="${inviteMore == null}" >
-                    <div class="panel-heading">
-                        <fmt:message key="title_participant"/>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="panel-heading">
-                        <fmt:message key="title_participant_list"/>
-                    </div>
-                </c:otherwise>
-            </c:choose> 
+                <div class="panel-heading">
+                    <fmt:message key="title_participant"/>
+                </div>
+            </div>
             <div class="panel-body">
                 <ul class="media-list">
                 <c:forEach items="${participants}" var="participant" >

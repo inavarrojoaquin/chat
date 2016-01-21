@@ -8,8 +8,9 @@
         <title>Home</title>
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/jquery-ui.min.css" rel="stylesheet">
         <link href="css-chat/home.css" rel="stylesheet">
-
+    
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
@@ -44,7 +45,8 @@
             </div>
         </fmt:bundle>
         
-        <script lang="javascript" type="text/javascript" src="./js-chat/jquery.js"></script>    
+        <script lang="javascript" type="text/javascript" src="./js/jquery.min.js"></script>    
+        <script lang="javascript" type="text/javascript" src="./js/jquery-ui.min.js"></script>    
         <script lang="javascript" type="text/javascript" src="./js-chat/utils.js"></script>
         <script lang="javascript" type="text/javascript" src="./js-chat/jsHome.js"></script>  
         <script src="js/bootstrap.min.js"></script>

@@ -7,7 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Room</title>
         <!-- Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/jquery-ui.min.css" rel="stylesheet">
         <link href="css-chat/room.css" rel="stylesheet">
     </head>
     <body>
@@ -155,9 +156,11 @@
             </c:choose>
         </fmt:bundle>
                     
-        <script lang="javascript" type="text/javascript" src="./js-chat/jquery.js"></script>    
+        <script lang="javascript" type="text/javascript" src="./js/jquery.min.js"></script>  
+        <script lang="javascript" type="text/javascript" src="./js/jquery-ui.min.js"></script>    
         <script lang="javascript" type="text/javascript" src="./js-chat/utils.js"></script>
         <script lang="javascript" type="text/javascript" src="./js-chat/jsRoom.js"></script>  
-        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+ 
     </body>
 </html>

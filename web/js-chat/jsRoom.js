@@ -10,6 +10,7 @@ $(document).ready(function(){
     roomVar.profileId = $("input[name='profileId']").val();
     roomVar.profileLogin = $("input[name='profileLogin']").val();
     roomVar.userAccessId = $("input[name='userAccessId']").val();
+    roomVar.availableTags = [];
     
     // null y undefined evaluan en falso en js
     // !! transforma en boolean
@@ -18,7 +19,7 @@ $(document).ready(function(){
     }
     
     if(roomVar.privateRoom){
-        jsRoom.getAllLoguedParticipantList();
+        jsRoom.reloadIfExistPrivateRoom();
         
         if(roomVar.roomOwner == roomVar.profileId){
             jsRoom.reloadRejectedInvitations();
@@ -45,6 +46,51 @@ $(document).ready(function(){
        jsRoom.inviteParticipant();
     });
     
+    /*Enable automplete in input text*/
+    $("#inviteParticipant #inviteEmail").autocomplete({
+        source: roomVar.availableTags
+    });
+    
+    /*******MULTI SELECT*******/
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#inviteParticipant #inviteEmail" )
+      // don't navigate away from the field on tab when selecting an item
+      .bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            roomVar.availableTags, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( ", " );
+          return false;
+        }
+      });
+      /**************/
 });
 
 var jsRoom = {
@@ -130,21 +176,6 @@ var jsRoom = {
         }).success(jsRoom.refreshMessage);                
     },
     
-    getAllLoguedParticipantList: function(){
-        $.ajax({
-            url: "index.jsp?action=GetAllLoguedParticipantList",
-            type: "post",
-            dataType: "html",            
-            data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId},
-            error: function(hr) {
-                jUtils.showing("error", hr);
-            },
-            success: function(html) {
-                jUtils.showing("allLoguedParticipants", html);
-            }
-        }).success(jsRoom.reloadIfExistPrivateRoom);
-    },
-    
     /**Check if the room has benn removed*/
     reloadIfExistPrivateRoom: function(){
         $.ajax({
@@ -161,14 +192,33 @@ var jsRoom = {
                     roomVar.privateRoom ? window.close() : parent.history.back();
                 }
             }
-        }).success(jsRoom.refreshAllLoguedParticipants);                
+        }).success(jsRoom.reloadSearchUserActives);                
+    },
+    
+    reloadSearchUserActives: function(){
+        roomVar.availableTags = [];
+        $.ajax({
+            url: "index.jsp?action=SearchUsersActives",
+            type: "post",
+            dataType: "json",            
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(data) {
+                if(data != "[]"){
+                    $.each(data, function(index, element) {
+                        roomVar.availableTags.push(element.login);
+                    });
+                }
+            }
+        }).success(jsRoom.refreshIfExistPrivateRoom);                
     },
     
     reloadRejectedInvitations: function(){
         $.ajax({
             url: "index.jsp?action=UpdateRejectedInvitation",
             type: "post",
-            dataType: "json",            
+            dataType: "json",
             data:  {"roomId" : roomVar.roomId},
             error: function(hr) {
                 jUtils.showing("error", hr);
@@ -202,8 +252,8 @@ var jsRoom = {
         setTimeout(jsRoom.getMessageList, roomVar.RELOAD_TIME);
     },
     
-    refreshAllLoguedParticipants: function(){
-        setTimeout(jsRoom.getAllLoguedParticipantList, roomVar.RELOAD_TIME);
+    refreshIfExistPrivateRoom: function(){
+        setTimeout(jsRoom.reloadIfExistPrivateRoom, roomVar.RELOAD_TIME);
     },
     
     refreshRejectedInvitations: function(){
@@ -241,14 +291,19 @@ var jsRoom = {
         $.ajax({
             url: "index.jsp?action=InviteParticipant",
             type: "post",
-            dataType: "html",            
+            dataType: "text",            
             data:  {'roomId': roomVar.roomId, 'profileId': roomVar.profileId, 'participantList': participantList},
             error: function(hr) {
                 jUtils.showing("error", hr);
             },
-            success: function(html) {
-                $("input[name='inviteEmailRoom']").val("");
-                alert("Send invitations success.");
+            success: function(data) {
+                if(data != "error"){
+                    $("input[name='inviteEmailRoom']").val("");
+                    alert("Send invitations success.");
+                }else{
+                    $("input[name='inviteEmailRoom']").val("");
+                    alert("Error, user not found");
+                }
             }
         });
     },
@@ -357,3 +412,22 @@ var jsRoom = {
     }
     
 };
+
+        /*
+         * Detecta cuando se pulsa una tecla en el input text
+         * */
+        
+//    $("#inviteParticipant #inviteEmail").on('keypress', function(event){
+//        var keyPress = String.fromCharCode(event.which); 
+//        //var availableTags = [];
+//        var input = $.trim($(this).val().split(",").pop());
+//        var string_search = input + keyPress;
+//        var stringSize = input.length;    
+//      
+//        if(event.which == 8 || event.which == 32){ //borrado y espacio
+//            string_search = input;
+//            if(stringSize == 1){
+//                string_search = "";
+//            }
+//        }
+//    });

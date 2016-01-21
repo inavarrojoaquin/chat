@@ -1,8 +1,5 @@
 package ar.edu.ubp.das.actions;
 
-import ar.edu.ubp.das.entities.InvitationEntity;
-import ar.edu.ubp.das.entities.ProfileEntity;
-import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +11,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Form;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -37,25 +33,35 @@ public class InviteParticipantAction extends Action{
         
         Client client = ClientBuilder.newClient();
         
-        String[] loginList = participantList.split(";");
-            
+        String[] loginList = participantList.split(",");
+        boolean flag = true;
+        
         for (String login : loginList) {
-            System.out.println("login: " + login);
+            if(!login.trim().isEmpty()){
+                System.out.println("login: " + login);
             
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "InviteParticipantAction-PRE llamado a INVITATION");
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "InviteParticipantAction-PRE llamado a INVITATION");
 
-            Form form = new Form();
-            form.param("room", roomId);
-            form.param("sender", profileId);
-            form.param("login", login);
-            WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/invite/participant/to/room");        
-            Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
-            Response invitationResponse = invitationInvocation.invoke();
+                Form form = new Form();
+                form.param("room", roomId);
+                form.param("sender", profileId);
+                form.param("login", login.trim());
+                WebTarget invitationTarget = client.target("http://localhost:8080/chat/webresources/invitations/invite/participant/to/room");        
+                Invocation invitationInvocation = invitationTarget.request().buildPost(Entity.form(form));
+                Response invitationResponse = invitationInvocation.invoke();
 
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "InviteParticipantAction-POS llamado a INVITATION: " + invitationResponse.getStatus());
-            if(invitationResponse.getStatus() == 200){
-                System.out.println("Send invitation...");
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "InviteParticipantAction-POS llamado a INVITATION: " + invitationResponse.getStatus());
+                if(invitationResponse.getStatus() == 200){
+                    System.out.println("Send invitation...");
+                }else{
+                    System.out.println("Error, user not found");
+                    flag = false;
+                }
             }
+        }
+        
+        if(!flag){
+            response.getWriter().write("error");
         }
     }
     
