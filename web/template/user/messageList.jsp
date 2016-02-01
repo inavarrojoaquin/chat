@@ -20,7 +20,7 @@
                                 <li class="media" id="${message.id}">
                                     <div class="media-body">
                                         <div class="media">
-                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="img/user.png" /></a>
+                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="/chat/img/user.png" /></a>
                                             <div class="media-body">
                                                 <p>${message.body}</p>
                                                 <small class="text-muted">${message.ownerName} | <fmt:formatDate type="both" dateStyle="short" timeStyle="short" value="${message.datetimeOfCreation}" /></small>

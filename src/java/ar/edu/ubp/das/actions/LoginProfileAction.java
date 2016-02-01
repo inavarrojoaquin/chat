@@ -47,7 +47,7 @@ public class LoginProfileAction extends Action{
         
         if(session.getAttribute("profile") != null){            
             this.getForm().setItem("profile", session.getAttribute("profile"));
-            this.gotoPage("/template/user/home.jsp", request, response);            
+            this.gotoPage("/template/user/presentation.jsp", request, response);            
         }else{
             String login = (String) this.getForm().getItem("userName");
             String password = (String) this.getForm().getItem("password");
@@ -81,7 +81,8 @@ public class LoginProfileAction extends Action{
                 
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-SessionAttribute: {0}", session.getAttribute("profile"));
                 
-                this.gotoPage("/template/user/home.jsp", request, response);
+                //this.gotoPage("/template/user/home.jsp", request, response);
+                this.gotoPage("/template/user/presentation.jsp", request, response);
             }
             else {
                 request.setAttribute("response", "User not found or password incorrect...");

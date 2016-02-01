@@ -22,7 +22,7 @@
                                             <li class="media">
                                                 <div class="media-body">
                                                     <div class="media">
-                                                        <a class="pull-left" href="#"><img class="media-object img-circle" src="img/invitation.png" /></a>
+                                                        <a class="pull-left" href="#"><img class="media-object img-circle" src="/chat/img/invitation.png" /></a>
 
                                                         <div class="media-body">
                                                             <p>Invitation from ${invitation.senderName} to room ${invitation.roomName}</p>

@@ -24,7 +24,7 @@
                             <div class="media-body">
                                 <div class="media">
                                     <a class="pull-left" href="#">
-                                        <img class="media-object img-circle" style="max-height:40px;" src="img/user.png" />
+                                        <img class="media-object img-circle" style="max-height:40px;" src="/chat/img/user.png" />
                                     </a>
                                     <div class="media-body" >
                                         <c:choose>

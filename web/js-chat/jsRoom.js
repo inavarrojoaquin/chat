@@ -97,7 +97,7 @@ var jsRoom = {
     
     getMessageList: function(){
         $.ajax({
-            url: "index.jsp?action=GetMessageList",
+            url: "/chat/index.jsp?action=GetMessageList",
             type: "post",
             dataType: "html",            
             data:  {"roomId":roomVar.roomId, "roomType":roomVar.roomType, "profileId":roomVar.profileId, "profileType":roomVar.profileType},
@@ -118,7 +118,7 @@ var jsRoom = {
     
     getParticipantList: function(){
         $.ajax({
-            url: "index.jsp?action=GetParticipantList",
+            url: "/chat/index.jsp?action=GetParticipantList",
             type: "post",
             dataType: "html",            
             data:  {"roomId":roomVar.roomId, "profileType":roomVar.profileType, "userAccessId":roomVar.userAccessId, "profileId": roomVar.profileId},
@@ -144,7 +144,7 @@ var jsRoom = {
     
     getPublicRoomByProfile: function(){
         $.ajax({
-            url: "index.jsp?action=GetPublicRoomByProfile",
+            url: "/chat/index.jsp?action=GetPublicRoomByProfile",
             type: "post",
             dataType: "html",            
             data:  {'profileId':roomVar.profileId},
@@ -160,7 +160,7 @@ var jsRoom = {
     /**Check if the user has been ejected*/
     reloadAccessPolicy: function(){
         $.ajax({
-            url: "index.jsp?action=UpdateCheckAccessPolicy",
+            url: "/chat/index.jsp?action=UpdateCheckAccessPolicy",
             type: "post",
             dataType: "html",            
             data:  {'roomId': roomVar.roomId, 'profileId': roomVar.profileId},
@@ -179,7 +179,7 @@ var jsRoom = {
     /**Check if the room has benn removed*/
     reloadIfExistPrivateRoom: function(){
         $.ajax({
-            url: "index.jsp?action=UpdateCheckIfExistPrivateRoom",
+            url: "/chat/index.jsp?action=UpdateCheckIfExistPrivateRoom",
             type: "post",
             dataType: "html",            
             data:  {'roomId': roomVar.roomId},
@@ -198,7 +198,7 @@ var jsRoom = {
     reloadSearchUserActives: function(){
         roomVar.availableTags = [];
         $.ajax({
-            url: "index.jsp?action=SearchUsersActives",
+            url: "/chat/index.jsp?action=SearchUsersActives",
             type: "post",
             dataType: "json",            
             error: function(hr) {
@@ -216,7 +216,7 @@ var jsRoom = {
     
     reloadRejectedInvitations: function(){
         $.ajax({
-            url: "index.jsp?action=UpdateRejectedInvitation",
+            url: "/chat/index.jsp?action=UpdateRejectedInvitation",
             type: "post",
             dataType: "json",
             data:  {"roomId" : roomVar.roomId},
@@ -235,7 +235,7 @@ var jsRoom = {
     
     getInvitationList: function(){
         $.ajax({
-            url: "index.jsp?action=GetInvitationList",
+            url: "/chat/index.jsp?action=GetInvitationList",
             type: "post",
             dataType: "html",            
             data:  {'profileId':roomVar.profileId},
@@ -269,7 +269,7 @@ var jsRoom = {
         var inviteEmail = $("input[name='inviteEmailRoom']").val();
 
         $.ajax({
-            url: "index.jsp?action=NewPrivateRoom",
+            url: "/chat/index.jsp?action=NewPrivateRoom",
             type: "post",
             dataType: "html",            
             data:  {'profileId': roomVar.profileId, 'title': title, 'inviteEmail': inviteEmail},
@@ -289,7 +289,7 @@ var jsRoom = {
         var participantList = $("input[name='inviteEmailRoom']").val();
 
         $.ajax({
-            url: "index.jsp?action=InviteParticipant",
+            url: "/chat/index.jsp?action=InviteParticipant",
             type: "post",
             dataType: "text",            
             data:  {'roomId': roomVar.roomId, 'profileId': roomVar.profileId, 'participantList': participantList},
@@ -312,7 +312,7 @@ var jsRoom = {
         var message = $("#sendMessage input[name='message']").val();
         
         $.ajax({
-            url: "index.jsp?action=SendMessage",
+            url: "/chat/index.jsp?action=SendMessage",
             type: "post",
             dataType: "html",            
             data: {"roomId":roomVar.roomId, "profileId":roomVar.profileId, "profileLogin":roomVar.profileLogin ,"roomType":roomVar.roomType, "profileType":roomVar.profileType, "message": message},
@@ -337,7 +337,7 @@ var jsRoom = {
         var id = messageId;
 
         $.ajax({
-            url: "index.jsp?action=DeleteMessage",
+            url: "/chat/index.jsp?action=DeleteMessage",
             type: "post",
             dataType: "html",            
             data:  {'id': id},
@@ -352,7 +352,7 @@ var jsRoom = {
     
     deletePrivateRoom: function(){
         $.ajax({
-            url: "index.jsp?action=DeletePrivateRoom",
+            url: "/chat/index.jsp?action=DeletePrivateRoom",
             type: "post",
             dataType: "html",            
             data:  {'roomId': roomVar.roomId},
@@ -367,7 +367,7 @@ var jsRoom = {
     
     leavePrivateRoom: function(){
         $.ajax({
-            url: "index.jsp?action=LeaveGroup",
+            url: "/chat/index.jsp?action=LeaveGroup",
             type: "post",
             dataType: "html",            
             data:  {'userAccessId': roomVar.userAccessId},
@@ -398,7 +398,7 @@ var jsRoom = {
         var parent = $("#participants li#"+profileId);
         
         $.ajax({
-            url: "index.jsp?action=EjectUser",
+            url: "/chat/index.jsp?action=EjectUser",
             type: "post",
             dataType: "html",            
             data:  {'roomId': roomId, 'profileId': profileId},

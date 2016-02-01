@@ -20,9 +20,9 @@
                                 <li class="media">
                                     <div class="media-body">
                                         <div class="media">
-                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="img/room.png" /></a>
+                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="/chat/img/room.png" /></a>
                                             <div class="media-body">
-                                                <a href="index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name}" >${room.name}</a>
+                                                <a href="#" onclick="jsHome.openPublicRoom('/chat/index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name}', '${room.name}'); return false;" >${room.name}</a>
                                                 <small class="text-muted"><p><fmt:message key="label_user_cant"/> ${room.cant_user}</p></small>
                                                 <hr />
                                             </div>
@@ -45,9 +45,9 @@
                                 <li class="media">
                                     <div class="media-body">
                                         <div class="media">
-                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="img/room.png" /></a>
+                                            <a class="pull-left" href="#"><img class="media-object img-circle" src="/chat/img/room.png" /></a>
                                             <div class="media-body">
-                                                <a href="index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name} ">${room.name}</a>
+                                                <a href="/chat/index.jsp?action=Room&roomId=${room.id}&profileId=${profileId}&roomName=${room.name} ">${room.name}</a>
                                                 <hr />
                                             </div>
                                         </div>

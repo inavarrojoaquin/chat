@@ -7,9 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Room</title>
         <!-- Bootstrap -->
-        <link href="css/bootstrap.css" rel="stylesheet">
-        <link href="css/jquery-ui.min.css" rel="stylesheet">
-        <link href="css-chat/room.css" rel="stylesheet">
+        <link href="/chat/css/bootstrap.css" rel="stylesheet">
+        <link href="/chat/css/jquery-ui.min.css" rel="stylesheet">
+        <link href="/chat/css-chat/room.css" rel="stylesheet">
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
@@ -42,7 +42,7 @@
                             <div class="col-md-4">
                                 <div class="btn-group btn-group-justified" role="group" aria-label="">
                                     <input type="hidden" value="${accessDenied}" name="accessDenied" />            
-                                    <a role="button" href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
+                                    <a role="button" href="/chat/index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
                                     <h3><span class="label label-danger"><fmt:message key="label_access_denied" /></span></h3>
                                 </div>
                             </div>
@@ -67,8 +67,8 @@
                                         </c:choose>
                                     </c:when>
                                     <c:otherwise>
-                                        <li><a href="index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a></li>
-                                        <li><a href="index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" ><fmt:message key="label_leave" /></a></li> 
+                                        <li><a href="/chat/index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a></li>
+                                        <li><a href="/chat/index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" ><fmt:message key="label_leave" /></a></li> 
                                     </c:otherwise>
                                 </c:choose>
                                 </ul>
@@ -156,11 +156,11 @@
             </c:choose>
         </fmt:bundle>
                     
-        <script lang="javascript" type="text/javascript" src="./js/jquery.min.js"></script>  
-        <script lang="javascript" type="text/javascript" src="./js/jquery-ui.min.js"></script>    
-        <script lang="javascript" type="text/javascript" src="./js-chat/utils.js"></script>
-        <script lang="javascript" type="text/javascript" src="./js-chat/jsRoom.js"></script>  
-        <script src="js/bootstrap.js"></script>
+        <script lang="javascript" type="text/javascript" src="/chat/js/jquery.min.js"></script>  
+        <script lang="javascript" type="text/javascript" src="/chat/js/jquery-ui.min.js"></script>    
+        <script lang="javascript" type="text/javascript" src="/chat/js-chat/utils.js"></script>
+        <script lang="javascript" type="text/javascript" src="/chat/js-chat/jsRoom.js"></script>  
+        <script src="/chat/js/bootstrap.js"></script>
  
     </body>
 </html>

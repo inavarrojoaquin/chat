@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css-chat/signin.css" rel="stylesheet">
+    <link href="/chat/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/chat/css-chat/signin.css" rel="stylesheet">
+    
   </head>
   <body>
         <c:choose>
@@ -86,7 +87,8 @@
           </c:otherwise>
         </c:choose>
     
-    <script lang="javascript" type="text/javascript" src="./js-chat/jquery.js"></script>    
-    <script src="js/bootstrap.min.js"></script>
+    <script lang="javascript" type="text/javascript" src="/chat/js/jquery.min.js"></script>    
+    <script src="/chat/js/bootstrap.min.js"></script>
+    
   </body>
 </html>

@@ -2,17 +2,17 @@ var homeVar = {};
 
 $(document).ready(function(){
     homeVar.RELOAD_TIME = 15000;
-    homeVar.profileId = $("input[name='profileId']").val();
+    homeVar.profileId = window.top.jsPresentation.getProfileId();
     
     jsHome.getPublicRoom();
-    jsHome.getInvitationList();
+    //jsHome.getInvitationList();
 });
 
 var jsHome = {
        
     getPublicRoom: function(){
         $.ajax({
-            url: "index.jsp?action=GetPublicRoom",
+            url: "/chat/index.jsp?action=GetPublicRoom",
             type: "post",
             dataType: "html",            
             data:  {'profileId':homeVar.profileId},
@@ -27,7 +27,7 @@ var jsHome = {
     
     getInvitationList: function(){
         $.ajax({
-            url: "index.jsp?action=GetInvitationList",
+            url: "/chat/index.jsp?action=GetInvitationList",
             type: "post",
             dataType: "html",            
             data:  {'profileId':homeVar.profileId},
@@ -56,7 +56,7 @@ var jsHome = {
         var newState = newState;
 
         $.ajax({
-            url: "index.jsp?action=UpdateStateInvitation",
+            url: "/chat/index.jsp?action=UpdateStateInvitation",
             type: "post",
             dataType: "html",            
             data:  {'id': id, 'newState': newState},
@@ -72,6 +72,10 @@ var jsHome = {
                 }                            
             }
         });
+    },
+    
+    openPublicRoom: function(url, roomName){
+        window.top.jsPresentation.setTab(url, roomName);
     }
 };
 
