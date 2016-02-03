@@ -14,10 +14,10 @@
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
             <c:set value="${form.room}" var="room" ></c:set>
-            <c:set value="${room.getId()}" var="roomId" ></c:set>
             <c:set value="${room.getName()}" var="roomName" ></c:set>
             <c:set value="${room.getType()}" var="roomType" ></c:set>
             <c:set value="${room.getOwner()}" var="roomOwner" ></c:set>
+            <c:set value="${form.roomId}" var="roomId" ></c:set>
             <c:set value="${form.profile}" var="profile" ></c:set>           
             <c:set value="${profile.getLogin()}" var="profileLogin" ></c:set>
             <c:set value="${profile.getId()}" var="profileId" ></c:set>        

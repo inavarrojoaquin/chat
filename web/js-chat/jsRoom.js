@@ -128,7 +128,7 @@ var jsRoom = {
                 var cant = $("#participants li[id]").length;
 
                 if(roomVar.privateRoom){
-                    if(cant > 1){
+                    if(cant >= 1){
                         $("input[name='message']").removeAttr('disabled');
                         $("input[name='send']").removeAttr('disabled');
                     }else{
@@ -153,7 +153,7 @@ var jsRoom = {
             success: function(html) {
                 if($.trim(html) == "ProfileEjected"){
                     alert("You has been ejected to this room");
-                    closeRoom(roomVar.roomId);
+                    jsRoom.closeRoom(roomVar.roomId);
                 }
             }
         }).success(jsRoom.getInvitationList);                
