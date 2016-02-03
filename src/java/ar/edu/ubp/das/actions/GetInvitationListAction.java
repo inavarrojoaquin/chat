@@ -28,8 +28,10 @@ public class GetInvitationListAction extends Action{
         System.out.println("GetInvitationListAction:execute");
         
         String profileId = (String) this.getForm().getItem("profileId");
+        String callFrom = (String) this.getForm().getItem("callFrom");
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-Param: {0}", profileId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "GetInvitationListAction-Param: {1}", callFrom);
         
         Client client = ClientBuilder.newClient();
  
@@ -49,6 +51,7 @@ public class GetInvitationListAction extends Action{
         if(invitationsList != null){
             this.getForm().setItem("invitations", invitationsList);
             this.getForm().setItem("profileId", profileId);
+            this.getForm().setItem("callFrom", callFrom);
             this.gotoPage("/template/user/invitationList.jsp", request, response);
         }
     }

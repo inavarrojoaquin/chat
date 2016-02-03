@@ -39,7 +39,7 @@ public class LoginProfileAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("LoginProfileAction:execute");  
         
-        HttpSession session = request.getSession(false); 
+        HttpSession session = request.getSession(); 
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 1: " + session);
         Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-Session 2: " + session.getAttribute("profile"));

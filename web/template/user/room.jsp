@@ -41,8 +41,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="btn-group btn-group-justified" role="group" aria-label="">
-                                    <input type="hidden" value="${accessDenied}" name="accessDenied" />            
-                                    <a role="button" href="/chat/index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a>
+                                    <input type="hidden" value="${accessDenied}" name="accessDenied" />
+                                    <a role="button" href="#" onclick="jsRoom.closeRoom('${roomId}'); return false;" ><fmt:message key="label_close" /></a>
                                     <h3><span class="label label-danger"><fmt:message key="label_access_denied" /></span></h3>
                                 </div>
                             </div>
@@ -50,7 +50,7 @@
                     </div>
                 </c:when>
                 <c:otherwise>
-                    <nav class="navbar navbar-inverse navbar-fixed-top"> <%-- NavBar --%>
+                    <nav class="navbar navbar-default navbar-fixed-top"> <%-- NavBar --%>
                         <div class="container">
                             <!-- Collect the nav links, forms, and other content for toggling -->
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -67,13 +67,9 @@
                                         </c:choose>
                                     </c:when>
                                     <c:otherwise>
-                                        <li><a href="/chat/index.jsp?action=LoginProfile" ><fmt:message key="label_close" /></a></li>
-                                        <li><a href="/chat/index.jsp?action=LeaveGroup&userAccessId=${userAccess.id}" ><fmt:message key="label_leave" /></a></li> 
+                                        <li><a id="leavePrivateRoom" href="#" onclick="jsRoom.leavePrivateRoom(); return false;" ><fmt:message key="label_leave" /></a></li>
                                     </c:otherwise>
                                 </c:choose>
-                                </ul>
-                                <ul class="nav navbar-nav navbar-right">
-                                    <p class="navbar-text">${profileLogin}</p>
                                 </ul>
                             </div><!-- /.navbar-collapse -->
                         </div><!-- /.container-fluid -->
@@ -159,8 +155,9 @@
         <script lang="javascript" type="text/javascript" src="/chat/js/jquery.min.js"></script>  
         <script lang="javascript" type="text/javascript" src="/chat/js/jquery-ui.min.js"></script>    
         <script lang="javascript" type="text/javascript" src="/chat/js-chat/utils.js"></script>
+        <script lang="javascript" type="text/javascript" src="/chat/js-chat/jsPresentation.js"></script>
         <script lang="javascript" type="text/javascript" src="/chat/js-chat/jsRoom.js"></script>  
         <script src="/chat/js/bootstrap.js"></script>
- 
+        
     </body>
 </html>

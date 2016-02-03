@@ -5,6 +5,8 @@
     <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
         <c:set value="${form.invitations}" var="invitations" ></c:set>      
         <c:set value="${form.profileId}" var="profileId" ></c:set>   
+        <c:set value="${form.callFrom}" var="callFrom" ></c:set>  
+        <c:set value="${callFrom == 'home' ? 'jsHome' : 'jsRoom'}" var="from" ></c:set>
         
         <%-- Invitations --%>
         <c:choose>
@@ -30,11 +32,11 @@
 
                                                             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                                                 <a href="#" role="button" class="btn btn-default" 
-                                                                   onclick="jsHome.updateStateInvitation(${invitation.room}, '${profileId}', ${invitation.id}, 'accepted'); return false;" >
-                                                                    <fmt:message key="lebel_accept"/>
+                                                                onclick="${from}.updateStateInvitation('${invitation.room}', '${profileId}', '${invitation.id}', 'accepted', '${invitation.roomName}'); return false;">
+                                                                <fmt:message key="lebel_accept"/>
                                                                 </a>
                                                                 <a href="#" role="button" class="btn btn-default" 
-                                                                   onclick="jsHome.updateStateInvitation(${invitation.room}, '${profileId}', ${invitation.id}, 'rejected'); return false;" >
+                                                                   onclick="${from}.updateStateInvitation('${invitation.room}', '${profileId}', '${invitation.id}', 'rejected', '${invitation.roomName}'); return false;" >
                                                                     <fmt:message key="label_reject"/>
                                                                 </a>
                                                             </div>

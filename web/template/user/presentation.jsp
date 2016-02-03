@@ -22,9 +22,9 @@
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse">
                         <ul class="nav nav-pills head-menu" id="tabs">
-                            <li class="active" ><a href="#iframe" data-toggle="tab" id="home" data-url="template/user/home.jsp" >Home</a></li>
-                            <li class="pull-right"><a href="/chat/index.jsp?action=LogoutProfile"><fmt:message key="label_logout"/></a></li>
-                            <li class="pull-right"><a data-toggle="tab">${profileLogin}</a></li>
+                            <li class="active pull-left" id="home"><a href="#iframe" data-toggle="tab" data-url="template/user/home.jsp" >Home</a></li>
+                            <li class="pull-right" id="logout"><a href="index.jsp?action=LogoutProfile"><fmt:message key="label_logout"/></a></li>
+                            <li class="pull-right"><a data-toggle="tab" onclick="return false;">${profileLogin}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -33,8 +33,11 @@
             <div class="container">
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="iframe">
-                        <iframe src="template/user/home.jsp" frameborder="0" framespacing="0"  border="0"
-                               scrolling="auto" style="position:absolute; left:0px; top:50px; width:100%; height:100%; "></iframe>
+                        <iframe
+                            sandbox="allow-same-origin allow-scripts allow-modals allow-popups allow-forms allow-pointer-lock allow-top-navigation"
+                            src="template/user/home.jsp" frameborder="0" framespacing="0"  border="0"
+                            scrolling="auto" style="position:absolute; left:0px; top:50px; width:100%; height:100%; "
+                        ></iframe>
                     </div>
                 </div>
             </div>

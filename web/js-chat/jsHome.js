@@ -5,7 +5,7 @@ $(document).ready(function(){
     homeVar.profileId = window.top.jsPresentation.getProfileId();
     
     jsHome.getPublicRoom();
-    //jsHome.getInvitationList();
+    jsHome.getInvitationList();
 });
 
 var jsHome = {
@@ -30,7 +30,7 @@ var jsHome = {
             url: "/chat/index.jsp?action=GetInvitationList",
             type: "post",
             dataType: "html",            
-            data:  {'profileId':homeVar.profileId},
+            data:  {'profileId':homeVar.profileId, 'callFrom':'home'},
             error: function(hr) {
                 jUtils.showing("error", hr);
             },
@@ -48,7 +48,7 @@ var jsHome = {
         setTimeout(jsHome.getInvitationList, homeVar.RELOAD_TIME);
     },
     
-    updateStateInvitation: function(room, profile, id, newState){
+    updateStateInvitation: function(room, profile, id, newState, roomName){
         var element = $("#invitations a");
         var room = room;
         var profileId = profile;
@@ -66,7 +66,8 @@ var jsHome = {
             success: function(html) {
                 if(newState == "accepted"){
                     element.parents("div#"+id).remove();
-                    window.open("http://localhost:8080/chat/index.jsp?action=Room&profileId="+profileId+"&roomId="+room , '_blank');
+                    var url = "http://localhost:8080/chat/index.jsp?action=Room&profileId=" + profileId + "&roomId=" + room;
+                    window.top.jsPresentation.setTab(url, "Room: " + roomName, room);
                 }else {
                     element.parents("div#"+id).remove();
                 }                            
@@ -74,8 +75,9 @@ var jsHome = {
         });
     },
     
-    openPublicRoom: function(url, roomName){
-        window.top.jsPresentation.setTab(url, roomName);
+    openPublicRoom: function(url, roomName, roomId){
+        window.top.jsPresentation.setTab(url, roomName, roomId);
     }
+    
 };
 

@@ -17,9 +17,9 @@ var jsPresentation = {
         return varPresentation.profileId;
     },
     
-    setTab: function(url, roomName){
+    setTab: function(url, roomName, roomId){
         var reference = $('#tabs li.pull-right').last();
-        var newElement = $('<li><a href="#iframe" data-toggle="tab" id="' + roomName + '" data-url="' + url + '">' + roomName + '</a></li>');
+        var newElement = $('<li id="'+roomId+'" class="pull-left"><a href="#iframe" data-toggle="tab" data-url="' + url + '">' + roomName + '</a></li>');
         newElement.insertBefore( reference );
         
         newElement.find("a").click(function(){
@@ -29,6 +29,11 @@ var jsPresentation = {
         $("#tabs li.active").removeClass("active");
         newElement.find("a").click();
         
+    },
+    
+    removeTab: function(tabId){
+        $("#tabs li#"+tabId).remove();
+        $("#tabs li.pull-left").last().find("a").click();
     }
 };
 

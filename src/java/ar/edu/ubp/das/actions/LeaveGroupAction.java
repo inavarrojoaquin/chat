@@ -58,7 +58,7 @@ public class LeaveGroupAction extends Action{
             Logger.getLogger(getClass().getName()).log(Level.INFO, "LeaveGroupAction-POS llamado a USERACCESSTERMINATE: " + usersActivesResponse1.getStatus());
 
             if(usersActivesResponse1.getStatusInfo().getReasonPhrase().equals("OK")){
-                this.gotoPage("/index.jsp?action=LoginProfile", request, response);
+                System.out.println("User: " +userAccessId + " leave room");  
             }
         }
     }

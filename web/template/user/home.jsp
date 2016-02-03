@@ -14,13 +14,7 @@
     </head>
     <body>
         <fmt:bundle basename="ar.edu.ubp.das.properties.etiquetas">
-            <c:set value="${form.profile}" var="profile" ></c:set>
-            <c:set value="${profile.getLogin()}" var="profileLogin" ></c:set>
-            
-            <input type="hidden" value="${profile.getId()}" name="profileId" />
-            
             <div class="container">
-                
                 <div class="row">
                     <div class="col-md-4 col-md-offset-4"><span class="label label-primary" id="response"></span></div>
                     

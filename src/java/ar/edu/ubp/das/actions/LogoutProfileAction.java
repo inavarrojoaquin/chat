@@ -27,7 +27,7 @@ public class LogoutProfileAction extends Action{
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("LogoutProfileAction:execute");
         
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         
         if(session.getAttribute("profile") != null){
             ProfileEntity profile = (ProfileEntity) session.getAttribute("profile");

@@ -24,8 +24,6 @@ $(document).ready(function(){
         if(roomVar.roomOwner == roomVar.profileId){
             jsRoom.reloadRejectedInvitations();
         }
-    }else{
-        jsRoom.getInvitationList();
     }
     
     //Detect enter-button when the user want send message
@@ -139,21 +137,6 @@ var jsRoom = {
                     }
                 }
             }
-        }).success(jsRoom.getPublicRoomByProfile);
-    },
-    
-    getPublicRoomByProfile: function(){
-        $.ajax({
-            url: "/chat/index.jsp?action=GetPublicRoomByProfile",
-            type: "post",
-            dataType: "html",            
-            data:  {'profileId':roomVar.profileId},
-            error: function(hr) {
-                jUtils.showing("error", hr);
-            },
-            success: function(html) {
-                jUtils.showing("participateRoom", html);
-            }
         }).success(jsRoom.reloadAccessPolicy);
     },
     
@@ -170,10 +153,25 @@ var jsRoom = {
             success: function(html) {
                 if($.trim(html) == "ProfileEjected"){
                     alert("You has been ejected to this room");
-                    parent.history.back();
+                    closeRoom(roomVar.roomId);
                 }
             }
-        }).success(jsRoom.refreshMessage);                
+        }).success(jsRoom.getInvitationList);                
+    },
+    
+    getInvitationList: function(){
+        $.ajax({
+            url: "/chat/index.jsp?action=GetInvitationList",
+            type: "post",
+            dataType: "html",            
+            data:  {'profileId':roomVar.profileId, 'callFrom':'room'},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                jUtils.showing("invitations", html);
+            }
+        }).success(jsRoom.refreshMessage);
     },
     
     /**Check if the room has benn removed*/
@@ -189,7 +187,7 @@ var jsRoom = {
             success: function(html) {
                 if($.trim(html) == "not_found"){
                     alert("This room has been removed");
-                    roomVar.privateRoom ? window.close() : parent.history.back();
+                    window.top.jsPresentation.removeTab(roomVar.roomId);
                 }
             }
         }).success(jsRoom.reloadSearchUserActives);                
@@ -233,21 +231,6 @@ var jsRoom = {
         }).success(jsRoom.refreshRejectedInvitations);  
     },
     
-    getInvitationList: function(){
-        $.ajax({
-            url: "/chat/index.jsp?action=GetInvitationList",
-            type: "post",
-            dataType: "html",            
-            data:  {'profileId':roomVar.profileId},
-            error: function(hr) {
-                jUtils.showing("error", hr);
-            },
-            success: function(html) {
-                jUtils.showing("invitations", html);
-            }
-        }).success(jsRoom.refreshInvitationList);
-    },
-    
     refreshMessage: function(){
         setTimeout(jsRoom.getMessageList, roomVar.RELOAD_TIME);
     },
@@ -258,10 +241,6 @@ var jsRoom = {
     
     refreshRejectedInvitations: function(){
         setTimeout(jsRoom.reloadRejectedInvitations, roomVar.RELOAD_TIME);
-    },
-    
-    refreshInvitationList: function(){
-        setTimeout(jsRoom.getInvitationList, roomVar.RELOAD_TIME);
     },
     
     newPrivateRoom: function(){
@@ -280,7 +259,36 @@ var jsRoom = {
                 //the call ajax response roomId
                 $("input[name='titleRoom']").val("");
                 $("input[name='inviteEmailRoom']").val("");
-                window.open("http://localhost:8080/chat/index.jsp?action=Room&profileId="+roomVar.profileId+"&roomId="+roomId , 'PrivateChat, _blank');
+                var roomId = roomId.trim();
+                var url = "http://localhost:8080/chat/index.jsp?action=Room&profileId="+roomVar.profileId+"&roomId="+roomId;
+                window.top.jsPresentation.setTab(url, "Room: "+title, roomId);
+            }
+        });
+    },
+    
+    updateStateInvitation: function(room, profile, id, newState, roomName){
+        var element = $("#invitations a");
+        var room = room;
+        var profileId = profile;
+        var id = id;
+        var newState = newState;
+
+        $.ajax({
+            url: "/chat/index.jsp?action=UpdateStateInvitation",
+            type: "post",
+            dataType: "html",            
+            data:  {'id': id, 'newState': newState},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                if(newState == "accepted"){
+                    element.parents("div#"+id).remove();
+                    var url = "http://localhost:8080/chat/index.jsp?action=Room&profileId=" + profileId + "&roomId=" + room;
+                    window.top.jsPresentation.setTab(url, "Room: " + roomName, room);
+                }else {
+                    element.parents("div#"+id).remove();
+                }                            
             }
         });
     },
@@ -359,8 +367,8 @@ var jsRoom = {
             error: function(hr) {
                 jUtils.showing("error", hr);
             },
-            success: function(html) {
-                window.close();
+            success: function(html) {                
+                window.top.jsPresentation.removeTab(roomVar.roomId);
             }
         });
     },
@@ -375,7 +383,7 @@ var jsRoom = {
                 jUtils.showing("error", hr);
             },
             success: function(html) {
-                window.close();
+                window.top.jsPresentation.removeTab(roomVar.roomId);
             }
         });        
     },
@@ -409,6 +417,10 @@ var jsRoom = {
                 parent.remove();
             }
         });
+    },
+    
+    closeRoom: function(roomId){
+        window.top.jsPresentation.removeTab(roomId);
     }
     
 };
