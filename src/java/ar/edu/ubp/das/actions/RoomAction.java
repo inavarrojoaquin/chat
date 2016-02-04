@@ -29,9 +29,11 @@ public class RoomAction extends Action{
         
         String profileId = (String) this.getForm().getItem("profileId");
         String roomId = (String) this.getForm().getItem("roomId");
+        String existTab = (String) this.getForm().getItem("existTab");
         
         Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-Param: {0}", profileId);
         Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-Param: {0}", roomId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-Param: {0}", existTab);
         
         Client client = ClientBuilder.newClient();
         
@@ -72,37 +74,54 @@ public class RoomAction extends Action{
             UserAccessEntity userAccess = new UserAccessEntity();
             userAccess.setProfile(Integer.parseInt(profileId));
             userAccess.setRoom(Integer.parseInt(roomId));
-
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a USERACCESS");
-            /**Create useraccess*/
-            WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess");        
-            Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.json(userAccess));
-            Response userAccessResponse = useraccessInvocation.invoke();
-
-            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a USERACCESS: " + userAccessResponse.getStatus());
-            
-            if(userAccessResponse.getStatus() == 200){
-                userAccess = userAccessResponse.readEntity(new GenericType<UserAccessEntity>(){});
-            
-                Form form = new Form();
-                form.param("id", roomId);
-
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a ROOM");
-                /**Get room*/
-                WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/id");        
-                Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
-                Response roomResponse = roomInvocation.invoke();
-
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a ROOM: " + roomResponse.getStatus());
                 
-                if(roomResponse.getStatus() == 200){
-                    RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+            if(existTab == null){
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a USERACCESS");
+                /**Create useraccess*/
+                WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess");        
+                Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.json(userAccess));
+                Response userAccessResponse = useraccessInvocation.invoke();
+
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a USERACCESS: " + userAccessResponse.getStatus());
+                if(userAccessResponse.getStatus() == 200){
+                    userAccess = userAccessResponse.readEntity(new GenericType<UserAccessEntity>(){});
+                }
+            }else{
+                Form userAccessForm = new Form();
+                userAccessForm.param("profileId", profileId);
+                userAccessForm.param("roomId", roomId);
                 
-                    this.getForm().setItem("profile", profile);
-                    this.getForm().setItem("room", roomEntity);
-                    this.getForm().setItem("userAccess", userAccess);
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a USERACCESS-GETLASTBYPROFILE");
+                /**Get last useraccess by profileId*/
+                WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/last/profile/room");        
+                Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.form(userAccessForm));
+                Response userAccessResponse = useraccessInvocation.invoke();
+
+                Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a USERACCESS-GETLASTBYPROFILE: " + userAccessResponse.getStatus());
+                if(userAccessResponse.getStatus() == 200){
+                    userAccess = userAccessResponse.readEntity(new GenericType<UserAccessEntity>(){});
                 }
             }
+            
+            Form form = new Form();
+            form.param("id", roomId);
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a ROOM");
+            /**Get room*/
+            WebTarget roomTarget = client.target("http://localhost:8080/chat/webresources/rooms/id");        
+            Invocation roomInvocation = roomTarget.request().buildPost(Entity.form(form));
+            Response roomResponse = roomInvocation.invoke();
+
+            Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-POS llamado a ROOM: " + roomResponse.getStatus());
+
+            if(roomResponse.getStatus() == 200){
+                RoomEntity roomEntity = roomResponse.readEntity(new GenericType<RoomEntity>(){});
+
+                this.getForm().setItem("profile", profile);
+                this.getForm().setItem("room", roomEntity);
+                this.getForm().setItem("userAccess", userAccess);
+            }
+            
         }else{
             this.getForm().setItem("profile", profile);
             this.getForm().setItem("roomId", roomId);

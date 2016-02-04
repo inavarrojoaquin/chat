@@ -2,12 +2,8 @@ package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.ProfileEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -34,17 +30,7 @@ public class NewProfileAction extends Action{
             Response res = profilesInvocation.invoke();
             
             if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
-                HttpSession session = request.getSession(false);
-                Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-profileList: {0}", session.getAttribute("profileList"));
-
-                if(session.getAttribute("profileList") != null){
-                    profile = res.readEntity(new GenericType<ProfileEntity>(){});
-                    List<ProfileEntity> profileList = (List<ProfileEntity>) session.getAttribute("profileList");
-                    Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-PRE-profileList: {0}", profileList.size());
-                    profileList.add(profile);
-                    session.setAttribute("profileList", profileList);
-                    Logger.getLogger(getClass().getName()).log(Level.INFO, "NewProfileAction-Session-POS-profileList: {0}", profileList.size());
-                }
+                profile = res.readEntity(new GenericType<ProfileEntity>(){});
                 request.setAttribute("response", "Registro exitoso, realice el login");
             }else {
                 request.setAttribute("error", "Error: El usuario ya existe...");

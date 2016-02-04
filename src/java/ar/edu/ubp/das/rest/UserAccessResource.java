@@ -109,15 +109,16 @@ public class UserAccessResource {
     }
     
     @POST
-    @Path("find/last/profile")
+    @Path("find/last/profile/room")
     @Produces("application/json")
-    public Response findLastByProfile(@FormParam("id") Integer id) {
+    public Response findLastByProfileAndRoom(@FormParam("profileId") Integer profileId, @FormParam("roomId") Integer roomId) {
         try {
             Dao dao = DaoFactory.getDao("UserAccess");
             DynaActionForm form = new DynaActionForm();
             
-            form.setItem("selector", "lastByProfile");
-            form.setItem("profile", id);
+            form.setItem("selector", "lastByProfileAndRoom");
+            form.setItem("profile", profileId);
+            form.setItem("room", roomId);
             List<DynaActionForm> select = dao.select(form);
             
             if(select.size() == 1){

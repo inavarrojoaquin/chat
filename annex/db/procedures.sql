@@ -563,21 +563,22 @@ BEGIN
 END
 GO
 
-if OBJECT_ID('proc_SelectLastUserAccessByProfile ')is not null
-	drop procedure proc_SelectLastUserAccessByProfile
+if OBJECT_ID('proc_SelectLastUserAccessByProfileAndRoom')is not null
+	drop procedure proc_SelectLastUserAccessByProfileAndRoom
 go
 
-CREATE PROCEDURE proc_SelectLastUserAccessByProfile
- @profile int
+CREATE PROCEDURE proc_SelectLastUserAccessByProfileAndRoom
+ @profile int,
+ @room int
 AS
 BEGIN
 	select * from User_access u
 	where u.datetime_of_access_start = (select max(datetime_of_access_start) 
 									from User_access
-									where profile = @profile)
+									where profile = @profile
+									and room = @room)
 END
 GO
-
 
 if OBJECT_ID('proc_SelectUsersAccess ')is not null
 	drop procedure proc_SelectUsersAccess
@@ -985,22 +986,30 @@ BEGIN
 
 	if (@type = 'ADMIN')
 		begin
+			select msj.*, p.login
+			from Profile p
+			join (
 			select * from Message m
 			where m.room = @room
 			and m.datetime_of_creation >= (select date_time_of_access_start from User_login --Last user login
 											where date_time_of_access_start = (select max(date_time_of_access_start) 
 																			from User_login 
-																			where profile = @profile))			
+																			where profile = @profile
+																			and room = @room)))msj		
+			on msj.owner = p.id
 		end
 	else
 		begin
-			select * from Message m
-			where m.room = @room
-			and m.datetime_of_creation >= (select u.datetime_of_access_start from User_access u --Last user access
-										where u.datetime_of_access_start = (select max(datetime_of_access_start) 
-										from User_access
-										where profile = @profile))
-		
+			select msj.*, p.login
+			from Profile p
+			join (select * from Message m
+				where m.room = @room
+				and m.datetime_of_creation >= (select u.datetime_of_access_start from User_access u --Last user access
+											where u.datetime_of_access_start = (select max(datetime_of_access_start) 
+											from User_access
+											where profile = @profile
+											and room = @room)))msj
+			 on msj.owner = p.id
 		end
 END
 GO

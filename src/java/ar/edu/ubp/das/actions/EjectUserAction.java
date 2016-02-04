@@ -51,10 +51,12 @@ public class EjectUserAction extends Action{
         if(policyResponse.getStatus() == 200){
             Logger.getLogger(getClass().getName()).log(Level.INFO, "EjectUserAction-PRE llamado a USERACCESS");
             
-            /**Get last user access by profile*/
+            /**Get last user access by profile and room*/
             Form form = new Form();
-            form.param("id", profileId);
-            WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/last/profile");
+            form.param("profileId", profileId);
+            form.param("roomId", roomId);
+            
+            WebTarget usersActivesTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/last/profile/room");
             Invocation usersActivesInvocation = usersActivesTarget.request().buildPost(Entity.form(form));
             Response usersActivesResponse = usersActivesInvocation.invoke();
             

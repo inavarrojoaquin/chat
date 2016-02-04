@@ -5,6 +5,7 @@
  */
 package ar.edu.ubp.das.rest;
 
+import ar.edu.ubp.das.entities.MessageComplexEntity;
 import ar.edu.ubp.das.entities.MessageEntity;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import ar.edu.ubp.das.mvc.daos.Dao;
@@ -149,11 +150,11 @@ public class MessageResource {
     @POST
     @Path("room/id/profile/id")
     @Produces("application/json")
-    public List<MessageEntity> findMessageByRoomAndProfile(@FormParam("room") Integer room, @FormParam("profile") Integer profile) {
+    public List<MessageComplexEntity> findMessageByRoomAndProfile(@FormParam("room") Integer room, @FormParam("profile") Integer profile) {
         try {
-            Dao dao = DaoFactory.getDao("Message");
+            Dao dao = DaoFactory.getDao("MessageComplex");
             DynaActionForm form = new DynaActionForm();
-            List<MessageEntity> entities = new LinkedList<>();
+            List<MessageComplexEntity> entities = new LinkedList<>();
             
             form.setItem("selector", "byRoomAndProfile");
             form.setItem("room", room);
@@ -161,7 +162,7 @@ public class MessageResource {
             List<DynaActionForm> select = dao.select(form);
             
             for(DynaActionForm temp : select){
-               MessageEntity m = new MessageEntity();
+               MessageComplexEntity m = new MessageComplexEntity();
                 m.fromMap(temp.getItems());
                 entities.add(m);
             }

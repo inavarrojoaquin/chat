@@ -36,8 +36,8 @@
                         <iframe
                             sandbox="allow-same-origin allow-scripts allow-modals allow-popups allow-forms allow-pointer-lock allow-top-navigation"
                             src="template/user/home.jsp" frameborder="0" framespacing="0"  border="0"
-                            scrolling="auto" style="position:absolute; left:0px; top:50px; width:100%; height:100%; "
-                        ></iframe>
+                            scrolling="auto" style="position:absolute; left:0px; top:50px; width:100%; height:100%;" >
+                        </iframe>
                     </div>
                 </div>
             </div>
