@@ -85,7 +85,7 @@ public class LoginProfileAction extends Action{
                 this.gotoPage("/template/user/presentation.jsp", request, response);
             }
             else {
-                request.setAttribute("response", "User not found or password incorrect...");
+                request.setAttribute("error", "User not found or password incorrect...");
                 this.gotoPage("/template/login.jsp", request, response);
             }
         }

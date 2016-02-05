@@ -1,7 +1,7 @@
 var homeVar = {};
 
 $(document).ready(function(){
-    homeVar.RELOAD_TIME = 15000;
+    homeVar.RELOAD_TIME = 5000;
     homeVar.profileId = window.top.jsPresentation.getProfileId();
     
     jsHome.getPublicRoom();

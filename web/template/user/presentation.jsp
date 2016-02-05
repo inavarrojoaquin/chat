@@ -22,9 +22,9 @@
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse">
                         <ul class="nav nav-pills head-menu" id="tabs">
-                            <li class="active pull-left" id="home"><a href="#iframe" data-toggle="tab" data-url="template/user/home.jsp" >Home</a></li>
-                            <li class="pull-right" id="logout"><a href="index.jsp?action=LogoutProfile"><fmt:message key="label_logout"/></a></li>
-                            <li class="pull-right"><a data-toggle="tab" onclick="return false;">${profileLogin}</a></li>
+                            <li role="presentation" class="active pull-left" id="home"><a href="#iframe" data-toggle="tab" data-url="template/user/home.jsp" >Home</a></li>
+                            <li role="presentation" class="pull-right" id="logout"><a class="noProccess" href="index.jsp?action=LogoutProfile"><fmt:message key="label_logout"/></a></li>
+                            <li role="presentation" class="pull-right disabled"><a href="#" onclick="return false;" class="noProccess" >${profileLogin}</a></li>
                         </ul>
                     </div>
                 </div>

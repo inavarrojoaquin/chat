@@ -1,7 +1,7 @@
 var roomVar = {};
 
 $(document).ready(function(){
-    roomVar.RELOAD_TIME = 15000;
+    roomVar.RELOAD_TIME = 5000;
     roomVar.roomId = $("input[name='roomId']").val();
     roomVar.roomType = $("input[name='roomType']").val();
     roomVar.roomOwner = $("input[name='roomOwner']").val();

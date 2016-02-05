@@ -3,8 +3,9 @@ varPresentation = {};
 $(document).ready(function(){
     
     varPresentation.profileId = $("input[name='profileId']").val();
-    
-    $("#tabs").on("click", 'a', function(){
+
+    $("#tabs").on("click", 'a:not(.noProccess)', function(){
+        $("#iframe iframe").attr("src", "");
         var thisElement = $(this);
         var parentId = thisElement.parent().attr("id");
         var newTab = thisElement.data("new");
