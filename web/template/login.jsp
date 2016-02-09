@@ -1,7 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
+<html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,8 +26,9 @@
                           <div class="col-md-6 col-md-offset-3">
                               <form class="form-signin" id="login" method="post" action="index.jsp?action=LoginProfile">
                                   <h3 class="form-signin-heading"><fmt:message key="title_login"/></h3>
-                                  <input type="text" class="form-control" name="userName" placeholder="Email address" required="" autofocus="">
-                                  <input type="password" class="form-control" name="password" placeholder="Password" required="">
+                                  <input class="form-control" name="userName" placeholder="Email address" type="email"
+                                         autofocus="" value="${userNameLogin != null ? userNameLogin : ""}" required >
+                                  <input type="password" class="form-control" name="password" placeholder="Password" required >
                                   <input class="form-control btn btn-primary btn-block" type="submit" value="Sign in" />
                               </form>
                           </div>
@@ -59,19 +60,22 @@
                                       <fieldset>
                                           <div class="form-group input-group">
                                               <span class="input-group-addon">@</span>
-                                              <input class="form-control" placeholder="someone@gmail.com" name="userName" type="email" required="" autofocus="">
+                                              <input class="form-control" placeholder="someone@gmail.com" name="userName" type="email" 
+                                                     autofocus="" value="${userNameNew != null ? userNameNew : ""}" required >
                                           </div>
                                           <div class="form-group input-group">
                                               <span class="input-group-addon">
                                                   <i class="glyphicon glyphicon-lock"></i>
                                               </span>
-                                              <input class="form-control" placeholder="Password" name="password" type="password" value="" required="">
+                                              <input class="form-control" placeholder="Password" name="password" type="password"
+                                                     required >
                                           </div>
                                           <div class="form-group input-group">
                                               <span class="input-group-addon">
                                                   <i class="glyphicon glyphicon-lock"></i>
                                               </span>
-                                              <input class="form-control" placeholder="Confirm password" name="confirmPassword" type="password" value="" required="">
+                                              <input class="form-control" placeholder="Confirm password" name="confirmPassword" type="password" 
+                                                     required >
                                           </div>
                                           <div class="form-group">
                                               <input class="form-control btn btn-primary btn-block" type="submit" value="Sign up"/>

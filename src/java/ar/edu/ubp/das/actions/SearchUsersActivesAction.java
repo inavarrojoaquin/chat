@@ -36,8 +36,6 @@ public class SearchUsersActivesAction extends Action{
 
         if(searchUsersActivesResponse.getStatus() == 200){
             String json = searchUsersActivesResponse.readEntity(String.class);
-            
-            System.out.println("Search User JSON: " + json);
         
             response.getWriter().write(json);
         }

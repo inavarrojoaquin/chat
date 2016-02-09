@@ -81,10 +81,10 @@ public class LoginProfileAction extends Action{
                 
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "LoginProfileAction-SessionAttribute: {0}", session.getAttribute("profile"));
                 
-                //this.gotoPage("/template/user/home.jsp", request, response);
                 this.gotoPage("/template/user/presentation.jsp", request, response);
             }
             else {
+                request.setAttribute("userNameLogin", login);
                 request.setAttribute("error", "User not found or password incorrect...");
                 this.gotoPage("/template/login.jsp", request, response);
             }

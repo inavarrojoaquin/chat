@@ -1,7 +1,7 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,7 +89,7 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-md-10">
-                                                    <input type="text" class="form-control" name="message" placeholder="Enter message" />
+                                                    <input type="text" class="form-control" name="message" placeholder="Enter message" required >
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input class="form-control btn btn-info" type="submit" value="Send" />
@@ -118,8 +118,10 @@
                                                     </div>
                                                     <form id="createPrivateRoom">
                                                         <div class="input-group" >
-                                                            <input type="text" class="form-control" id="title" name="titleRoom" placeholder="I want to talk about..." autofocus="" required="">
-                                                            <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
+                                                            <input type="text" class="form-control" id="title" name="titleRoom" placeholder="I want to talk about..."
+                                                                   autofocus="" required >
+                                                            <input type="email" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com"
+                                                                   required >
                                                             <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" />
                                                         </div>
                                                     </form>
@@ -135,7 +137,8 @@
                                                         </div>
                                                         <form id="inviteParticipant">
                                                             <div>
-                                                                <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" placeholder="somebody@somewhere.com" required="">
+                                                                <input type="email" class="form-control" id="inviteEmail" name="inviteEmailRoom" 
+                                                                       placeholder="somebody@somewhere.com" required >
                                                                 <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" />
                                                             </div>
                                                         </form>
@@ -155,7 +158,6 @@
         <script lang="javascript" type="text/javascript" src="/chat/js/jquery.min.js"></script>  
         <script lang="javascript" type="text/javascript" src="/chat/js/jquery-ui.min.js"></script>    
         <script lang="javascript" type="text/javascript" src="/chat/js-chat/utils.js"></script>
-        <script lang="javascript" type="text/javascript" src="/chat/js-chat/jsPresentation.js"></script>
         <script lang="javascript" type="text/javascript" src="/chat/js-chat/jsRoom.js"></script>  
         <script src="/chat/js/bootstrap.js"></script>
         

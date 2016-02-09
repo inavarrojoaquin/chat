@@ -17,11 +17,15 @@ public class NewProfileAction extends Action{
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {        
         System.out.println("NewProfileAction:execute");
+        
+        String userName = (String) this.getForm().getItem("userName");
+        String password = (String) this.getForm().getItem("password");
+        String confirmPassword = (String) this.getForm().getItem("confirmPassword");
        
-        if(this.getForm().getItem("password").equals(this.getForm().getItem("confirmPassword"))){
+        if(password.equals(confirmPassword)){
             ProfileEntity profile = new ProfileEntity();
-            profile.setLogin((String) this.getForm().getItem("userName"));
-            profile.setPassword((String) this.getForm().getItem("password"));
+            profile.setLogin(userName);
+            profile.setPassword(password);
 
             Client client = ClientBuilder.newClient();
 
@@ -31,13 +35,14 @@ public class NewProfileAction extends Action{
             
             if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
                 profile = res.readEntity(new GenericType<ProfileEntity>(){});
-                request.setAttribute("response", "Registro exitoso, realice el login");
+                request.setAttribute("response", "Successful registration. Please login.");
             }else {
-                request.setAttribute("error", "Error: El usuario ya existe...");
+                request.setAttribute("error", "Error: The user already exists...");
             }
         }else{
-            request.setAttribute("error", "Error: Las contraseñas ingresadas son diferentes. Vuelva a intentar el registro");
+            request.setAttribute("error", "Error: The passwords are differents. Try again...");
         }
+        request.setAttribute("userNameNew", userName);
         this.gotoPage("/template/login.jsp", request, response);
     }
 }
