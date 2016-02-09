@@ -152,8 +152,12 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html) == "ProfileEjected"){
-                    alert("You has been ejected to this room");
-                    jsRoom.closeRoom(roomVar.roomId);
+                    //alert("You has been ejected to this room");
+                    $("#myModal .modal-body").text("You has been ejected to this room");
+                    $("#myModal").modal("show");
+                    $("#myModal button").click(function(){
+                        jsRoom.closeRoom(roomVar.roomId);
+                    });
                 }
             }
         }).success(jsRoom.getInvitationList);                
@@ -186,8 +190,12 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html) == "not_found"){
-                    alert("This room has been removed");
-                    window.top.jsPresentation.removeTab(roomVar.roomId);
+                    //alert("This room has been removed");
+                    $("#myModal .modal-body").text("This room has been removed");
+                    $("#myModal").modal("show");
+                    $("#myModal button").click(function(){
+                        window.top.jsPresentation.removeTab(roomVar.roomId);
+                    });
                 }
             }
         }).success(jsRoom.reloadSearchUserActives);                
@@ -224,7 +232,8 @@ var jsRoom = {
             success: function(data) {
                 if(data != "[]"){
                     $.each(data, function(index, element) {
-                        alert("El usuario: " + element.login + " rechazo la invitacion al chat");
+                        $("#myModal .modal-body").text("El usuario: " + element.login + " rechazo la invitacion al chat");
+                        $("#myModal").modal("show");
                     });
                 }
             }
@@ -307,10 +316,12 @@ var jsRoom = {
             success: function(data) {
                 if(data != "error"){
                     $("input[name='inviteEmailRoom']").val("");
-                    alert("Send invitations success.");
+                    $("#myAlert").text("Send invitations success.").addClass("alert-success");
+                    $("#myAlert").fadeIn(1000).fadeOut(8000);
                 }else{
                     $("input[name='inviteEmailRoom']").val("");
-                    alert("Error, user not found");
+                    $("#myAlert").text("Error, user not found.").addClass("alert-danger");
+                    $("#myAlert").fadeIn(1000).fadeOut(8000);
                 }
             }
         });

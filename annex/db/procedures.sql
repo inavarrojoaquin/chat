@@ -351,17 +351,17 @@ select @id_out id
 */
 /**Insert some rooms
 insert into Room(name, type, owner)
-values ('deporte', 'public', 1)
+values ('Sexualidad humana', 'public', 1)
 insert into Room(name, type, owner)
-values ('vacaciones', 'public', 1)
+values ('Aparato reproductor', 'public', 1)
 insert into Room(name, type, owner)
-values ('ventas', 'public', 1)
+values ('Orientacion sexual', 'public', 1)
 insert into Room(name, type, owner)
-values ('compras', 'public', 1)
+values ('Relaciones sexuales', 'public', 1)
 insert into Room(name, type, owner)
-values ('facultad', 'public', 1)
+values ('Anticonceptivos', 'public', 1)
 insert into Room(name, type, owner)
-values ('juegos', 'public', 1)
+values ('Enfermedades de transmision sexual', 'public', 1)
 */
 
 if OBJECT_ID('proc_SelectRoomById ')is not null

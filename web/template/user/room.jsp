@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -50,6 +51,21 @@
                     </div>
                 </c:when>
                 <c:otherwise>
+                    <!--Non Modal Alert-->
+                    <div class="modal fade modeless" id="myModal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Alert</h4>
+                                </div>
+                                <div class="modal-body"> <!--content here--> </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.Non Modal Alert -->
+                    
                     <nav class="navbar navbar-default navbar-fixed-top"> <%-- NavBar --%>
                         <div class="container">
                             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -137,9 +153,9 @@
                                                         </div>
                                                         <form id="inviteParticipant">
                                                             <div>
-                                                                <input type="email" class="form-control" id="inviteEmail" name="inviteEmailRoom" 
+                                                                <input type="text" class="form-control" id="inviteEmail" name="inviteEmailRoom" 
                                                                        placeholder="somebody@somewhere.com" required >
-                                                                <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" />
+                                                                <input id="submit" class="form-control btn btn-primary btn-block" type="submit" value="Send" >
                                                             </div>
                                                         </form>
                                                     </div>
@@ -147,6 +163,10 @@
                                             </c:if>
                                         </c:otherwise>
                                     </c:choose>
+                                    
+                                    <div class="col-md-12"> <%-- Alert message --%>
+                                        <div class="alert " style="display: none" id="myAlert" role="alert"></div>
+                                    </div> <%-- /.Alert message --%>
                                 </div>
                             </div> <%-- /.Right panel --%>
                         </div>

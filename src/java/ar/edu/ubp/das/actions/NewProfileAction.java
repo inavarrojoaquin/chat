@@ -35,14 +35,16 @@ public class NewProfileAction extends Action{
             
             if(res.getStatus() != Response.Status.CONFLICT.getStatusCode()){
                 profile = res.readEntity(new GenericType<ProfileEntity>(){});
+                request.setAttribute("userNameLogin", userName);
                 request.setAttribute("response", "Successful registration. Please login.");
             }else {
                 request.setAttribute("error", "Error: The user already exists...");
+                request.setAttribute("userNameNew", userName);
             }
         }else{
             request.setAttribute("error", "Error: The passwords are differents. Try again...");
+            request.setAttribute("userNameNew", userName);
         }
-        request.setAttribute("userNameNew", userName);
         this.gotoPage("/template/login.jsp", request, response);
     }
 }
