@@ -1,8 +1,11 @@
 var varPresentation = {};
 
 $(document).ready(function(){
-    varPresentation.RELOAD_TIME = 8000;
+    varPresentation.RELOAD_TIME = 5000;
     varPresentation.profileId = $("input[name='profileId']").val();
+    /*Only for compare message dates*/
+    varPresentation.oldTab = $("#tabs li.active");
+    /********************************/
     
     jsPresentation.getMessageCount();
 
@@ -10,6 +13,11 @@ $(document).ready(function(){
         $("#iframe iframe").attr("src", "");
         var thisElement = $(this);
         var parentId = thisElement.parent().attr("id");
+        /*Only for compare message dates*/
+        thisElement.find("span").text(0);
+        var oldTabId = varPresentation.oldTab.attr("id");
+        var lastAccessToRoom = $("body input:hidden[id='"+oldTabId+"']");
+        /********************************/
         var newTab = thisElement.data("new");
         var existTab = "";
         if($.isNumeric(parentId)){
@@ -19,8 +27,14 @@ $(document).ready(function(){
                 thisElement.data("new","false");
             }
         }
+        /*Only for compare message dates*/
+        if($.isNumeric(oldTabId)){
+            lastAccessToRoom.val(new Date().toLocaleString());
+        }
+        varPresentation.oldTab = thisElement.parent(); //change oldTab for actual tab
+        /********************************/
         var url = thisElement.data("url");
-        $("#iframe iframe").attr("src", url+existTab);
+        $("#iframe iframe").attr("src", url+existTab); 
     });
     
 });
@@ -34,24 +48,33 @@ var jsPresentation = {
         var existTab = $("#tabs li#"+roomId).length;
         if(existTab == 0){
             var reference = $('#tabs li.pull-right').last();
-            var newElement = $('<li id="'+roomId+'" class="pull-left dynamic"><a href="#iframe" data-new="true" data-toggle="tab" data-url="' + url + '">' + roomName + '<span class="badge">0</span></a></li>');
-            newElement.insertBefore( reference );
-            $("#tabs li.active").removeClass("active");     
-            newElement.find("a").click();
+            var newTabElement = $('<li id="'+roomId+'" class="pull-left dynamic"><a href="#iframe" data-new="true" data-toggle="tab" data-url="' + url + '">' + roomName + '<span class="badge">0</span></a></li>');
+            newTabElement.insertBefore( reference );
+            $("#tabs li.active").removeClass("active");
+            
+            /*Only for compare message dates*/
+            var $lastAccessToRoom = $("<input type='hidden' id='"+roomId+"' value='"+ new Date().toLocaleString() +" ' >");
+            $lastAccessToRoom.appendTo("body");
+            /********************************/
+            
+            newTabElement.find("a").click();
         }else{
             $("#tabs li#"+roomId).find("a").click();
         }
     },
     
     removeTab: function(tabId){
+        $("body input#room"+tabId).remove();
         $("#tabs li#"+tabId).remove();
         $("#tabs li.pull-left").last().find("a").click();
     },
     
     getMessageCount: function(){
-        var tabs = $("#tabs li.dynamic");
+        var tabs = $("#tabs li.dynamic:not(.active)");
         tabs.each(function(index){
             var id = $(this).attr("id");
+            var lastAccessToRoom = $("body input:hidden[id='"+id+"']").val();
+            var messageCount = 0;
             $.ajax({
                 url: "/chat/index.jsp?action=GetMessageCount",
                 type: "post",
@@ -60,8 +83,13 @@ var jsPresentation = {
                 error: function(hr) {},
                 success: function(data) {
                     if(data.length != 0){
-                        console.log("Room: " + id + " MessageCant: " + data.length);
-                        $("#tabs li#"+id).find("span").text(data.length);
+                        $.each(data, function(index, element) {
+                            var messageDate = new Date(element.datetimeOfCreation).toLocaleString();
+                            if(messageDate > lastAccessToRoom){
+                                messageCount += 1;
+                            }
+                        });
+                        $("#tabs li#"+id).find("span").text(messageCount);
                     }
                 }
             });

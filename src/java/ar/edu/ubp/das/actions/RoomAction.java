@@ -92,7 +92,7 @@ public class RoomAction extends Action{
                 userAccessForm.param("roomId", roomId);
                 
                 Logger.getLogger(getClass().getName()).log(Level.INFO, "RoomAction-PRE llamado a USERACCESS-GETLASTBYPROFILE");
-                /**Get last useraccess by profileId*/
+                /**Get last useraccess by profileId and roomId*/
                 WebTarget userAccessTarget = client.target("http://localhost:8080/chat/webresources/useraccess/find/last/profile/room");        
                 Invocation useraccessInvocation = userAccessTarget.request().buildPost(Entity.form(userAccessForm));
                 Response userAccessResponse = useraccessInvocation.invoke();

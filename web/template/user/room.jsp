@@ -92,7 +92,7 @@
                                                     <input type="text" class="form-control" name="message" placeholder="Enter message" required >
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input class="form-control btn btn-info" type="submit" value="Send" />
+                                                    <input class="form-control btn btn-info" name='send' type="submit" value="Send" />
                                                 </div>
                                             </div>
                                         </div>
