@@ -16,6 +16,9 @@ $(document).ready(function(){
     // !! transforma en boolean
     if ( (!! $("input[name='accessDenied']").val()) == false ){
         jsRoom.getMessageList();
+        if(roomVar.profileType != 'ADMIN' && window.top.jsPresentation.recentlyCreatedTab(roomVar.roomId)){
+            jsRoom.sendMessage("<span class='label label-success'>Hi I'm: "+roomVar.profileLogin+"</span>");
+        }
     }
     
     if(roomVar.privateRoom){
@@ -152,11 +155,11 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html) == "ProfileEjected"){
-                    //alert("You has been ejected to this room");
-                    $("#myModal .modal-body").text("You has been ejected to this room");
+                    $("#myModal .modal-body").text("You have been ejected FROM this room");
                     $("#myModal").modal("show");
                     $("#myModal button").click(function(){
-                        jsRoom.closeRoom(roomVar.roomId);
+                        jsRoom.sendMessage("<span class='label label-danger'>The user: "+roomVar.profileLogin+" was ejected from this room by ADMIN!</span>")
+                              .done(function() {jsRoom.closeRoom(roomVar.roomId);});
                     });
                 }
             }
@@ -190,7 +193,6 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html) == "not_found"){
-                    //alert("This room has been removed");
                     $("#myModal .modal-body").text("This room has been removed");
                     $("#myModal").modal("show");
                     $("#myModal button").click(function(){
@@ -232,7 +234,7 @@ var jsRoom = {
             success: function(data) {
                 if(data != "[]"){
                     $.each(data, function(index, element) {
-                        $("#myModal .modal-body").text("El usuario: " + element.login + " rechazo la invitacion al chat");
+                        $("#myModal .modal-body").text("The user: " + element.login + " refuse the invitation to chat.");
                         $("#myModal").modal("show");
                     });
                 }
@@ -327,10 +329,14 @@ var jsRoom = {
         });
     },
         
-    sendMessage: function(){
-        var message = $("#sendMessage input[name='message']").val();
-        
-        $.ajax({
+    sendMessage: function(msj){
+        var message;
+        if(msj != null){
+            message = msj;
+        }else{
+            message = $("#sendMessage input[name='message']").val();
+        }
+        return $.ajax({
             url: "/chat/index.jsp?action=SendMessage",
             type: "post",
             dataType: "html",            
@@ -394,6 +400,9 @@ var jsRoom = {
                 jUtils.showing("error", hr);
             },
             success: function(html) {
+                if(roomVar.profileType != 'ADMIN'){
+                    jsRoom.sendMessage("<span class='label label-warning'>I'm out! Bye Bye...</span>");
+                }
                 window.top.jsPresentation.removeTab(roomVar.roomId);
             }
         });        

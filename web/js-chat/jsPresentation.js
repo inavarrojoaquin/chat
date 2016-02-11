@@ -8,7 +8,7 @@ $(document).ready(function(){
     /********************************/
     
     jsPresentation.getMessageCount();
-
+                        
     $("#tabs").on("click", 'a:not(.noProccess)', function(){
         $("#iframe iframe").attr("src", "");
         var thisElement = $(this);
@@ -23,6 +23,8 @@ $(document).ready(function(){
         if($.isNumeric(parentId)){
             if(newTab == "false"){
                 existTab = "&existTab=true";
+                var count = thisElement.data("count");
+                thisElement.data("count", count+1);
             }else{
                 thisElement.data("new","false");
             }
@@ -40,6 +42,7 @@ $(document).ready(function(){
 });
 
 var jsPresentation = {
+    
     getProfileId :  function(){
         return varPresentation.profileId;
     },
@@ -48,7 +51,7 @@ var jsPresentation = {
         var existTab = $("#tabs li#"+roomId).length;
         if(existTab == 0){
             var reference = $('#tabs li.pull-right').last();
-            var newTabElement = $('<li id="'+roomId+'" class="pull-left dynamic"><a href="#iframe" data-new="true" data-toggle="tab" data-url="' + url + '">' + roomName + '<span class="badge">0</span></a></li>');
+            var newTabElement = $('<li id="'+roomId+'" class="pull-left dynamic"><a href="#iframe" data-new="true" data-count="1" data-toggle="tab" data-url="' + url + '">' + roomName + '<span class="badge">0</span></a></li>');
             newTabElement.insertBefore( reference );
             $("#tabs li.active").removeClass("active");
             
@@ -99,6 +102,15 @@ var jsPresentation = {
     
     refreshMessageCount: function(){
         setTimeout(jsPresentation.getMessageCount, varPresentation.RELOAD_TIME);
+    },
+    
+    recentlyCreatedTab: function(tabId){
+        return $("#tabs li#"+tabId).find("a").data("count") == 1 ? true : false;
     }
 };
+
+//Funciona correctamente si quiero llamar a una funcion que se encuentra dentro del iframe
+//probando: function(){
+//      window.frames[0].jsHome.prueba();  
+//    },
 

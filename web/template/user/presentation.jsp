@@ -34,7 +34,7 @@
             <div class="container">
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="iframe">
-                        <iframe
+                        <iframe name="myIframe"
                             sandbox="allow-same-origin allow-scripts allow-modals allow-popups allow-forms allow-pointer-lock allow-top-navigation"
                             src="template/user/home.jsp" frameborder="0" framespacing="0"  border="0"
                             scrolling="auto" style="position:absolute; left:0px; top:50px; width:100%; height:100%;" >

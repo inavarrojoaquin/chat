@@ -349,20 +349,6 @@ declare @id_out int
 exec proc_InsertRoom @id_out OUTPUT,'ROOM1','TIPO1', null
 select @id_out id
 */
-/**Insert some rooms
-insert into Room(name, type, owner)
-values ('Sexualidad humana', 'public', 1)
-insert into Room(name, type, owner)
-values ('Aparato reproductor', 'public', 1)
-insert into Room(name, type, owner)
-values ('Orientacion sexual', 'public', 1)
-insert into Room(name, type, owner)
-values ('Relaciones sexuales', 'public', 1)
-insert into Room(name, type, owner)
-values ('Anticonceptivos', 'public', 1)
-insert into Room(name, type, owner)
-values ('Enfermedades de transmision sexual', 'public', 1)
-*/
 
 if OBJECT_ID('proc_SelectRoomById ')is not null
 	drop procedure proc_SelectRoomById

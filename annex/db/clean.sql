@@ -32,20 +32,20 @@ GO
 
 /**Add admin profile
 insert into Profile
-values('admin','admin','ADMIN')
+values('admin@admin.com','admin','ADMIN')
 */
 
 /**Insert some rooms
 insert into Room(name, type, owner)
-values ('Sexualidad humana', 'public', 1)
+values ('Human Sexuality', 'public', 1)
 insert into Room(name, type, owner)
-values ('Aparato reproductor', 'public', 1)
+values ('Reproductive System', 'public', 1)
 insert into Room(name, type, owner)
-values ('Orientacion sexual', 'public', 1)
+values ('Sexual Orientation', 'public', 1)
 insert into Room(name, type, owner)
-values ('Relaciones sexuales', 'public', 1)
+values ('Sexual Relations', 'public', 1)
 insert into Room(name, type, owner)
-values ('Anticonceptivos', 'public', 1)
+values ('Contraceptives', 'public', 1)
 insert into Room(name, type, owner)
-values ('Enfermedades de transmision sexual', 'public', 1)
+values ('Sexually Transmitted Sisease', 'public', 1)
 */

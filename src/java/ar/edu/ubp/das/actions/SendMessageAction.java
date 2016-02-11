@@ -1,9 +1,9 @@
 package ar.edu.ubp.das.actions;
 
 import ar.edu.ubp.das.entities.MessageEntity;
-import ar.edu.ubp.das.entities.RoomEntity;
 import ar.edu.ubp.das.mvc.actions.Action;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
@@ -30,6 +30,13 @@ public class SendMessageAction extends Action{
         String roomType = (String) this.getForm().getItem("roomType");
         String profileType = (String) this.getForm().getItem("profileType");
         String profileLogin = (String) this.getForm().getItem("profileLogin");
+        
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", roomId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", profileId);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", message);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", roomType);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", profileType);
+        Logger.getLogger(getClass().getName()).log(Level.INFO, "SendMessageAction-Param: {0}", profileLogin);
         
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setRoom(Integer.parseInt(roomId));
