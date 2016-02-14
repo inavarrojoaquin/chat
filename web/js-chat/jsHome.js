@@ -9,7 +9,7 @@ $(document).ready(function(){
 });
 
 var jsHome = {
-       
+    
     getPublicRoom: function(){
         $.ajax({
             url: "/chat/index.jsp?action=GetPublicRoom",

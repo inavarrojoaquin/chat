@@ -145,6 +145,7 @@ var jsRoom = {
     
     /**Check if the user has been ejected*/
     reloadAccessPolicy: function(){
+        var deferred = $.Deferred();
         $.ajax({
             url: "/chat/index.jsp?action=UpdateCheckAccessPolicy",
             type: "post",
@@ -155,15 +156,20 @@ var jsRoom = {
             },
             success: function(html) {
                 if($.trim(html) == "ProfileEjected"){
+                    //reject promise for unreload page
+                    deferred.reject();
                     $("#myModal .modal-body").text("You have been ejected FROM this room");
                     $("#myModal").modal("show");
                     $("#myModal button").click(function(){
                         jsRoom.sendMessage("<span class='label label-danger'>The user: "+roomVar.profileLogin+" was ejected from this room by ADMIN!</span>")
                               .done(function() {jsRoom.closeRoom(roomVar.roomId);});
                     });
+                }else{
+                    deferred.resolve();
                 }
             }
-        }).success(jsRoom.getInvitationList);                
+        });
+        deferred.done(jsRoom.getInvitationList);                
     },
     
     getInvitationList: function(){
