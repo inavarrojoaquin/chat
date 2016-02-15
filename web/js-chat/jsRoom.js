@@ -397,6 +397,7 @@ var jsRoom = {
     },
     
     leavePrivateRoom: function(){
+        var deferred = $.Deferred();
         $.ajax({
             url: "/chat/index.jsp?action=LeaveGroup",
             type: "post",
@@ -407,11 +408,14 @@ var jsRoom = {
             },
             success: function(html) {
                 if(roomVar.profileType != 'ADMIN'){
-                    jsRoom.sendMessage("<span class='label label-warning'>I'm out! Bye Bye...</span>");
+                    jsRoom.sendMessage("<span class='label label-warning'>I'm out! Bye Bye...</span>")
+                            .done(function(){ deferred.resolve(); });
                 }
-                window.top.jsPresentation.removeTab(roomVar.roomId);
+                deferred.done(function(){
+                    window.top.jsPresentation.removeTab(roomVar.roomId);
+                });
             }
-        });        
+        });
     },
     
     addToInvite: function(email){                    
