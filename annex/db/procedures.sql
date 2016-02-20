@@ -658,6 +658,25 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_SelectRoomAccessPolicyByProfile ')is not null
+	drop procedure proc_SelectRoomAccessPolicyByProfile
+go
+
+CREATE PROCEDURE proc_SelectRoomAccessPolicyByProfile
+ @profile int
+AS
+BEGIN
+ 	select rap.*, p.login, r.name
+	from Room_access_policy rap
+	join Profile p on p.id = rap.profile
+	join Room r on r.id = rap.room
+	where rap.profile = @profile
+	and rap.policy = 'enabled'
+
+END
+GO
+
+
 if OBJECT_ID('proc_SelectAccessPolicyByRoomAndProfile ')is not null
 	drop procedure proc_SelectAccessPolicyByRoomAndProfile
 go
@@ -683,7 +702,11 @@ CREATE PROCEDURE proc_SelectRoomsAccessPolicy
 AS
 BEGIN
   
-	select * from Room_access_policy
+	select rap.*, p.login, r.name
+	from Room_access_policy rap
+	join Profile p on p.id = rap.profile
+	join Room r on r.id = rap.room
+	and policy = 'ejected'
 END
 GO
 
@@ -701,6 +724,33 @@ BEGIN
 END
 GO
 
+if OBJECT_ID('proc_DeleteRoomsAccessPolicyByPolicyId ')is not null
+	drop procedure proc_DeleteRoomsAccessPolicyByPolicyId
+go
+
+CREATE PROCEDURE proc_DeleteRoomsAccessPolicyByPolicyId
+ @policy int
+AS
+BEGIN
+  
+	delete Room_access_policy 
+	where id = @policy
+END
+GO
+
+if OBJECT_ID('proc_UpdateRoomsAccessPolicyByPolicyId ')is not null
+	drop procedure proc_UpdateRoomsAccessPolicyByPolicyId
+go
+
+CREATE PROCEDURE proc_UpdateRoomsAccessPolicyByPolicyId
+ @policy int
+AS
+BEGIN
+	update Room_access_policy
+	set policy = 'enabled'
+	where id = @policy
+END
+GO
 
 /****************************************************
 				TABLE Invitation

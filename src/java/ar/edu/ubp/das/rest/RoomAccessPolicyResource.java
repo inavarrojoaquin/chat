@@ -5,6 +5,7 @@
  */
 package ar.edu.ubp.das.rest;
 
+import ar.edu.ubp.das.entities.RoomAccessPolicyComplexEntity;
 import ar.edu.ubp.das.entities.RoomAccessPolicyEntity;
 import ar.edu.ubp.das.mvc.actions.DynaActionForm;
 import ar.edu.ubp.das.mvc.daos.Dao;
@@ -88,18 +89,18 @@ public class RoomAccessPolicyResource {
     
     @GET
     @Produces("application/json")
-    public List<RoomAccessPolicyEntity> findAll() {
+    public List<RoomAccessPolicyComplexEntity> findAll() {
         try {
-            Dao dao = DaoFactory.getDao("RoomAccessPolicy");
+            Dao dao = DaoFactory.getDao("RoomAccessPolicyComplex");
             DynaActionForm form = new DynaActionForm();
             List<DynaActionForm> resultSet;
-            List<RoomAccessPolicyEntity> entities = new LinkedList<>();
+            List<RoomAccessPolicyComplexEntity> entities = new LinkedList<>();
             
             form.setItem("selector", "findAll");
             resultSet = dao.select(form);
             
             for(DynaActionForm temp : resultSet ){
-                RoomAccessPolicyEntity e = new RoomAccessPolicyEntity();
+                RoomAccessPolicyComplexEntity e = new RoomAccessPolicyComplexEntity();
                 e.fromMap(temp.getItems());
                 entities.add(e);
             }
@@ -178,6 +179,69 @@ public class RoomAccessPolicyResource {
         } catch (Exception ex) {
             Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
             return Response.serverError().build();
+        }
+    }
+    
+    @POST
+    @Path("delete/policy/id")
+    @Produces("application/json")
+    public Response deleteRoomAccessPolicyByPolicyId(@FormParam("policyId") Integer policyId){
+        try {
+            Dao dao = DaoFactory.getDao("RoomAccessPolicyComplex");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("policyId", policyId);
+            dao.delete(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    @POST
+    @Path("update/policy/id")
+    @Produces("application/json")
+    public Response updateRoomAccessPolicyByPolicyId(@FormParam("policyId") Integer policyId){
+        try {
+            Dao dao = DaoFactory.getDao("RoomAccessPolicyComplex");
+            DynaActionForm form = new DynaActionForm();
+            
+            form.setItem("policyId", policyId);
+            dao.update(form);
+            
+            return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.serverError().build();
+        }
+    }
+    
+    @POST
+    @Path("enable/profile/id")
+    @Produces("application/json")
+    public List<RoomAccessPolicyComplexEntity> findEnableRoomAccessPolicyByProfile(@FormParam("profileId") Integer profileId) {
+        try {
+            Dao dao = DaoFactory.getDao("RoomAccessPolicyComplex");
+            DynaActionForm form = new DynaActionForm();
+            List<DynaActionForm> resultSet;
+            List<RoomAccessPolicyComplexEntity> entities = new LinkedList<>();
+            
+            form.setItem("selector", "byProfile");
+            form.setItem("profileId", profileId);
+            resultSet = dao.select(form);
+            
+            for(DynaActionForm temp : resultSet ){
+                RoomAccessPolicyComplexEntity e = new RoomAccessPolicyComplexEntity();
+                e.fromMap(temp.getItems());
+                entities.add(e);
+            }
+            
+            return entities;
+        } catch (Exception ex) {
+            Logger.getLogger(RoomAccessPolicyResource.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 

@@ -16,9 +16,15 @@ $(document).ready(function(){
     // !! transforma en boolean
     if ( (!! $("input[name='accessDenied']").val()) == false ){
         jsRoom.getMessageList();
+        jsRoom.reloadEnableUserAccessPolicy();
+        
         if(roomVar.profileType != 'ADMIN' && window.top.jsPresentation.recentlyCreatedTab(roomVar.roomId)){
             jsRoom.sendMessage("<span class='label label-success'>Hi I'm: "+roomVar.profileLogin+"</span>");
         }
+    }
+    
+    if(roomVar.profileType == "ADMIN"){
+        jsRoom.getEjectedUserList();
     }
     
     if(roomVar.privateRoom){
@@ -410,7 +416,7 @@ var jsRoom = {
                 if(roomVar.profileType != 'ADMIN'){
                     jsRoom.sendMessage("<span class='label label-warning'>I'm out! Bye Bye...</span>")
                             .done(function(){ deferred.resolve(); });
-                }
+                }else{ deferred.resolve(); }
                 deferred.done(function(){
                     window.top.jsPresentation.removeTab(roomVar.roomId);
                 });
@@ -445,6 +451,89 @@ var jsRoom = {
             },
             success: function(html) {
                 parent.remove();
+            }
+        });
+    },
+    
+    getEjectedUserList: function(){
+        $.ajax({
+            url: "/chat/index.jsp?action=GetAllEjectedUsers",
+            type: "post",
+            dataType: "html",            
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                jUtils.showing("ejectedParticipants", html);
+            }
+        }).success(jsRoom.refreshEjectedUser);
+    },
+    
+    refreshEjectedUser: function(){
+        setTimeout(jsRoom.getEjectedUserList, roomVar.RELOAD_TIME);
+    },
+    
+    enabledUserAgain: function(policyId){
+        var parent = $("#ejectedParticipants li#"+policyId);
+        
+        $.ajax({
+            url: "/chat/index.jsp?action=AcceptUserAgain",
+            type: "post",
+            dataType: "html",            
+            data:  {'policyId': policyId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+                parent.remove();
+            }
+        });
+    },
+    
+    /**Check if the enabled user again */
+    reloadEnableUserAccessPolicy: function(){
+        var deferred = $.Deferred();
+        $.ajax({
+            url: "/chat/index.jsp?action=UpdateCheckAccessPolicyEnable",
+            type: "post",
+            dataType: "html",            
+            data:  {'profileId': roomVar.profileId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(data) {   
+                if(data != "[]"){
+                    $.each(JSON.parse(data), function(index, element) {
+                        $("#myModal .modal-body").text("You have been enabled again from room: " + element.roomName);
+                        $("#myModal").modal("show");
+                        $("#myModal button").click(function(){
+                            jsRoom.deleteEnabledUserAgain(element.id);
+                        });
+                    });
+                    deferred.resolve();
+                }else{
+                    deferred.resolve();
+                }
+            }
+        });
+        deferred.done(jsRoom.refreshEnableUserAccessPolicy);                
+    },
+    
+    refreshEnableUserAccessPolicy: function(){
+        setTimeout(jsRoom.reloadEnableUserAccessPolicy, roomVar.RELOAD_TIME);
+    },
+    
+    deleteEnabledUserAgain: function(policyId){
+        $.ajax({
+            url: "/chat/index.jsp?action=DeleteEnableUserPolicy",
+            type: "post",
+            dataType: "html",            
+            data:  {'policyId': policyId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+               console.log("Delete successful....");
             }
         });
     },

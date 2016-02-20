@@ -6,6 +6,7 @@ $(document).ready(function(){
     
     jsHome.getPublicRoom();
     jsHome.getInvitationList();
+    jsHome.reloadEnableUserAccessPolicy();
 });
 
 var jsHome = {
@@ -77,6 +78,54 @@ var jsHome = {
     
     openPublicRoom: function(url, roomName, roomId){
         window.top.jsPresentation.setTab(url, roomName, roomId);
+    },
+    
+    /**Check if the enabled user again */
+    reloadEnableUserAccessPolicy: function(){
+        var deferred = $.Deferred();
+        $.ajax({
+            url: "/chat/index.jsp?action=UpdateCheckAccessPolicyEnable",
+            type: "post",
+            dataType: "html",            
+            data:  {'profileId': homeVar.profileId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(data) {   
+                if(data != "[]"){
+                    $.each(JSON.parse(data), function(index, element) {
+                        $("#myModal .modal-body").text("You have been enabled again from room: " + element.roomName);
+                        $("#myModal").modal("show");
+                        $("#myModal button").click(function(){
+                            jsHome.deleteEnabledUserAgain(element.id);
+                        });
+                    });
+                    deferred.resolve();
+                }else{
+                    deferred.resolve();
+                }
+            }
+        });
+        deferred.done(jsHome.refreshEnableUserAccessPolicy);                
+    },
+    
+    refreshEnableUserAccessPolicy: function(){
+        setTimeout(jsHome.reloadEnableUserAccessPolicy, homeVar.RELOAD_TIME);
+    },
+    
+    deleteEnabledUserAgain: function(policyId){
+        $.ajax({
+            url: "/chat/index.jsp?action=DeleteEnableUserPolicy",
+            type: "post",
+            dataType: "html",            
+            data:  {'policyId': policyId},
+            error: function(hr) {
+                jUtils.showing("error", hr);
+            },
+            success: function(html) {
+               console.log("Delete successful....");
+            }
+        });
     }
     
 };

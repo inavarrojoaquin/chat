@@ -122,8 +122,7 @@
                                 <div class="row">
                                     
                                     <div class="col-md-12" id="participants"></div>   <%-- Participants in this room --%>
-                                    <div class="col-md-12" id="allLoguedParticipants"></div> <%-- All logued participants --%>
-                                    <div class="col-md-12" id="participateRoom"></div> <%-- Rooms in which I participate --%>
+                                    <div class="col-md-12" id="ejectedParticipants"></div> <%-- All logued participants ejected --%>
 
                                     <c:choose>
                                         <c:when test="${roomType.equals('public')}">
